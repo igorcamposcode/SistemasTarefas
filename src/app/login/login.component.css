@@ -1,0 +1,166 @@
+.div {
+  display: block;
+  /* Define o elemento como um bloco */
+  justify-content: center;
+  /* Centraliza os itens horizontalmente (não aplicável diretamente ao "block") */
+  align-items: center;
+  /* Alinha os itens verticalmente (não aplicável diretamente ao "block") */
+
+  height: 465px;
+  /* Define a altura da div */
+  padding: 1%;
+  box-sizing: content-box;
+  /* O tamanho da caixa não inclui as bordas e o padding */
+  background-color: #ffffff;
+  /* Define a cor de fundo branca */
+  border-radius: 2%;
+  /* Aplica bordas arredondadas de 10px */
+
+  min-width: 150px;
+  /* Define a largura mínima de 150px */
+  max-width: 500px;
+  /* Define a largura máxima de 500px */
+
+  margin: 0;
+  /* Remove as margens padrão */
+  margin-top: 12.5%;
+  /* Adiciona margem superior de 12% */
+  margin-left: auto;
+  /* Centraliza horizontalmente */
+  margin-right: auto;
+  /* Centraliza horizontalmente */
+}
+
+.h3 {
+  width: 90%;
+  /* Define a largura como 90% */
+  background-color: rgb(238, 175, 1);
+  /* Define a cor de fundo em amarelo */
+  justify-content: center;
+  /* Centraliza itens (não aplicável ao display "inline-block") */
+  align-items: center;
+  /* Alinha verticalmente (não aplicável ao display "inline-block") */
+
+  margin: 0;
+  /* Remove as margens padrão */
+  margin-top: 2%;
+  /* Adiciona uma margem superior de 2% */
+  margin-right: 10%;
+  /* Define margem direita de 10% */
+  margin-inline-start: 4%;
+  /* Define margem à esquerda de 4% */
+
+  border-radius: 4px;
+  /* Aplica bordas arredondadas de 4px */
+  border: 3px double #e64c07;
+  /* Aplica uma borda dupla de 3px na cor laranja */
+
+  display: inline-block;
+  /* Faz com que o elemento se comporte como um bloco em linha */
+  text-align: center;
+  /* Centraliza o texto */
+  font-size: 25px;
+  /* Define o tamanho da fonte como 25px */
+  font-weight: bold;
+  /* Define o texto em negrito */
+}
+
+.itens {
+  display: block;
+  /* Define o elemento como um bloco */
+  justify-content: center;
+  /* Centraliza os itens horizontalmente (não aplicável ao "block") */
+  align-items: center;
+  /* Alinha os itens verticalmente (não aplicável ao "block") */
+  height: 295px;
+  /* Define a altura da div */
+  padding: 5%;
+
+  box-sizing: content-box;
+  /* O tamanho da caixa não inclui bordas e padding */
+  background-color: #54afeb;
+  /* Define a cor de fundo como azul */
+  border-radius: 10%;
+  /* Aplica bordas arredondadas de 10px */
+
+  min-width: 75%;
+  /* Define a largura mínima de 150px */
+  max-width: 50%;
+  /* Define a largura máxima de 410px */
+
+  margin: 0;
+  /* Remove as margens padrão */
+  margin-top: 10%;
+  /* Adiciona margem superior de 10% */
+  margin-left: auto;
+  /* Centraliza horizontalmente */
+  margin-right: auto;
+  /* Centraliza horizontalmente */
+}
+
+.login-form {
+  width: 75.5%;
+  /* Define a largura como 75.5% */
+  display: block;
+  /* Faz com que o elemento se comporte como um bloco em linha */
+  min-width: 150px;
+  /* Define a largura mínima de 150px */
+  max-width: 300px;
+  /* Define a largura máxima de 300px */
+  margin-top: 4.5%;
+  /* Adiciona uma margem superior de 4.5% */
+  margin-right: 10%;
+  /* Define uma margem direita de 10% */
+  margin-inline-start: 12.9%;
+  /* Define uma margem esquerda de 12.9% */
+}
+
+.login-form-margin {
+  margin-bottom: 5%;
+  /* Adiciona uma margem inferior de 12px */
+}
+
+.login-form-forgot {
+  float: right;
+  /* Faz o item flutuar à direita */
+}
+
+.login-form-button {
+  display: block;
+  width: 100%;
+  /* Define a largura como 100% */
+  border-radius: 10px;
+  /* Aplica bordas arredondadas de 10px */
+  background-color: #e64c07;
+  /* Define a cor de fundo laranja */
+  color: white;
+  /* Define a cor do texto como branca */
+}
+
+.efeito {
+  color: #ffffff;
+  /* Define a cor do texto como branco */
+  font-weight: bold;
+  /* Define o texto em negrito */
+  display: inline-block;
+  /* Faz com que o elemento se comporte como um bloco em linha */
+}
+
+.efeito:hover {
+  color: black;
+  /* Altera a cor do texto para preto ao passar o mouse */
+}
+
+.efeito2 {
+  color: #ffffff;
+  /* Define a cor do texto como branco */
+  font-size: 17px;
+  /* Define o tamanho da fonte como 17px */
+  display: inline-block;
+  /* Faz com que o elemento se comporte como um bloco em linha */
+}
+
+.efeito2:hover {
+  color: black;
+  /* Altera a cor do texto para preto ao passar o mouse */
+}

@@ -1,0 +1,63 @@
+<div>
+  <h3 class="h3" style="text-align: center">Sistemas de Tarefas - 2024</h3>
+
+  <!--https://ng.ant.design/components/table/en-->
+
+  <nz-table
+    #nzTable
+    [nzData]="listOfDisplayData"
+    nzTableLayout="fixed"
+    class="ConsultaTarefa"
+  >
+    <thead>
+      <tr style="text-align: center; font-weight: bold">
+        <th nzCustomFilter>
+          NOME DA TAREFA
+          <nz-filter-trigger
+            [(nzVisible)]="visible"
+            [nzActive]="searchValue.length > 0"
+            [nzDropdownMenu]="menu"
+          >
+            <span nz-icon nzType="search"></span>
+          </nz-filter-trigger>
+        </th>
+        <th>ID</th>
+        <th>ESTADO DA TAREFA</th>
+        <th>DATA & HORA</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (data of nzTable.data; track data) {
+      <tr>
+        <td>{{ data.NOME }}</td>
+        <td>{{ data.ID }}</td>
+        <td>{{ data.ESTADO }}</td>
+        <td>{{ data.DATA }}</td>
+      </tr>
+      }
+    </tbody>
+  </nz-table>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <div class="ant-table-filter-dropdown">
+      <div class="search-box">
+        <input
+          type="text"
+          nz-input
+          placeholder="Pesquisar Tarefa"
+          [(ngModel)]="searchValue"
+        />
+        <button
+          nz-button
+          nzSize="small"
+          nzType="primary"
+          (click)="search()"
+          class="search-button"
+        >
+          Pesquisar
+        </button>
+        <button nz-button nzSize="small" (click)="reset()">Resetar</button>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+  <button class="Retornar" (click)="Clique_Retornar('menu')">Retornar</button>
+</div>

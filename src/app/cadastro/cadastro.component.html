@@ -1,0 +1,147 @@
+<div class="div">
+  <!-- Título do sistema de tarefas -->
+  <h3 class="h3" style="text-align: center">Sistemas de Tarefas - 2024</h3>
+  <!-- Título do formulário de cadastro -->
+  <h1 class="Cadastro" style="text-align: center">Faça um Cadastro</h1>
+
+  <!-- Início do formulário principal -->
+  <form class="itens">
+    <!-- Formulário com validação via formGroup -->
+    <form class="nz-form" [formGroup]="validateForms" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <!-- Rótulo do campo de nome -->
+        <nz-form-label
+          class="label"
+          [nzSm]="8"
+          [nzXs]="39"
+          nzRequired
+          nzFor="nome"
+          >Nome</nz-form-label
+        >
+
+        <!-- Campo de entrada do nome -->
+        <nz-form-control
+          [nzSm]="14"
+          [nzXs]="27"
+          nzErrorTip="Digite seu nome completo"
+          style="font-weight: bold"
+        >
+          <input nz-input formControlName="nome" id="nome" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Campo de entrada do telefone -->
+      <nz-form-item>
+        <nz-form-label class="label" [nzSm]="8" [nzXs]="39" nzFor="telefone"
+          >Telefone</nz-form-label
+        >
+
+        <nz-form-control [nzSm]="14" [nzXs]="27" style="font-weight: bold">
+          <input nz-input formControlName="telefone" id="telefone" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Campo de e-mail com validação -->
+      <nz-form-item>
+        <!-- Rótulo do campo de e-mail -->
+        <nz-form-label
+          class="label"
+          [nzSm]="8"
+          [nzXs]="39"
+          nzRequired
+          nzFor="email"
+          >E-mail</nz-form-label
+        >
+
+        <!-- Campo de entrada do e-mail -->
+        <nz-form-control
+          [nzSm]="14"
+          [nzXs]="27"
+          nzErrorTip="Este não é um E-mail válido."
+          style="font-weight: bold;"
+        >
+          <input nz-input formControlName="email" id="email" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Campo de senha com validação -->
+      <nz-form-item>
+        <!-- Rótulo do campo de senha -->
+        <nz-form-label
+          class="label"
+          [nzSm]="8"
+          [nzXs]="39"
+          nzFor="password"
+          nzRequired
+          >Senha</nz-form-label
+        >
+
+        <!-- Campo de entrada da senha -->
+        <nz-form-control
+          [nzSm]="14"
+          [nzXs]="27"
+          nzErrorTip="Por favor Digite uma senha."
+          style="font-weight: bold"
+        >
+          <input
+            nz-input
+            type="password"
+            id="password"
+            formControlName="password"
+            (ngModelChange)="updateConfirmValidator()"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Campo de confirmação da senha com validação -->
+      <nz-form-item>
+        <!-- Rótulo do campo de confirmação da senha -->
+        <nz-form-label
+          class="label"
+          [nzSm]="8"
+          [nzXs]="39"
+          nzFor="checkPassword"
+          nzRequired
+          >Confirmar senha</nz-form-label
+        >
+
+        <!-- Campo de entrada da confirmação de senha -->
+        <nz-form-control [nzSm]="14" [nzXs]="20" [nzErrorTip]="errorTpl">
+          <input
+            nz-input
+            type="password"
+            formControlName="checkPassword"
+            id="checkPassword"
+            class="inputSenha"
+          />
+
+          <!-- Mensagem de erro personalizada para o campo de confirmação de senha -->
+          <ng-template #errorTpl let-control>
+            <!-- Caso o campo esteja vazio -->
+            @if (control.errors?.['required']) { Por favor confirme sua senha! }
+            <!-- Caso as senhas não sejam iguais -->
+            @if (control.errors?.['confirm']) { As Duas senhas inseridas são
+            incompartivéis! }
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Botão de registro -->
+      <nz-form-item nz-row class="register-area">
+        <nz-form-control [nzSpan]="14" [nzOffset]="6">
+          <button nz-button nzType="primary" class="Registrar">
+            Registrar
+          </button>
+          <button
+            nz-button
+            class="Registrar2"
+            (click)="CliqueRetornar('login')"
+          >
+            Retornar
+          </button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </form>
+  <!-- Fim do formulário principal -->
+</div>

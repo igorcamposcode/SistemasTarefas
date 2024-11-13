@@ -1,0 +1,116 @@
+<!--
+Componentes usados para este projeto:
+https://valor-software.com/ngx-bootstrap/#/components/modals?tab=examples
+https://ng.ant.design/components/upload/en
+https://getbootstrap.com/docs/5.3/components/card/
+https://po-ui.io/documentation
+
+Colaboradores deste projeto - Igor campos, Alexandre
+Ano - 2024
+Fim de desenvolvimento: Novembro-Dezembro 2024
+
+(click)="CliqueMenu('menu')
+-->
+
+<div class="div">
+  <!-- Título do sistema -->
+  <h3 class="h3" style="text-align: center">Sistemas de Tarefas - 2024</h3>
+
+  <!-- Formulário principal (itens) -->
+  <form class="itens">
+    <!-- Formulário de login com validação via Angular (formGroup) e acionamento ao submeter (ngSubmit) -->
+    <form
+      nz-form
+      [formGroup]="validateForms"
+      class="login-form"
+      (ngSubmit)="submitForm()"
+    >
+      <!-- Campo de E-mail para login -->
+      <nz-form-item>
+        <!-- Controle de formulário com mensagem de erro personalizada -->
+        <nz-form-control
+          nzErrorTip="Por favor, digite seu E-mail."
+          style="font-weight: bold"
+        >
+          <!-- Input com ícone de prefixo 'user' para campo de E-mail -->
+          <nz-input-group nzPrefixIcon="user">
+            <!-- Input de texto com formControl ligado ao campo 'userName' no formulário -->
+            <input
+              type="text"
+              nz-input
+              formControlName="userName"
+              placeholder="E-mail"
+            />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Campo de senha para login -->
+      <nz-form-item>
+        <!-- Controle de formulário com mensagem de erro personalizada para o campo de senha -->
+        <nz-form-control
+          nzErrorTip="Por Favor, Digite sua senha."
+          style="font-weight: bold"
+        >
+          <!-- Input com ícone de prefixo 'lock' para campo de senha -->
+          <nz-input-group nzPrefixIcon="lock">
+            <!-- Input de senha com formControl ligado ao campo 'password' no formulário -->
+            <input
+              type="password"
+              nz-input
+              formControlName="password"
+              placeholder="Senha"
+            />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Linha de opções: "Lembrar-me" e "Esqueceu a senha?" -->
+      <div nz-row class="login-form-margin">
+        <!-- Checkbox para a opção 'Lembrar-me' -->
+        <div nz-col [nzSpan]="12">
+          <label nz-checkbox formControlName="remember" style="color: #ffffff">
+            <span style="font-size: 1rem">Lembrar-me</span>
+          </label>
+        </div>
+
+        <!-- Link para recuperação de senha -->
+        <div nz-col [nzSpan]="12">
+          <a
+            class="login-form-forgot"
+            class="efeito2"
+            (click)="CliqueRecuperar_Senha('recuperar-senha')"
+            style="font-size: 1rem; display: block"
+            >Esqueceu a Senha?</a
+          >
+        </div>
+      </div>
+
+      <!-- Botão de submissão do formulário de login -->
+      <button
+        nz-button
+        class="login-form-button login-form-margin"
+        [nzType]="'primary'"
+        (click)="CliqueMenu('menu')"
+        style="font-size: 1rem"
+      >
+        Entrar
+      </button>
+
+      <!-- Link para registro de novos usuários -->
+      <a
+        style="
+          font-size: 19px;
+          margin-top: 3.5%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        "
+        class="efeito"
+        (click)="CliqueRegistrar('registro')"
+      >
+        Registre agora!
+      </a>
+    </form>
+  </form>
+</div>

@@ -1,0 +1,54 @@
+
+.h3{
+  width: 100%;
+  background-color: rgb(238, 175, 1);
+  margin: 0;
+  box-shadow: 2px 3px 3px 2px rgb(199, 47, 0);
+  text-align: center;
+  font-size: 25px;
+  justify-content: center;
+}
+
+
+.topobtn {
+  display: grid;
+  min-width: 150px;
+  max-width: 150px;
+  margin-top: 1.5%;
+  margin-inline-start: 1.5%;
+}
+
+.btn1 {
+  height: 35px;
+  border-radius: 10px;
+  margin-right: 5px;
+  background-color: #E64C07;
+  color: white;
+  font-size: 18px;
+}
+
+.btn2 {
+  height: 35px;
+  border-radius: 10px;
+  margin-top: 4.5%;
+  margin-right: 5px;
+  background-color: #E64C07;
+  color: white;
+  font-size: 18px;
+}
+
+.btn3 {
+  height: 35px;
+  border-radius: 10px;
+  margin-top: 4.5%;
+  margin-right: 2%;
+  background-color: #E64C07;
+  color: white;
+  font-size: 18px;
+}
+
+/* Incluir Tarefas Modal */
+
+ .NomeTarefa{
+  top: 2rem;
+ }

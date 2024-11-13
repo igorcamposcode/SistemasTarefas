@@ -1,0 +1,56 @@
+.h3 {
+  width: 100%;
+  background-color: rgb(238, 175, 1);
+  margin: 0;
+  box-shadow: 2px 3px 3px 2px rgb(199, 47, 0);
+  text-align: center;
+  font-size: 25px;
+  justify-content: center;
+}
+
+.Retornar {
+  width: 125px;
+  display: inline-block;
+  /* Define a largura como 100% */
+  border-radius: 5px;
+  /* Aplica bordas arredondadas de 10px */
+  background-color: #e64c07;
+  /* Define a cor de fundo laranja */
+  color: white;
+  /* Define a cor do texto como branca */
+  font-size: 1rem;
+  margin-top: 2%;
+  margin-inline-start: 49%;
+  text-align: center;
+}
+
+.ConsultaTarefa {
+  width: 100%;
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.search-box {
+  padding: 1rem;
+}
+
+.search-box input {
+  width: 13.2rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.search-box button {
+  width: 6.5rem;
+  background-color: #e64c07;
+  border-radius: 10rem;
+  color: white;
+}
+
+.search-button {
+  margin-right: 8px;
+}

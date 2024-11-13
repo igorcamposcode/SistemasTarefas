@@ -1,0 +1,139 @@
+<div>
+  <h3 class="h3" style="text-align: center">Sistemas de Tarefas - 2024</h3>
+
+  <div class="topobtn">
+    <button
+      class="btn1"
+      nz-button
+      [nzType]="'primary'"
+      (click)="CliqueTarefa()"
+    >
+      Tarefa
+    </button>
+    <button class="btn2" (click)="CliqueMinhaTarefa('minhas-tarefas')">
+      Minhas Tarefas
+    </button>
+    <button class="btn3" (click)="CliqueHome('login')">Sair</button>
+
+    <!--Modal: Abrirá uma tela para a inclusão/Cadastro das tarefas-->
+    <nz-modal
+      [(nzVisible)]="isVisible"
+      (nzOnCancel)="handleCancel()"
+      (nzOnOk)="handleOk()"
+      nzOkText="Confirmar"
+      style="font: bold"
+      >;
+      <!--Na Parte de Tarefas Estarei utilizando os componentes do nebular para está integrando
+      ao sistemas de inclusão da tarefa mãe e o mesmo acontecerá na inclusão e aduteração
+      de sub tarefas -->
+      <ng-container *nzModalContent>
+        <h2 style="margin-top: 2rem">
+          Preencha os campos Para Inserir as Tarefas
+        </h2>
+        <div class="Containers">
+          <form
+            class="nz-form-tarefa"
+            [formGroup]="validateForms"
+            (ngSubmit)="submitForm()"
+          >
+            <nz-form-item class="NomeTarefa" style="margin-top: 1rem">
+              <nz-form-label
+                class="label"
+                [nzSm]="8"
+                [nzXs]="39"
+                nzFor="nome"
+                style="font-weight: bold"
+                >Nome da tarefa
+              </nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="27">
+                <input
+                  nz-input
+                  placeholder="Digite o Nome da Tarefa"
+                  [(ngModel)]="value"
+                  type="textTarefa"
+                  style="width: 19rem"
+                />
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label
+                class="label"
+                [nzSm]="8"
+                [nzXs]="39"
+                nzFor="email"
+                style="font-weight: bold; font-size: 22px"
+                >Descrição
+              </nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="27">
+                <textarea
+                  nz-input
+                  placeholder="Descrição da Tarefa"
+                  [nzAutosize]="{ minRows: 10, maxRows: 30 }"
+                  type="text"
+                  style="width: 19rem"
+                ></textarea>
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label
+                class="label"
+                [nzSm]="8"
+                [nzXs]="39"
+                nzFor="dateFormat"
+                style="font-weight: bold"
+                >Data Inicio
+              </nz-form-label>
+              <nz-date-picker [nzFormat]="dateFormat"></nz-date-picker>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label
+                class="label"
+                [nzSm]="8"
+                [nzXs]="39"
+                nzFor="dateFormat"
+                style="font-weight: bold"
+                >Data fim
+              </nz-form-label>
+              <nz-date-picker [nzFormat]="dateFormat"></nz-date-picker>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label
+                class="label"
+                [nzSm]="8"
+                [nzXs]="39"
+                nzFor="email"
+                style="font-weight: bold"
+              >
+                Selecione a Prioridade
+              </nz-form-label>
+              <nz-select
+                nzShowSearch
+                nzAllowClear
+                nzPlaceHolder="Prioridade"
+                [(ngModel)]="selectedValue"
+              >
+                <nz-option
+                  nzLabel="Muito Alta"
+                  nzValue="Muito Alta"
+                ></nz-option>
+                <nz-option nzLabel="Alta" nzValue="Alta"></nz-option>
+                <nz-option nzLabel="Média" nzValue="Média"></nz-option>
+                <nz-option nzLabel="Baixo" nzValue="Baixo"></nz-option>
+                <nz-option
+                  nzLabel="Muito Baixo"
+                  nzValue="Muito Baixo"
+                ></nz-option>
+              </nz-select>
+            </nz-form-item>
+          </form>
+        </div>
+      </ng-container>
+    </nz-modal>
+  </div>
+
+  <!--Exibição das Tarefas-->
+</div>

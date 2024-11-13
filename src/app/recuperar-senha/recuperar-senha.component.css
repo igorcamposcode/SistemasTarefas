@@ -1,0 +1,98 @@
+.div {
+  display: block; /* Define o elemento como um bloco */
+  justify-content: center; /* Centraliza os itens horizontalmente (não aplicável diretamente ao "block") */
+  align-items: center; /* Alinha os itens verticalmente (não aplicável diretamente ao "block") */
+
+  height: 475px; /* Define a altura da div */
+  box-sizing: content-box; /* O tamanho da caixa não inclui as bordas e o padding */
+  background-color: #ffffff; /* Define a cor de fundo branca */
+  border-radius: 10px; /* Aplica bordas arredondadas de 10px */
+
+  min-width: 150px; /* Define a largura mínima de 150px */
+  max-width: 605px; /* Define a largura máxima de 605px */
+
+  margin: 0; /* Remove as margens padrão */
+  margin-top: 12%; /* Adiciona margem superior de 12% */
+  margin-left: auto; /* Centraliza horizontalmente */
+  margin-right: auto; /* Centraliza horizontalmente */
+}
+
+.h3 {
+  width: 90%; /* Define a largura como 90% */
+  background-color: rgb(238, 175, 1); /* Define a cor de fundo em amarelo */
+  justify-content: center; /* Centraliza itens (não aplicável ao display "inline-block") */
+  align-items: center; /* Alinha verticalmente (não aplicável ao display "inline-block") */
+
+  margin: 0; /* Remove as margens padrão */
+  margin-top: 2%; /* Adiciona uma margem superior de 2% */
+  margin-right: 10%; /* Define margem direita de 10% */
+  margin-inline-start: 4%; /* Define margem à esquerda de 4% */
+
+  border-radius: 4px; /* Aplica bordas arredondadas de 4px */
+  border: 3px double #E64C07; /* Aplica uma borda dupla de 3px na cor laranja */
+
+  display: inline-block; /* Faz com que o elemento se comporte como um bloco em linha */
+  text-align: center; /* Centraliza o texto */
+  font-size: 25px; /* Define o tamanho da fonte como 25px */
+  font-weight: bold; /* Define o texto em negrito */
+}
+
+.itens {
+  display: block; /* Define o elemento como um bloco */
+  justify-content: center; /* Centraliza os itens horizontalmente (não aplicável ao "block") */
+  align-items: center; /* Alinha os itens verticalmente (não aplicável ao "block") */
+  height: 320px; /* Define a altura da div */
+
+  box-sizing: content-box; /* O tamanho da caixa não inclui bordas e padding */
+  background-color: #54AFEB; /* Define a cor de fundo como azul */
+  border-radius: 10px; /* Aplica bordas arredondadas de 10px */
+
+  min-width: 150px; /* Define a largura mínima de 150px */
+  max-width: 520px; /* Define a largura máxima de 520px */
+
+  margin: 0; /* Remove as margens padrão */
+  margin-top: 5%; /* Adiciona margem superior de 10% */
+  margin-left: auto; /* Centraliza horizontalmente */
+  margin-right: auto; /* Centraliza horizontalmente */
+}
+
+.nz-form {
+  display: inline-block; /* Faz com que o elemento se comporte como um bloco em linha */
+  width: 75%;
+  min-width: 90%; /* Define a largura mínima de 90% */
+  max-width: 20%;/* Define a largura máxima de 20% */
+
+  font-weight: bold;/*Torna o Texto em negrito*/
+  font-size: 19px;/*Aumenta o texto pra 19 pixels*/
+
+  margin-top: 6.5%; /* Adiciona uma margem superior de 4.5% */
+  margin-bottom: 12px;
+  margin-left: 2%;/*Define uma margem a esquerda automática*/
+  margin-right: auto;/*Define uma margem a direita automática*/
+}
+
+
+.label{
+  font-size: 19px;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.Registrar
+.register-area {
+  display: inline-block; /* Faz com que o elemento se comporte como um bloco em linha */
+  justify-content: center; /* Centraliza itens (não aplicável ao display "inline-block") */
+  margin: 0; /* Remove as margens padrão */
+  margin-top: 4; /* Adiciona uma margem superior de 4.5% */
+  left: auto;
+  right: auto;
+}
+
+.Recuperar{
+  width: 100%; /* Define a largura como 100% */
+  border-radius: 10px; /* Aplica bordas arredondadas de 10px */
+  background-color: #E64C07; /* Define a cor de fundo laranja */
+  color: white; /* Define a cor do texto como branca */
+  font-size: 16px;
+  text-align: center;
+}
