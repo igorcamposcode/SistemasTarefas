@@ -17,9 +17,9 @@ app.use(json());
 // Conectando ao banco de dados MySQL
 const db = createConnection({
   host: "localhost", // Host do MySQL
-  user: "root", // Usuário do MySQL
-  password: "senha", // Senha do MySQL
-  database: "", // Nome do banco de dados
+  user: "starefassystem", // Usuário do MySQL
+  password: "ci@systemtarefas2024b", // Senha do MySQL
+  database: "sistematarefas", // Nome do banco de dados
 });
 
 db.connect((err) => {
