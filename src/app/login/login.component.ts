@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // Importações necessárias de módulos e bibliotecas do Angular e NG-ZORRO
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,6 +8,7 @@ import { NzFormModule } from 'ng-zorro-antd/form'; // Módulo de formulários NG
 import { NzInputModule } from 'ng-zorro-antd/input'; // Módulo de input NG-ZORRO
 import { NzButtonModule } from 'ng-zorro-antd/button'; // Módulo de botões NG-ZORRO
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'; // Módulo de checkbox NG-ZORRO
+import { AuthService } from '../services/auth.service';
 
 // Declaração do componente
 @Component({
@@ -20,6 +22,10 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'; // Módulo de checkbo
 
 // Declaração da classe LoginComponent
 export class LoginComponent {
+
+  email: string = '';
+  senha: string = '';
+  error: string | null = null;
 
   validateForms: FormGroup; // Define o formulário de validação como um grupo de controle
 
@@ -42,7 +48,7 @@ export class LoginComponent {
 
   // Construtor da classe, onde o FormBuilder e o Router são injetados
   // FormBuilder é usado para criar o formulário reativo, e Router para navegação entre páginas
-  constructor(private router: Router, private fb: FormBuilder) {
+  constructor(private router: Router, private fb: FormBuilder, private authService: AuthService) {
     // Criação do formulário com três campos: userName, password e remember
     // 'Validators.required' garante que o campo é obrigatório
     this.validateForms = this.fb.group({
@@ -51,6 +57,19 @@ export class LoginComponent {
       remember: [false] // Checkbox para "Lembrar-me", com valor inicial false
     });
   }
+
+  login() {
+    this.authService.login(this.email, this.senha).subscribe(
+      (response) => {
+        this.authService.setToken(response.token);
+        this.router.navigate(['/tasks']); // Redireciona para a lista de tarefas
+      },
+      (err): void => {
+        this.error = 'Credenciais inválidas';
+      }
+    );
+  }
+
   //Método para navegação ao clicar no texto "Registre Agora", redireciona para a página especificada
   CliqueRegistrar(pageName: string) {
     this.router.navigate([`${pageName}`])

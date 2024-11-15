@@ -6,7 +6,7 @@ import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } fr
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { PoHttpRequestModule } from '@po-ui/ng-components';
-import { pt_PT, provideNzI18n, en_US } from 'ng-zorro-antd/i18n';
+import { pt_PT, provideNzI18n } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import pt from '@angular/common/locales/pt';
 import { FormsModule } from '@angular/forms';
