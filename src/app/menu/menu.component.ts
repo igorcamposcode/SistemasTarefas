@@ -21,12 +21,11 @@ export class MenuComponent {
 submitForm() {
 throw new Error('Method not implemented.');
 }
-  value? : String
-  text: FormControl<String> | undefined
-  textTarefa: FormControl<String> | undefined
+  value? : string
+  text: FormControl<string> | undefined
+  textTarefa: FormControl<string> | undefined
   dateFormat = 'yyyy/MM/dd';
   selectedValue = null;
-
   isVisible = false;
   validateForms!: FormGroup<any>;
 

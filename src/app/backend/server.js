@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-/* eslint-disable no-undef */
 // server.js
+/* Liberando a porta 3306: https://repassandoconhecimento.com/como-liberar-o-acesso-remoto-ao-mysql/
+passo a passo para fazer o procedimento */
+
 const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
@@ -35,7 +36,7 @@ db.connect((err) => {
 });*/
 
 // Rota para adicionar um item
-app.post('/sistematarefas', (req, res) => {
+app.post('/usuario', (req, res) => {
     const { name, description } = req.body;
     db.query('INSERT INTO usuario (name, description) VALUES (?, ?)', [name, description], (err, result) => {
         if (err) return res.status(500).send(err);
