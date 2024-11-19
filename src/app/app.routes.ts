@@ -5,6 +5,8 @@ import { LoginComponent } from './login/login.component';
 import { NgModule } from '@angular/core';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { RecuperarSenhaComponent } from './recuperar-senha/recuperar-senha.component';
+import { HttpClientModule } from '@angular/common/http';
+import { AppComponent } from './app.component';
 
 // Definindo as rotas do aplicativo
 export const routes: Routes = [
@@ -38,7 +40,7 @@ export const routes: Routes = [
 
 @NgModule({
   // Importa as rotas configuradas
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes), HttpClientModule],
 
   // Exporta as rotas para serem usadas no resto do aplicativo
   exports: [RouterModule],

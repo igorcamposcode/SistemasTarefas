@@ -7,28 +7,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
+  private apiUrl = 'http://127.0.0.1:3306/usuarios';
 
-  private apiUrl = 'http://localhost:3306'
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  login(email: string, senha: string): Observable<any>{
-    return this.http.post<any>(`${this.apiUrl}/login`,{email,senha})
-  }
-
-  cadastro(email: string, senha: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/cadastro`, { email, senha });
-  }
-
-  logout() {
-    localStorage.removeItem('token');
-  }
-
-  setToken(token: string) {
-    localStorage.setItem('token', token);
-  }
-
-  getToken() {
-    return localStorage.getItem('token');
+  register(user: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, user);
   }
 }

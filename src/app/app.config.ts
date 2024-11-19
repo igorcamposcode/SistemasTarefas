@@ -1,10 +1,14 @@
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
-
-import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  provideZoneChangeDetection,
+} from '@angular/core';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { PoHttpRequestModule } from '@po-ui/ng-components';
 import { pt_PT, provideNzI18n } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
@@ -22,7 +26,11 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     importProvidersFrom([PoHttpRequestModule]),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideHttpClient(withInterceptorsFromDi()), provideNzI18n(pt_PT), importProvidersFrom(FormsModule), provideAnimationsAsync(), provideHttpClient(), provideNzIcons(icons)
+    provideHttpClient(withInterceptorsFromDi()),
+    provideNzI18n(pt_PT),
+    importProvidersFrom(FormsModule),
+    provideAnimationsAsync(),
+    provideHttpClient(),
+    provideNzIcons(icons),
   ],
-
 };

@@ -39,6 +39,7 @@ export class CadastroComponent {
   checkPassword: FormControl<string> | undefined;
   acordo: FormControl<boolean> | undefined;
   validateForms: FormGroup;
+  userService: any;
 
   submitForm(): void {
     if (this.validateForms.valid) {
@@ -72,7 +73,9 @@ export class CadastroComponent {
     return {};
   };
 
-  constructor(private fb: NonNullableFormBuilder, private router: Router) {
+  constructor(
+    private fb: NonNullableFormBuilder,
+    private router: Router  ) {
     this.validateForms = this.fb.group({
       nome: ['', [Validators.email, Validators.required]],
       telefone: ['', [Validators.email, Validators.required]],
@@ -82,6 +85,8 @@ export class CadastroComponent {
       acordo: [false],
     });
   }
+
+
 
   CliqueRetornar(pageName: string) {
     this.router.navigate([`${pageName}`]);
