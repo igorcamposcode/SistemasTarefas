@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {
   AbstractControl,
+  FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
@@ -15,6 +16,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-cadastro',
@@ -35,7 +37,7 @@ export class CadastroComponent {
   nome: FormControl<string> | undefined;
   telefone: FormControl<string> | undefined;
   email: FormControl<string> | undefined;
-  password: FormControl<string> | undefined;
+  senha: FormControl<string> | undefined;
   checkPassword: FormControl<string> | undefined;
   acordo: FormControl<boolean> | undefined;
   validateForms: FormGroup;
@@ -66,7 +68,7 @@ export class CadastroComponent {
     if (!control.value) {
       return { required: true };
     } else if (
-      control.value !== this.validateForms.controls['password'].value
+      control.value !== this.validateForms.controls['senha'].value
     ) {
       return { confirm: true, error: true };
     }
@@ -74,19 +76,29 @@ export class CadastroComponent {
   };
 
   constructor(
-    private fb: NonNullableFormBuilder,
-    private router: Router  ) {
+    private fb: FormBuilder,
+    private router: Router, private authService: AuthService  ) {
     this.validateForms = this.fb.group({
-      nome: ['', [Validators.email, Validators.required]],
-      telefone: ['', [Validators.email, Validators.required]],
+      nome: ['', Validators.required],
+      telefone: [''],
       email: ['', [Validators.email, Validators.required]],
-      password: ['', [Validators.required]],
-      checkPassword: ['', [Validators.required, this.confirmationValidator]],
+      senha: ['', [Validators.required, Validators.minLength(7)]],
+      checkPassword: ['',[Validators.required, this.confirmationValidator]],
       acordo: [false],
     });
   }
 
-
+  onSubmit() {
+    if (this.validateForms.valid) {
+      const formData = this.validateForms.value;
+      this.authService.registro(formData).subscribe({
+        next: (_res) => alert('Usuário cadastrado com sucesso!'),
+        error: (err) => alert(err.error.error || 'Erro ao registrar usuário'),
+      });
+    } else {
+      alert('Por favor, preencha os campos corretamente.');
+    }
+  }
 
   CliqueRetornar(pageName: string) {
     this.router.navigate([`${pageName}`]);

@@ -7,7 +7,11 @@
   <!-- Início do formulário principal -->
   <form class="itens">
     <!-- Formulário com validação via formGroup -->
-    <form class="nz-form" [formGroup]="validateForms" (ngSubmit)="submitForm()">
+    <form
+      class="nz-form"
+      [formGroup]="validateForms"
+      (ngSubmit)="submitForm(); onSubmit()"
+    >
       <nz-form-item>
         <!-- Rótulo do campo de nome -->
         <nz-form-label
@@ -58,7 +62,7 @@
           [nzSm]="14"
           [nzXs]="27"
           nzErrorTip="Este não é um E-mail válido."
-          style="font-weight: bold;"
+          style="font-weight: bold"
         >
           <input nz-input formControlName="email" id="email" />
         </nz-form-control>
@@ -86,8 +90,8 @@
           <input
             nz-input
             type="password"
-            id="password"
-            formControlName="password"
+            id="senha"
+            formControlName="senha"
             (ngModelChange)="updateConfirmValidator()"
           />
         </nz-form-control>

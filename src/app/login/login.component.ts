@@ -52,22 +52,22 @@ export class LoginComponent {
     // Criação do formulário com três campos: userName, password e remember
     // 'Validators.required' garante que o campo é obrigatório
     this.validateForms = this.fb.group({
-      userName: [null, [Validators.required]], // Campo de nome de usuário
+      email: [null, [Validators.required]], // Campo de nome de usuário
       password: [null, [Validators.required]], // Campo de senha
       remember: [false] // Checkbox para "Lembrar-me", com valor inicial false
     });
   }
 
-  login() {
-    this.authService.login(this.email, this.senha).subscribe(
-      (response) => {
-        this.authService.setToken(response.token);
-        this.router.navigate(['/tasks']); // Redireciona para a lista de tarefas
-      },
-      (err): void => {
-        this.error = 'Credenciais inválidas';
-      }
-    );
+  onSubmit() {
+    if (this.validateForms.valid) {
+      this.authService.login(this.validateForms.value).subscribe({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          alert('Login realizado com sucesso!');
+        },
+        error: (err) => alert('Erro ao realizar login'),
+      });
+    }
   }
 
   //Método para navegação ao clicar no texto "Registre Agora", redireciona para a página especificada
