@@ -22,6 +22,9 @@ import { AuthService } from '../services/auth.service';
 
 // Declaração da classe LoginComponent
 export class LoginComponent {
+onSubmit() {
+throw new Error('Method not implemented.');
+}
 
   email: string = '';
   senha: string = '';
@@ -58,17 +61,6 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
-    if (this.validateForms.valid) {
-      this.authService.login(this.validateForms.value).subscribe({
-        next: (res) => {
-          localStorage.setItem('token', res.token);
-          alert('Login realizado com sucesso!');
-        },
-        error: (err) => alert('Erro ao realizar login'),
-      });
-    }
-  }
 
   //Método para navegação ao clicar no texto "Registre Agora", redireciona para a página especificada
   CliqueRegistrar(pageName: string) {

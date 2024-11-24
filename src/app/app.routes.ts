@@ -40,7 +40,7 @@ export const routes: Routes = [
 
 @NgModule({
   // Importa as rotas configuradas
-  imports: [RouterModule.forRoot(routes), HttpClientModule, BrowserModule],
+  imports: [RouterModule.forRoot(routes),BrowserModule],
 
   // Exporta as rotas para serem usadas no resto do aplicativo
   exports: [RouterModule],

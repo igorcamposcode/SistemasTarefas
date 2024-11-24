@@ -5,7 +5,6 @@ import {
   FormControl,
   FormGroup,
   FormsModule,
-  NonNullableFormBuilder,
   ReactiveFormsModule,
   ValidatorFn,
   Validators,
@@ -17,6 +16,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { AuthService } from '../services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-cadastro',
@@ -29,21 +29,30 @@ import { AuthService } from '../services/auth.service';
     NzIconModule,
     NzButtonModule,
     NzCheckboxModule,
+    HttpClientModule
   ],
   templateUrl: './cadastro.component.html',
   styleUrl: './cadastro.component.css',
 })
 export class CadastroComponent {
-  nome: FormControl<string> | undefined;
-  telefone: FormControl<string> | undefined;
-  email: FormControl<string> | undefined;
-  senha: FormControl<string> | undefined;
-  checkPassword: FormControl<string> | undefined;
+  nome: FormControl<String> | undefined;
+  telefone: FormControl<String> | undefined;
+  email: FormControl<String> | undefined;
+  senha: FormControl<String> | undefined;
+  checkPassword: FormControl<String> | undefined;
   acordo: FormControl<boolean> | undefined;
   validateForms: FormGroup;
   userService: any;
 
   submitForm(): void {
+    const usuario = {
+      nome: this.validateForms.get('nome')?.value,
+      telefone: this.validateForms.get('telefone')?.value,
+      email: this.validateForms.get('email')?.value,
+      senha: this.validateForms.get('senha')?.value,
+      checkPassword: this.validateForms.get('checkPassword')?.value,
+    };
+
     if (this.validateForms.valid) {
       console.log('submit', this.validateForms.value);
     } else {
@@ -84,19 +93,28 @@ export class CadastroComponent {
       email: ['', [Validators.email, Validators.required]],
       senha: ['', [Validators.required, Validators.minLength(7)]],
       checkPassword: ['',[Validators.required, this.confirmationValidator]],
-      acordo: [false],
+      acordo: [true],
     });
   }
+
+
 
   onSubmit() {
     if (this.validateForms.valid) {
       const formData = this.validateForms.value;
-      this.authService.registro(formData).subscribe({
-        next: (_res) => alert('Usuário cadastrado com sucesso!'),
-        error: (err) => alert(err.error.error || 'Erro ao registrar usuário'),
+
+      this.authService.criarUsuario(formData).subscribe({
+        next: (res) => {
+          alert('Usuário cadastrado com sucesso!');
+          this.validateForms.reset();
+        },
+        error: (err) => {
+          console.error('Erro ao cadastrar usuário:', err.error || err.message);
+          alert('Erro ao cadastrar usuário. Verifique os dados e tente novamente.');
+        },
       });
     } else {
-      alert('Por favor, preencha os campos corretamente.');
+      alert('Por favor, preencha todos os campos obrigatórios corretamente.');
     }
   }
 

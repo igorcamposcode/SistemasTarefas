@@ -133,7 +133,7 @@
       <!-- Botão de registro -->
       <nz-form-item nz-row class="register-area">
         <nz-form-control [nzSpan]="14" [nzOffset]="6">
-          <button nz-button nzType="primary" class="Registrar">
+          <button nz-button nzType="primary" class="Registrar" type="submit" [disabled]="validateForms.invalid">
             Registrar
           </button>
           <button

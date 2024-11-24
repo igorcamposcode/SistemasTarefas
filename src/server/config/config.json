@@ -5,8 +5,17 @@
     "database": "sistematarefas",
     "host": "localhost",
     "dialect": "mysql",
-    "logging": false
-  },
+    "logging": false,
+    "dialectOptions": {
+      "connectTimeout": 60000
+    },
+    "pool": {
+      "max": 5,
+      "min": 0,
+      "idle": 10000
+    }
+  }
+  ,
   "test": {
     "username": "starefassystem",
     "password": "ci@systemtarefas2024b",
