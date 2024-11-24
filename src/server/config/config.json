@@ -5,6 +5,7 @@
     "database": "sistematarefas",
     "host": "localhost",
     "dialect": "mysql",
+    "port": 3306,
     "logging": false,
     "dialectOptions": {
       "connectTimeout": 60000
@@ -21,13 +22,15 @@
     "password": "ci@systemtarefas2024b",
     "database": "sistematarefas",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "port": 3306
   },
   "production": {
    "username": "starefassystem",
     "password": "ci@systemtarefas2024b",
     "database": "sistematarefas",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "port": 3306
   }
 }
