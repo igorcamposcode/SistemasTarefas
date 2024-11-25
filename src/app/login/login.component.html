@@ -23,7 +23,7 @@ Fim de desenvolvimento: Novembro-Dezembro 2024
       nz-form
       [formGroup]="validateForms"
       class="login-form"
-      (ngSubmit)="submitForm();"
+      (ngSubmit)="submitForm();onSubmit()"
     >
       <!-- Campo de E-mail para login -->
       <nz-form-item>

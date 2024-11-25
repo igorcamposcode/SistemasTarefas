@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       telefone: {
-        type: DataTypes.CHAR(13),
+        type: DataTypes.CHAR(15),
         allowNull: true, // Opcional
       },
       email: {
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         unique: true, // E-mail único
       },
       senha: {
-        type: DataTypes.CHAR(15),
+        type: DataTypes.CHAR(60),
         allowNull: false,
       },
     },

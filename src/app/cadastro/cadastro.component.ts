@@ -87,17 +87,14 @@ export class CadastroComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router, private authService: AuthService  ) {
-    this.validateForms = this.fb.group({
-      nome: ['', Validators.required],
-      telefone: [''],
-      email: ['', [Validators.email, Validators.required]],
-      senha: ['', [Validators.required, Validators.minLength(7)]],
-      checkPassword: ['',[Validators.required, this.confirmationValidator]],
-      acordo: [true],
-    });
+      this.validateForms = this.fb.group({
+        nome: ['', Validators.required],
+        telefone: [''],
+        email: ['', [Validators.required, Validators.email]], // Validação do email
+        senha: ['', [Validators.required, Validators.minLength(8)]],
+        checkPassword: ['', Validators.required],
+      });
   }
-
-
 
   onSubmit() {
     if (this.validateForms.valid) {

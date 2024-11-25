@@ -22,13 +22,10 @@ import { AuthService } from '../services/auth.service';
 
 // Declaração da classe LoginComponent
 export class LoginComponent {
-onSubmit() {
-throw new Error('Method not implemented.');
-}
 
   email: string = '';
   senha: string = '';
-  error: string | null = null;
+  error: string | undefined = undefined;
 
   validateForms: FormGroup; // Define o formulário de validação como um grupo de controle
 
@@ -55,10 +52,30 @@ throw new Error('Method not implemented.');
     // Criação do formulário com três campos: userName, password e remember
     // 'Validators.required' garante que o campo é obrigatório
     this.validateForms = this.fb.group({
-      email: [null, [Validators.required]], // Campo de nome de usuário
-      password: [null, [Validators.required]], // Campo de senha
+      email: ['', [Validators.required, Validators.email]],
+      senha: ['', Validators.required],
       remember: [false] // Checkbox para "Lembrar-me", com valor inicial false
     });
+  }
+
+  onSubmit(): void {
+    if (this. validateForms.valid) {
+      const { email, senha } = this. validateForms.value;
+
+      this.authService.login(email, senha).subscribe({
+        next: (res) => {
+          this.authService.armazenarToken(res.token);
+          alert('Login bem-sucedido!');
+          this.router.navigate(['/home']); // Redireciona para a página inicial
+        },
+        error: (err) => {
+          console.error('Erro no login:', err);
+          alert('Falha no login. Verifique suas credenciais.');
+        },
+      });
+    } else {
+      alert('Por favor, preencha todos os campos.');
+    }
   }
 
 
