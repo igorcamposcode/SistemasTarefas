@@ -6,6 +6,7 @@ import { NgModule } from '@angular/core';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { RecuperarSenhaComponent } from './recuperar-senha/recuperar-senha.component';
 import { BrowserModule } from '@angular/platform-browser';
+import { AuthGuard } from './services/auth.guard';
 
 // Definindo as rotas do aplicativo
 export const routes: Routes = [
@@ -14,7 +15,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
 
   // Rota para o menu principal
-  { path: 'menu', component: MenuComponent },
+  { path: 'menu', component: MenuComponent, canActivate: [AuthGuard] },
 
   // Alteração no comportamento da rota minhas-tarefas:
   // Antes era utilizado mês e ano para agrupar as tarefas, agora:

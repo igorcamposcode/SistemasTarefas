@@ -7,6 +7,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { NzAutosizeDirective } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -43,7 +44,7 @@ throw new Error('Method not implemented.');
     this.isVisible = false;
   }
 
-  constructor(private router: Router){}
+  constructor(private router: Router,private authService: AuthService){}
 
   // Redireciona para página consulta
   CliqueMinhaTarefa(pageName: string){
@@ -51,6 +52,8 @@ throw new Error('Method not implemented.');
   }
   // Retorna ao login/Finaliza a sessão
   CliqueHome(pageName: string){
+    this.authService.removerToken(); // Remove o token
+    alert('Você saiu do sistema!');
     this.router.navigate([`${pageName}`]);
   }
 }

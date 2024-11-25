@@ -20,4 +20,24 @@ export class AuthService {
   listarUsuarios(): Observable<Object> {
     return this.http.get(`${API_PATH}`);
   }
+
+  login(email: string, senha: string): Observable<any> {
+    return this.http.post(`${API_PATH}/login`, { email, senha });
+  }
+
+  armazenarToken(token: string): void {
+    localStorage.setItem('token', token);
+  }
+
+  obterToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  removerToken(): void {
+    localStorage.removeItem('token');
+  }
+
+  estaAutenticado(): boolean {
+    return !!this.obterToken(); // Retorna verdadeiro se o token existir
+  }
 }

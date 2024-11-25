@@ -3,7 +3,8 @@ const bcrypt = require("bcrypt");
 const cors = require("cors");
 const { Usuario } = require("./models"); // Modelo Sequelize
 const sequelize = require("./database"); // Conexão com o banco
-
+const jwt = require("jsonwebtoken")
+const SECRET_KEY = 'ci@tarefassystem2024b'// Substitua por uma chave segura
 const app = express();
 const PORT = 3000;
 
@@ -17,20 +18,63 @@ app.use(cors({
 // Middleware para processar JSON
 app.use(express.json());
 
-// Rota para login
+// Endpoint de login
 app.post('/api/login', async (req, res) => {
   try {
     const { email, senha } = req.body;
-    const usuario = await User.findOne({ where: { email } });
 
-    if (!usuario || !(await bcrypt.compare(senha, usuario.senha))) {
-      return res.status(401).json({ error: 'Credenciais inválidas' });
+    // Verificar se o email existe no banco
+    const usuario = await Usuario.findOne({ where: { email } });
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuário não encontrado.' });
     }
 
-    const token = jwt.sign({ id: usuario.id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
-    res.json({ token });
+    // Comparar a senha fornecida com o hash armazenado
+    const senhaValida = await bcrypt.compare(senha, usuario.senha);
+    if (!senhaValida) {
+      return res.status(401).json({ error: 'Senha inválida.' });
+    }
+
+    // Gerar um token JWT
+    const token = jwt.sign(
+      { id: usuario.id, email: usuario.email },
+      SECRET_KEY,
+      { expiresIn: '2h' } // Token expira em 2 horas
+    );
+
+    res.status(200).json({
+      message: 'Login bem-sucedido.',
+      token,
+    });
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao realizar login' });
+    console.error('Erro ao efetuar login:', error);
+    res.status(500).json({ error: 'Erro ao efetuar login.', details: error.message });
+  }
+});
+
+function autenticarToken(req, res, next) {
+  const token = req.headers['authorization'];
+
+  if (!token) {
+    return res.status(401).json({ error: 'Acesso negado. Token não fornecido.' });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ error: 'Token inválido.' });
+    }
+
+    req.usuario = decoded; // Dados do token disponíveis na requisição
+    next();
+  });
+}
+
+app.get('/api/usuario', autenticarToken, async (req, res) => {
+  try {
+    const usuario = await Usuario.findAll();
+    res.status(200).json(usuario);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar usuários.', details: error.message });
   }
 });
 
