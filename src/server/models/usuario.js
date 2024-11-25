@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.CHAR(255),
         allowNull: false,
-        unique: true, // E-mail único
+        unique: true, // E-mail é único
       },
       senha: {
         type: DataTypes.CHAR(60),

@@ -17,6 +17,23 @@ app.use(cors({
 // Middleware para processar JSON
 app.use(express.json());
 
+// Rota para login
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email, senha } = req.body;
+    const usuario = await User.findOne({ where: { email } });
+
+    if (!usuario || !(await bcrypt.compare(senha, usuario.senha))) {
+      return res.status(401).json({ error: 'Credenciais inválidas' });
+    }
+
+    const token = jwt.sign({ id: usuario.id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao realizar login' });
+  }
+});
+
 // Rotas CRUD para o modelo Usuario
 
 // 1. Criar um novo usuário (CREATE)

@@ -58,27 +58,6 @@ export class LoginComponent {
     });
   }
 
-  onSubmit(): void {
-    if (this. validateForms.valid) {
-      const { email, senha } = this. validateForms.value;
-
-      this.authService.login(email, senha).subscribe({
-        next: (res) => {
-          this.authService.armazenarToken(res.token);
-          alert('Login bem-sucedido!');
-          this.router.navigate(['/home']); // Redireciona para a página inicial
-        },
-        error: (err) => {
-          console.error('Erro no login:', err);
-          alert('Falha no login. Verifique suas credenciais.');
-        },
-      });
-    } else {
-      alert('Por favor, preencha todos os campos.');
-    }
-  }
-
-
   //Método para navegação ao clicar no texto "Registre Agora", redireciona para a página especificada
   CliqueRegistrar(pageName: string) {
     this.router.navigate([`${pageName}`])
