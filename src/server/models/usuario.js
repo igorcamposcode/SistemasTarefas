@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true, // Opcional
       },
       email: {
-        type: DataTypes.CHAR(255),
+        type: DataTypes.STRING(255),
         allowNull: false,
         unique: true, // E-mail é único
       },
