@@ -78,6 +78,35 @@ app.get('/api/usuario', autenticarToken, async (req, res) => {
   }
 });
 
+// Endpoint para recuperação de senha
+app.post('/api/recuperar-senha', async (req, res) => {
+  try {
+    const { email, senha, checkPassword } = req.body;
+
+    // Verificar se o email existe no banco de dados
+    const usuario = await Usuario.findOne({ where: { email } });
+    if (!usuario) {
+      return res.status(404).json({ error: 'E-mail não cadastrado.' });
+    }
+
+    // Verificar se as senhas coincidem
+    if (senha !== checkPassword) {
+      return res.status(400).json({ error: 'As senhas não coincidem.' });
+    }
+
+    // Hash da nova senha
+    const senhaHash = await bcrypt.hash(senha, 10);
+
+    // Atualizar a senha no banco de dados
+    await Usuario.update({ senha: senhaHash }, { where: { email } });
+
+    res.status(200).json({ message: 'Senha atualizada com sucesso.' });
+  } catch (error) {
+    console.error('Erro ao recuperar senha:', error);
+    res.status(500).json({ error: 'Erro ao atualizar senha.', details: error.message });
+  }
+});
+
 // Rotas CRUD para o modelo Usuario
 
 // 1. Criar um novo usuário (CREATE)
@@ -119,7 +148,7 @@ app.get('/api/usuario', async (req, res) => {
     const usuario = await Usuario.findAll();
     res.status(200).json(usuario);
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao buscar usuários.', details: error.message });
+    res.status(500).json({ error: 'Erro ao buscar usuário.', details: error.message });
   }
 });
 

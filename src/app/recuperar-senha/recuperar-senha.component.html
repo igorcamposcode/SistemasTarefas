@@ -7,7 +7,7 @@
   <!-- Início do formulário de recuperação -->
   <form class="itens">
     <!-- Formulário com validação via formGroup -->
-    <form class="nz-form" [formGroup]="validateForms"  (ngSubmit)="submitForm()">
+    <form class="nz-form" [formGroup]="validateForms"  (ngSubmit)="submitForm();onSubmit()">
       <!-- Campo de e-mail cadastrado -->
       <nz-form-item>
         <!-- Rótulo do campo de e-mail -->
@@ -28,8 +28,8 @@
           <input
             nz-input
             type="password"
-            id="password"
-            formControlName="password"
+            id="senha"
+            formControlName="senha"
             (ngModelChange)="validateNewPassword()"
           />
         </nz-form-control>
@@ -60,7 +60,7 @@
       <!-- Botão de recuperação de senha -->
       <nz-form-item nz-row class="recover-area">
         <nz-form-control [nzSpan]="14" [nzOffset]="6">
-          <button nz-button nzType="primary" class="Recuperar">Confirmar Recuperação</button>
+          <button nz-button nzType="primary" class="Recuperar" >Confirmar Recuperação</button>
         </nz-form-control>
       </nz-form-item>
     </form>

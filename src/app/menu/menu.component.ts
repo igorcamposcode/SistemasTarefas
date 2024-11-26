@@ -8,13 +8,18 @@ import { NzAutosizeDirective } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { AuthService } from '../services/auth.service';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
 
 
 @Component({
   selector: 'app-menu',
   standalone: true,
   imports: [NzModalModule,NzButtonModule,NzFormModule,ReactiveFormsModule,
-   FormsModule,NzAutosizeDirective,NzDatePickerModule,NzSelectModule],
+   FormsModule,NzAutosizeDirective,NzDatePickerModule,NzSelectModule, NzAvatarModule, NzCardModule, NzIconModule, NzSwitchModule, NzSkeletonModule],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
@@ -29,6 +34,8 @@ throw new Error('Method not implemented.');
   selectedValue = null;
   isVisible = false;
   validateForms!: FormGroup<any>;
+
+  loading = false;
 
   CliqueTarefa(): void {
     this.isVisible = true;
