@@ -137,8 +137,8 @@ export class MenuComponent implements OnInit {
   }
 
   // Redireciona para "Minhas Tarefas"
-  CliqueMinhaTarefa(route: string) {
-    console.log('Redirecionando para:', route);
+  CliqueMinhaTarefa(pageName: string) {
+    this.router.navigate([`${pageName}`]);
     // Aqui você pode implementar lógica para redirecionar
   }
 
