@@ -9,124 +9,185 @@ import {
 } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-
+import { TaskService } from '../services/task.service';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    FormsModule,
-    NgFor,DatePipe,NgIf
-  ],
+  imports: [ReactiveFormsModule, FormsModule, NgFor, DatePipe, NgIf],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
 })
 export class MenuComponent implements OnInit {
   tarefas: any[] = []; // Lista de tarefas
-  tarefaForm: FormGroup; // Formulário reativo para tarefas
-  tarefaEditando: any = null; // Tarefa que está sendo editada
-  isModalVisible: boolean = true; // Controle de visibilidade do modal
-  prioridades: string[] = ['Muito Alta', 'Alta', 'Média', 'Baixa', 'Muito Baixa']; // Opções de prioridade
+  prioridades: any[] = []; // Lista de prioridades
+  tarefaForm!: FormGroup; // Formulário para tarefas
+  usuarioForm!: FormGroup; // Formulário para dados do usuário
+  isModalVisible: boolean = false; // Controle de visibilidade do modal de tarefas
+  isUsuarioModalVisible: boolean = false;
+  isEditarUsuarioModalVisible: boolean = false;
+  tarefaEditando: any = null; // Armazena a tarefa sendo editada
 
-  constructor(private fb: FormBuilder,private authService: AuthService, private router: Router) {
-    // Inicialização do formulário de tarefas
+  constructor(
+    private fb: FormBuilder,
+    private taskService: TaskService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  usuario = {
+    nome: '',
+    telefone: '',
+    email: '',
+  };
+
+  ngOnInit(): void {
+    this.inicializarFormularios();
+    this.carregarTarefas();
+    this.carregarPrioridades();
+    this.carregarDadosUsuario();
+  }
+
+  // Inicializa os formulários reativos
+  inicializarFormularios() {
     this.tarefaForm = this.fb.group({
       titulo: ['', [Validators.required]],
       descricao: ['', [Validators.required]],
-      prioridade: ['Média', [Validators.required]],
+      prioridade: ['', [Validators.required]],
       usuario: ['', [Validators.required]],
-      dataInicio: [{ value: '', disabled: true }], // Desativado para preenchimento automático
       dataFim: [''],
-      documento: [null], // Campo para anexar documento
+    });
+
+    this.usuarioForm = this.fb.group({
+      nome: ['', [Validators.required]],
+      telefone: [
+        '',
+        [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)],
+      ],
+      email: ['', [Validators.required, Validators.email]],
     });
   }
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
+
+  // Carrega as tarefas do backend
+  carregarTarefas() {
+    this.taskService.getTarefas().subscribe({
+      next: (dados) => (this.tarefas = dados),
+      error: (err) => console.error('Erro ao carregar tarefas:', err),
+    });
   }
 
-  // Abre o modal para criar uma nova tarefa
+  // Carrega as prioridades do backend
+  carregarPrioridades() {
+    this.taskService.getPrioridades().subscribe({
+      next: (dados) => (this.prioridades = dados),
+      error: (err) => console.error('Erro ao carregar prioridades:', err),
+    });
+  }
+
+  // Busca os dados do usuário logado pelo ID
+  carregarDadosUsuario() {
+    this.authService.getUsuarioId().subscribe({
+      next: (dados) => (this.usuario = dados),
+      error: (err) => console.error('Erro ao carregar usuário:', err),
+    });
+  }
+
+
+
+  // Abre o modal de exibição do usuário
+  abrirModalUsuario() {
+    this.isUsuarioModalVisible = true;
+  }
+
+  // Fecha o modal de exibição do usuário
+  fecharModalUsuario() {
+    this.isUsuarioModalVisible = false;
+  }
+
+// Abrir modal de edição
+abrirModalEditarUsuario() {
+  this.isUsuarioModalVisible = false;
+  this.isEditarUsuarioModalVisible = true;
+}
+
+// Fechar modal de edição
+fecharModalEditarUsuario() {
+  this.isEditarUsuarioModalVisible = false;
+}
+
+// Salvar alterações
+salvarDadosUsuario() {
+  if (this.usuarioForm.invalid) {
+    alert('Por favor, preencha os campos corretamente.');
+    return;
+  }
+  const dadosAtualizados = this.usuarioForm.value;
+  this.authService.atualizarUsuario(dadosAtualizados).subscribe({
+    next: () => {
+      alert('Dados do usuário atualizados com sucesso!');
+      this.fecharModalEditarUsuario();
+    },
+    error: (err) => console.error('Erro ao atualizar usuário:', err),
+  });
+}
+  // Abre o modal para criar ou editar uma tarefa
   CliqueTarefa() {
     this.isModalVisible = true;
-    this.tarefaEditando = null; // Reseta o estado de edição
-    this.tarefaForm.reset({
-      prioridade: 'Média', // Define valor padrão
-    });
+    this.tarefaEditando = null;
+    this.tarefaForm.reset();
   }
 
-  // Abre o modal para editar uma tarefa
-  editarTarefa(tarefa: any) {
-    this.isModalVisible = false;
-    this.tarefaEditando = tarefa;
-    this.tarefaForm.patchValue(tarefa); // Preenche o formulário com os dados da tarefa
-  }
-
-  // Salva ou edita a tarefa
+  // Salva uma nova tarefa ou atualiza uma existente
   salvarTarefa() {
     if (this.tarefaForm.invalid) {
-      // Verifica se o formulário é válido
+      alert('Por favor, preencha todos os campos corretamente.');
       return;
     }
 
-    const tarefa = this.tarefaForm.getRawValue(); // Pega os valores do formulário
+    const tarefa = this.tarefaForm.getRawValue();
 
-    if (!this.tarefaEditando) {
-      // Nova tarefa
-      tarefa.id = Date.now(); // Gera um ID único
-      tarefa.dataInicio = new Date(); // Define a data de início como o momento atual
-      tarefa.subTarefas = []; // Inicializa sub-tarefas
-      tarefa.estado = 'Em Progresso'; // Define o estado inicial
-      this.tarefas.push(tarefa); // Adiciona à lista de tarefas
+    if (this.tarefaEditando) {
+      this.taskService
+        .atualizarTarefa(this.tarefaEditando.id, tarefa)
+        .subscribe({
+          next: () => {
+            this.carregarTarefas();
+            this.fecharModal();
+          },
+          error: (err) => console.error('Erro ao atualizar tarefa:', err),
+        });
     } else {
-      // Edição de tarefa existente
-      const index = this.tarefas.findIndex((t) => t.id === this.tarefaEditando.id);
-      this.tarefas[index] = { ...this.tarefaEditando, ...tarefa }; // Atualiza os dados da tarefa
+      this.taskService.criarTarefa(tarefa).subscribe({
+        next: () => {
+          this.carregarTarefas();
+          this.fecharModal();
+        },
+        error: (err) => console.error('Erro ao criar tarefa:', err),
+      });
     }
-
-    this.fecharModal(); // Fecha o modal após salvar
   }
 
-  // Exclui uma tarefa
+  editarTarefa(tarefa: any) {
+    this.isModalVisible = false;
+    this.tarefaEditando = tarefa;
+    this.tarefaForm.patchValue(tarefa);
+  }
+
   excluirTarefa(id: number) {
-    this.tarefas = this.tarefas.filter((t) => t.id !== id); // Remove a tarefa com o ID correspondente
+    this.taskService.excluirTarefa(id).subscribe(() => this.carregarTarefas());
   }
-
-  // Fecha o modal e reseta o formulário
+  // Fechar o modal
   fecharModal() {
     this.isModalVisible = false;
-    this.tarefaForm.reset({
-      prioridade: 'Média', // Define o valor padrão para prioridade
-    });
-    this.tarefaEditando = true; // Reseta o estado de edição
+    this.tarefaForm.reset();
+    this.tarefaEditando = null;
   }
 
-  // Adiciona uma sub-tarefa
-  incluirSubTarefa(tarefa: any) {
-    const novaSubTarefa = {
-      id: Date.now(),
-      titulo: 'Nova Sub-Tarefa',
-      concluido: false,
-      dataInicio: new Date(),
-      dataFim: null,
-    };
-    tarefa.subTarefas.push(novaSubTarefa); // Adiciona à lista de sub-tarefas
-  }
-
-  // Calcula o progresso da tarefa com base nas sub-tarefas
-  calcularProgresso(tarefa: any) {
-    if (!tarefa.subTarefas || tarefa.subTarefas.length === 0) {
-      return 0; // Sem sub-tarefas, progresso é 0%
-    }
-
-    const concluido = tarefa.subTarefas.filter((st: any) => st.concluido).length;
-    return Math.round((concluido / tarefa.subTarefas.length) * 100); // Calcula o percentual
-  }
-
-  // Lida com a seleção de arquivos para upload
+  // Lidar com seleção de arquivo
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
-      const fakeUploadUrl = URL.createObjectURL(file); // Simula o upload com uma URL local
+      const fakeUploadUrl = URL.createObjectURL(file);
       this.tarefaForm.patchValue({
         documento: {
           nome: file.name,
@@ -136,16 +197,15 @@ export class MenuComponent implements OnInit {
     }
   }
 
-  // Redireciona para "Minhas Tarefas"
+  // Navegar para "Minhas Tarefas"
   CliqueMinhaTarefa(pageName: string) {
-    this.router.navigate([`${pageName}`]);
-    // Aqui você pode implementar lógica para redirecionar
+    this.router.navigate([pageName]);
   }
 
-  // Retorna ao login/Finaliza a sessão
+  // Encerrar sessão e sair
   CliqueHome(pageName: string) {
-    this.authService.removerToken(); // Remove o token
+    this.authService.removerToken();
     alert('Você saiu do sistema!');
-    this.router.navigate([`${pageName}`]);
+    this.router.navigate([pageName]);
   }
 }

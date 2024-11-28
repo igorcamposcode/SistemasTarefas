@@ -1,12 +1,34 @@
-module.exports = (sequelize, DataTypes) => {
-  const Prioridade = sequelize.define('Prioridade', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    nome: { type: DataTypes.STRING(100), allowNull: false },
-  }, { tableName: 'prioridade', timestamps: false });
+'use strict';
+const { Model } = require('sequelize');
 
-  Prioridade.associate = (models) => {
-    Prioridade.hasMany(models.Tarefa, { foreignKey: 'idprioridade' });
-  };
+module.exports = (sequelize, DataTypes) => {
+  class Prioridade extends Model {
+    static associate(models) {
+      Prioridade.hasMany(models.Tarefa, {
+        foreignKey: 'idprioridade',
+      });
+    }
+  }
+
+  Prioridade.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      nome: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Prioridade',
+      tableName: 'prioridade',
+      timestamps: false,
+    }
+  );
 
   return Prioridade;
 };

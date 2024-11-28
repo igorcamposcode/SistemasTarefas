@@ -1,40 +1,51 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('TarefasEstados', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
+    await queryInterface.createTable('tarefasestado', {
       idtarefa: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        references: {
+          model: 'tarefa',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       idusuario: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        references: {
+          model: 'usuario',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       idestado: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        references: {
+          model: 'estado',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       dthrinicio: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        primaryKey: true,
+        allowNull: false,
       },
       dthrfim: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: true,
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('TarefasEstados');
-  }
+
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('tarefasestado');
+  },
 };

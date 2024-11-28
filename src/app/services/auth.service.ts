@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Tarefa } from '../menu/menu.model'
 
 export const API_PATH = 'http://localhost:3000/api';
 
@@ -19,11 +20,28 @@ export class AuthService {
   listarUsuarios(): Observable<Object> {
     return this.http.get(`${API_PATH}`);
   }
+// Realiza o login e retorna os dados do usuário e token
+login( email: string, senha: string ): Observable<any> {
+  return this.http.post(`${API_PATH}/login`, { email, senha })
+}
 
-  login(email: string, senha: string): Observable<any> {
-    return this.http.post(`${API_PATH}/login`, { email, senha });
-  }
+// Armazena o token e o ID do usuário no Local Storage
+armazenarCredenciais(token: string, userId: number) {
+  localStorage.setItem('authToken', token);
+  localStorage.setItem('userId', userId.toString());
+}
 
+// Obtém o ID do usuário logado armazenado no Local Storage
+ // Busca os dados do usuário pelo ID
+ getUsuarioId(): Observable<any> {
+  return this.http.get(`${API_PATH}/${1}`);
+}
+
+// Limpa as credenciais do usuário
+logout() {
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('userId');
+}
   armazenarToken(token: string): void {
     localStorage.setItem('token', token);
   }
@@ -52,19 +70,14 @@ export class AuthService {
     });
   }
 
-  listarTarefas(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_PATH}`);
+  // Obtém os dados do usuário logado
+  getUsuario(): Observable<any> {
+    return this.http.get(`${API_PATH}`); // Realiza um GET para buscar os dados do usuário
   }
 
-  criarTarefa(tarefa: any): Observable<any> {
-    return this.http.post(`${API_PATH}`, tarefa);
+  // Atualiza os dados do usuário
+  atualizarUsuario(usuario: Object): Observable<Object> {
+    return this.http.put(`${API_PATH}/usuario`, usuario); // Realiza um PUT para atualizar os dados do usuário
   }
 
-  atualizarTarefa(id: number, tarefa: any): Observable<any> {
-    return this.http.put(`${API_PATH}/${id}`, tarefa);
-  }
-
-  excluirTarefa(id: number): Observable<any> {
-    return this.http.delete(`${API_PATH}/${id}`);
-  }
 }

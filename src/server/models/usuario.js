@@ -3,8 +3,10 @@ const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Usuario extends Model {
-    static associate(_models) {
-      // Associações podem ser definidas aqui
+    static associate(models) {
+      Usuario.hasMany(models.Tarefa, {
+        foreignKey: 'idusuario',
+      });
     }
   }
 
@@ -21,12 +23,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       telefone: {
         type: DataTypes.CHAR(15),
-        allowNull: true, // Opcional
+        allowNull: true,
       },
       email: {
         type: DataTypes.STRING(255),
         allowNull: false,
-        unique: true, // E-mail é único
+        unique: true,
       },
       senha: {
         type: DataTypes.CHAR(60),
@@ -36,11 +38,10 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'Usuario',
-      tableName: 'usuario', // Nome da tabela no banco
-      timestamps: false, // Remove colunas createdAt e updatedAt
+      tableName: 'usuario',
+      timestamps: false,
     }
   );
 
   return Usuario;
 };
-

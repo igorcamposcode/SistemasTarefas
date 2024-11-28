@@ -1,46 +1,52 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Documentos', {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable('documento', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      id: {
-        type: Sequelize.INTEGER
       },
       idtarefa: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        references: {
+          model: 'tarefa',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       idusuario: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        references: {
+          model: 'usuario',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       nome: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(100),
+        allowNull: false,
       },
       caminho: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(255),
+        allowNull: false,
       },
       extensao: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(255),
+        allowNull: false,
       },
       tamanho: {
-        type: Sequelize.STRING
-      },
-      createdAt: {
+        type: Sequelize.STRING(255),
         allowNull: false,
-        type: Sequelize.DATE
       },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Documentos');
-  }
+
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('documento');
+  },
 };

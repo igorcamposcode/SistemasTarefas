@@ -1,31 +1,21 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Prioridades', {
+    await queryInterface.createTable('prioridade', {
       id: {
-        allowNull: false,
+        type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      id: {
-        type: Sequelize.INTEGER
       },
       nome: {
-        type: Sequelize.STRING
-      },
-      createdAt: {
+        type: Sequelize.STRING(100),
         allowNull: false,
-        type: Sequelize.DATE
       },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Prioridades');
-  }
+
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('prioridade');
+  },
 };

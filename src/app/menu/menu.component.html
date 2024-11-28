@@ -4,9 +4,147 @@
 
   <!-- Botões de Ações -->
   <div class="d-flex justify-content-center gap-3 mb-4">
-    <button class="btn btn-primary" (click)="CliqueTarefa()">Nova Tarefa</button>
-    <button class="btn btn-secondary" (click)="CliqueMinhaTarefa('minhas-tarefas')">Minhas Tarefas</button>
+    <button
+      class="btn btn-primary"
+      (click)="abrirModalUsuario()"
+    >
+      {{ usuario.nome }} Dados do usuário {{ usuario.telefone }}
+    </button>
+    <button class="btn btn-primary" (click)="isModalVisible = true">
+      Nova Tarefa
+    </button>
+    <button
+      class="btn btn-secondary"
+      (click)="CliqueMinhaTarefa('minhas-tarefas')"
+    >
+      Minhas Tarefas
+    </button>
     <button class="btn btn-danger" (click)="CliqueHome('login')">Sair</button>
+  </div>
+
+  <!-- Modal para Exibir Dados do Usuário -->
+  <div
+    class="modal fade"
+    id="usuarioModal"
+    tabindex="-1"
+    aria-labelledby="usuarioModalLabel"
+    aria-hidden="true"
+    [class.show]="isUsuarioModalVisible"
+    [style.display]="isUsuarioModalVisible ? 'block' : 'none'"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="usuarioModalLabel">Dados do Usuário</h5>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Fechar"
+            (click)="fecharModalUsuario()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Nome:</strong> {{ usuario.nome }}</p>
+          <p><strong>Telefone:</strong> {{ usuario.telefone }}</p>
+          <p><strong>Email:</strong> {{ usuario.email }}</p>
+          <button
+            class="btn btn-primary mt-3"
+            (click)="abrirModalEditarUsuario()"
+          >
+            Alterar Dados do Usuário
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="fecharModalUsuario()"
+          >
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Editar Dados do Usuário -->
+  <div
+    class="modal fade"
+    id="editarUsuarioModal"
+    tabindex="-1"
+    aria-labelledby="editarUsuarioModalLabel"
+    aria-hidden="true"
+    [class.show]="isEditarUsuarioModalVisible"
+    [style.display]="isEditarUsuarioModalVisible ? 'block' : 'none'"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editarUsuarioModalLabel">
+            Alterar Dados do Usuário
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Fechar"
+            (click)="fecharModalEditarUsuario()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="usuarioForm">
+            <!-- Nome -->
+            <div class="mb-3">
+              <label for="nome" class="form-label">Nome</label>
+              <input
+                id="nome"
+                type="text"
+                class="form-control"
+                formControlName="nome"
+                placeholder="Digite seu nome"
+              />
+            </div>
+            <!-- Telefone -->
+            <div class="mb-3">
+              <label for="telefone" class="form-label">Telefone</label>
+              <input
+                id="telefone"
+                type="text"
+                class="form-control"
+                formControlName="telefone"
+                placeholder="Digite seu telefone"
+              />
+            </div>
+            <!-- Email -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                id="email"
+                type="email"
+                class="form-control"
+                formControlName="email"
+                placeholder="Digite seu email"
+              />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="fecharModalEditarUsuario()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="salvarDadosUsuario()"
+          >
+            Salvar Alterações
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Modal para Cadastro de Tarefas -->
@@ -22,52 +160,114 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="tarefaModalLabel">{{ tarefaEditando ? 'Editar Tarefa' : 'Nova Tarefa' }}</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="fecharModal()"></button>
+          <h5 class="modal-title" id="tarefaModalLabel">
+            {{ tarefaEditando ? "Editar Tarefa" : "Nova Tarefa" }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="fecharModal()"
+          ></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="tarefaForm">
             <!-- Nome da Tarefa -->
             <div class="mb-3">
               <label for="titulo" class="form-label">Título</label>
-              <input id="titulo" type="text" class="form-control" formControlName="titulo" />
+              <input
+                id="titulo"
+                type="text"
+                class="form-control"
+                formControlName="titulo"
+              />
             </div>
             <!-- Descrição -->
             <div class="mb-3">
               <label for="descricao" class="form-label">Descrição</label>
-              <textarea id="descricao" class="form-control" formControlName="descricao"></textarea>
+              <textarea
+                id="descricao"
+                class="form-control"
+                formControlName="descricao"
+              ></textarea>
             </div>
             <!-- Prioridade -->
             <div class="mb-3">
               <label for="prioridade" class="form-label">Prioridade</label>
-              <select id="prioridade" class="form-select" formControlName="prioridade">
-                <option *ngFor="let prioridade of prioridades" [value]="prioridade">{{ prioridade }}</option>
+              <select
+                id="prioridade"
+                class="form-select"
+                formControlName="prioridade"
+              >
+                <option
+                  *ngFor="let prioridade of prioridades"
+                  [value]="prioridade"
+                >
+                  {{ prioridade }}
+                </option>
               </select>
             </div>
             <!-- Usuário Responsável -->
             <div class="mb-3">
-              <label for="usuario" class="form-label">Usuário Responsável</label>
-              <input id="usuario" type="text" class="form-control" formControlName="usuario" />
+              <label for="usuario" class="form-label"
+                >Usuário Responsável</label
+              >
+              <input
+                id="usuario"
+                type="text"
+                class="form-control"
+                formControlName="usuario"
+              />
             </div>
             <!-- Datas -->
             <div class="mb-3">
-              <label for="dataInicio" class="form-label">Data e Hora de Início</label>
-              <input id="dataInicio" type="datetime-local" class="form-control" formControlName="dataInicio" readonly />
+              <label for="dataInicio" class="form-label"
+                >Data e Hora de Início</label
+              >
+              <input
+                id="dataInicio"
+                type="datetime-local"
+                class="form-control"
+                formControlName="dataInicio"
+                readonly
+              />
             </div>
             <div class="mb-3">
               <label for="dataFim" class="form-label">Data e Hora de Fim</label>
-              <input id="dataFim" type="datetime-local" class="form-control" formControlName="dataFim" />
+              <input
+                id="dataFim"
+                type="datetime-local"
+                class="form-control"
+                formControlName="dataFim"
+              />
             </div>
             <!-- Documento -->
             <div class="mb-3">
               <label for="documento" class="form-label">Anexar Documento</label>
-              <input id="documento" type="file" class="form-control" (change)="onFileSelected($event)" />
+              <input
+                id="documento"
+                type="file"
+                class="form-control"
+                (change)="onFileSelected($event)"
+              />
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="fecharModal()">Cancelar</button>
-          <button type="button" class="btn btn-primary" (click)="salvarTarefa()">Salvar</button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="fecharModal()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="salvarTarefa()"
+          >
+            Salvar
+          </button>
         </div>
       </div>
     </div>
@@ -77,27 +277,43 @@
   <div class="row">
     <div *ngFor="let tarefa of tarefas" class="col-md-4 mb-4">
       <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
           <span>{{ tarefa.titulo }}</span>
           <div>
-            <button class="btn btn-sm btn-outline-secondary me-2" (click)="editarTarefa(tarefa)">Editar</button>
-            <button class="btn btn-sm btn-outline-danger" (click)="excluirTarefa(tarefa.id)">Excluir</button>
+            <button
+              class="btn btn-sm btn-outline-secondary me-2"
+              (click)="editarTarefa(tarefa)"
+            >
+              Editar
+            </button>
+            <button
+              class="btn btn-sm btn-outline-danger"
+              (click)="excluirTarefa(tarefa.id)"
+            >
+              Excluir
+            </button>
           </div>
         </div>
         <div class="card-body">
           <h5 class="card-title">Descrição</h5>
           <p class="card-text">{{ tarefa.descricao }}</p>
           <p><strong>Usuário Responsável:</strong> {{ tarefa.usuario }}</p>
-          <p><strong>Início:</strong> {{ tarefa.dataInicio | date: 'short' }}</p>
-          <p><strong>Fim:</strong> {{ tarefa.dataFim | date: 'short' }}</p>
+          <p>
+            <strong>Início:</strong> {{ tarefa.dataInicio | date : "short" }}
+          </p>
+          <p><strong>Fim:</strong> {{ tarefa.dataFim | date : "short" }}</p>
           <p><strong>Prioridade:</strong> {{ tarefa.prioridade }}</p>
           <p><strong>Status:</strong> {{ tarefa.estado }}</p>
           <p *ngIf="tarefa.documento">
             <strong>Documento:</strong>
-            <a [href]="tarefa.documento.url" target="_blank">{{ tarefa.documento.nome }}</a>
+            <a [href]="tarefa.documento.url" target="_blank">{{
+              tarefa.documento.nome
+            }}</a>
           </p>
           <div class="progress mb-3">
-            <div
+      <!--  <div
               class="progress-bar"
               role="progressbar"
               [style.width.%]="calcularProgresso(tarefa)"
@@ -107,11 +323,11 @@
               aria-valuemax="100"
             >
               {{ calcularProgresso(tarefa) }}%
-            </div>
+            </div> -->
           </div>
-          <button class="btn btn-sm btn-outline-primary" (click)="incluirSubTarefa(tarefa)">+ Adicionar Sub-Tarefa</button>
+    <!-- <button class="btn btn-sm btn-outline-primary" (click)="incluirSubTarefa(tarefa)">+ Adicionar Sub-Tarefa</button>-->
         </div>
       </div>
-    </div>
+    </div>    
   </div>
 </div>

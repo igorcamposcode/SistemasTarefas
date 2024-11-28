@@ -1,12 +1,34 @@
-module.exports = (sequelize, DataTypes) => {
-  const Estado = sequelize.define('Estado', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    nome: { type: DataTypes.STRING(100), allowNull: false },
-  }, { tableName: 'estado', timestamps: false });
+'use strict';
+const { Model } = require('sequelize');
 
-  Estado.associate = (models) => {
-    Estado.hasMany(models.TarefasEstado, { foreignKey: 'idestado' });
-  };
+module.exports = (sequelize, DataTypes) => {
+  class Estado extends Model {
+    static associate(models) {
+      Estado.hasMany(models.TarefasEstado, {
+        foreignKey: 'idestado',
+      });
+    }
+  }
+
+  Estado.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      nome: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Estado',
+      tableName: 'estado',
+      timestamps: false,
+    }
+  );
 
   return Estado;
 };
