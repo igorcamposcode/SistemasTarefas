@@ -228,10 +228,10 @@ function autenticarToken(req, res, next) {
   });
 }
 
-// Endpoint para atualizar os dados do usuário autenticado;
+// Endpoint para atualizar os dados do usuário autenticado
 
 // Atualizar usuário autenticado
-app.put('/api/usuario/:id', autenticarToken, async (req, res) => {
+app.put('/api/usuario/', autenticarToken, async (req, res) => {
   try {
     const { id } = req.usuario; // Obtém o ID do token JWT
     const { nome, telefone, email } = req.body;
@@ -251,7 +251,25 @@ app.put('/api/usuario/:id', autenticarToken, async (req, res) => {
   }
 });
 
+function autenticarToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  if (!authHeader) {
+    console.error('Token não fornecido.');
+    return res.status(401).json({ error: 'Token não fornecido.' });
+  }
 
+  const token = authHeader.split(' ')[1];
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      console.error('Token inválido ou expirado:', err.message);
+      return res.status(403).json({ error: 'Token inválido ou expirado.' });
+    }
+
+    console.log('Token válido. Usuário ID:', decoded.id);
+    req.usuario = decoded; // Adiciona o ID do usuário à requisição
+    next();
+  });
+}
 
 function verificarToken(req, res, next) {
   try {
