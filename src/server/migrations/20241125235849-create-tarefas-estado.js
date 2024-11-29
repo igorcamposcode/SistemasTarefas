@@ -5,47 +5,43 @@ module.exports = {
     await queryInterface.createTable('tarefasestado', {
       idtarefa: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
+        allowNull: false,
         references: {
           model: 'tarefa',
           key: 'id',
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        primaryKey: true,
       },
       idusuario: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
+        allowNull: false,
         references: {
           model: 'usuario',
           key: 'id',
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        primaryKey: true,
       },
       idestado: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
+        allowNull: false,
         references: {
           model: 'estado',
           key: 'id',
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        primaryKey: true,
       },
       dthrinicio: {
         type: Sequelize.DATE,
-        primaryKey: true,
         allowNull: false,
+        primaryKey: true,
       },
       dthrfim: {
         type: Sequelize.DATE,
-        allowNull: true,
       },
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
+  async down(queryInterface) {
     await queryInterface.dropTable('tarefasestado');
   },
 };

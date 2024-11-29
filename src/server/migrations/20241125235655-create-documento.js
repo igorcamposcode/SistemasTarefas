@@ -1,52 +1,49 @@
 'use strict';
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable('documento', {
       id: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         primaryKey: true,
       },
       idtarefa: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
+        allowNull: false,
         references: {
           model: 'tarefa',
           key: 'id',
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
       },
       idusuario: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
+        allowNull: false,
         references: {
           model: 'usuario',
           key: 'id',
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
       },
-      nome: {
+      Nome: {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      caminho: {
-        type: Sequelize.STRING(255),
+      Caminho: {
+        type: Sequelize.CHAR(255),
         allowNull: false,
       },
-      extensao: {
-        type: Sequelize.STRING(255),
+      Extensao: {
+        type: Sequelize.CHAR(255),
         allowNull: false,
       },
-      tamanho: {
-        type: Sequelize.STRING(255),
+      Tamanho: {
+        type: Sequelize.CHAR(255),
         allowNull: false,
       },
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
+  async down(queryInterface) {
     await queryInterface.dropTable('documento');
   },
 };

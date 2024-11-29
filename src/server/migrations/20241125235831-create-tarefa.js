@@ -7,6 +7,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
+        allowNull: false,
+        unique: true,
       },
       idusuario: {
         type: Sequelize.INTEGER,
@@ -15,18 +17,13 @@ module.exports = {
           model: 'usuario',
           key: 'id',
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
       },
       idmae: {
         type: Sequelize.INTEGER,
-        allowNull: true,
         references: {
           model: 'tarefa',
           key: 'id',
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
       },
       idprioridade: {
         type: Sequelize.INTEGER,
@@ -35,8 +32,6 @@ module.exports = {
           model: 'prioridade',
           key: 'id',
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
       },
       titulo: {
         type: Sequelize.STRING(255),
@@ -48,16 +43,14 @@ module.exports = {
       },
       dthrfim: {
         type: Sequelize.DATE,
-        allowNull: true,
       },
       descricao: {
         type: Sequelize.TEXT,
-        allowNull: true,
       },
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
+  async down(queryInterface) {
     await queryInterface.dropTable('tarefa');
   },
 };
