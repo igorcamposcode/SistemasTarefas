@@ -8,7 +8,7 @@
       class="btn btn-primary"
       (click)="abrirModalUsuario()"
     >
-      {{ usuario.nome }} Dados do usuário {{ usuario.telefone }}
+   Bem Vindo:   {{ usuario.nome }}  |  {{ usuario.telefone }}
     </button>
     <button class="btn btn-primary" (click)="isModalVisible = true">
       Nova Tarefa
@@ -301,7 +301,7 @@
           <p class="card-text">{{ tarefa.descricao }}</p>
           <p><strong>Usuário Responsável:</strong> {{ tarefa.usuario }}</p>
           <p>
-            <strong>Início:</strong> {{ tarefa.dataInicio | date : "short" }}
+            <strong>Início:</strong> {{ tarefa.dthrinicio | date : "short" }}
           </p>
           <p><strong>Fim:</strong> {{ tarefa.dataFim | date : "short" }}</p>
           <p><strong>Prioridade:</strong> {{ tarefa.prioridade }}</p>
@@ -313,7 +313,7 @@
             }}</a>
           </p>
           <div class="progress mb-3">
-      <!--  <div
+      <div
               class="progress-bar"
               role="progressbar"
               [style.width.%]="calcularProgresso(tarefa)"
@@ -323,9 +323,9 @@
               aria-valuemax="100"
             >
               {{ calcularProgresso(tarefa) }}%
-            </div> -->
+            </div>
           </div>
-    <!-- <button class="btn btn-sm btn-outline-primary" (click)="incluirSubTarefa(tarefa)">+ Adicionar Sub-Tarefa</button>-->
+     <button class="btn btn-sm btn-outline-primary" (click)="incluirSubTarefa(tarefa)">+ Adicionar Sub-Tarefa</button>
         </div>
       </div>
     </div>    

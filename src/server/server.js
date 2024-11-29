@@ -141,6 +141,7 @@ app.post('/api/usuario', async (req, res) => {
   }
 });
 
+
 // Endpoint para buscar os dados do usuário pelo ID
 app.get('/api/usuario/:id', async (req, res) => {
   try {
@@ -157,8 +158,21 @@ app.get('/api/usuario/:id', async (req, res) => {
   }
 });
 
+// Buscar usuário por ID
+app.get('/api/usuario/:id', autenticarToken, async (req, res) => {
+  try {
+    const usuario = await Usuario.findByPk(req.params.id);
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuário não encontrado.' });
+    }
+    res.json(usuario);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar usuário.', details: error.message });
+  }
+});
+
 // Exemplo de autenticação (retorna ID e token)
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { email, senha } = req.body;
 
   try {
@@ -205,7 +219,7 @@ app.get('/api/usuario', async (req, res) => {
 });
 
 // 4. Deletar um usuário (DELETE)
-/* app.delete('/api/usuario/:id', async (req, res) => {
+ app.delete('/api/usuario/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -219,7 +233,7 @@ app.get('/api/usuario', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Erro ao deletar usuário.', details: error.message });
   }
-});*/
+});
 
 // Sincronizar o banco de dados e iniciar o servidor
 sequelize.sync({ alter: true })

@@ -8,38 +8,34 @@ export const API_PATH = 'http://localhost:3000/api';
   providedIn: "root",
 })
 export class TaskService {
+  atualizarTarefa(id: any, tarefa: any) {
+    return this.http.post(`${API_PATH}/tarefas`,tarefa);
+  }
 
   constructor(private http: HttpClient) {}
 
-  // Obter todas as tarefas
-  getTarefas(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_PATH}/tarefa`);
+  obterEstados(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_PATH}/estados`);
   }
 
-  // Criar nova tarefa
-  criarTarefa(tarefa: Object): Observable<Object> {
-    return this.http.post(`${API_PATH}/tarefa`, tarefa);
+  obterPrioridades(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_PATH}/prioridades`);
   }
 
-  // Atualizar tarefa existente
-  atualizarTarefa(id: number, tarefa: any): Observable<any> {
-    return this.http.put(`${API_PATH}/tarefa/${id}`, tarefa);
+  obterTarefas(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_PATH}/tarefas`);
   }
 
+  criarTarefa(tarefa: any): Observable<any> {
+    return this.http.post(`${API_PATH}/tarefas`, tarefa);
+  }
+
+  atualizarEstadoTarefa(idtarefa: number, idestado: number): Observable<any> {
+    return this.http.put(`${API_PATH}/tarefaEstado/${idtarefa}`, { idestado, dthrfim: new Date() });
+  }
   // Excluir tarefa
   excluirTarefa(id: number): Observable<any> {
     return this.http.delete(`${API_PATH}/tarefa/${id}`);
-  }
-
-
-  // Obter dados do usuário
-  getUsuario(): Observable<any> {
-    return this.http.get(`${API_PATH}/usuario`);
-  }
-
-  // Atualizar dados do usuário
-  atualizarUsuario(usuario: any): Observable<any> {
-    return this.http.put(`${API_PATH}/usuario`, usuario);
   }
 
   // Obter prioridades

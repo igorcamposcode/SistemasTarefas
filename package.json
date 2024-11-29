@@ -21,6 +21,7 @@
     "@po-ui/ng-components": "^18.4.0",
     "@po-ui/ng-templates": "^18.4.0",
     "bootstrap": "^5.3.3",
+    "jwt-decode": "^4.0.0",
     "mysql": "^2.18.1",
     "ng-zorro-antd": "^18.1.1",
     "ngx-bootstrap": "^18.0.2",
