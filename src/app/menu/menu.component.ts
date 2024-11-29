@@ -20,7 +20,8 @@ import { Tarefa, Prioridade, Usuario } from '../menu/menu.model';
   styleUrl: './menu.component.css',
 })
 export class MenuComponent implements OnInit {
-  usuario: any = {}; // Armazena os dados do usuário
+
+  usuario: any = {}; // Dados do usuário logado
   tarefas: any[] = []; // Lista de tarefas do usuário
   prioridades: string[] = []; // Prioridades disponíveis (ex.: Muito alta, Alta)
   estados: string[] = []; // Estados disponíveis (ex.: Aberto, Concluído)
@@ -74,25 +75,25 @@ inicializarFormularios(): void {
   });
 }
 
-  /** Carrega dados do usuário logado */
-  carregarUsuario(): void {
-    try {
-      const idUsuario = this.authService.obterIdUsuarioLogado(); // Obtém o ID do usuário logado
-      this.authService.obterUsuarioPorId(idUsuario).subscribe({
-        next: (res: any) => {
-          this.usuario = res; // Armazena os dados do usuário
-          console.log('Dados do usuário carregados:', this.usuario);
-        },
-        error: (err) => {
-          console.error('Erro ao carregar dados do usuário:', err);
-          alert('Erro ao carregar dados do usuário.');
-        },
-      });
-    } catch (err: any) {
-      console.error(err.message);
-      alert(err.message);
-    }
+ /** Carrega os dados do usuário logado */
+ carregarUsuario(): void {
+  try {
+    const idUsuario = this.authService.obterIdUsuarioLogado();
+    this.authService.obterUsuarioPorId(idUsuario).subscribe({
+      next: (res) => {
+        this.usuario = res;
+        this.usuarioForm.patchValue(this.usuario); // Preenche o formulário
+      },
+      error: (err) => {
+        console.error('Erro ao carregar usuário:', err);
+        alert('Erro ao carregar os dados do usuário.');
+      },
+    });
+  } catch (error) {
+    console.error('Erro ao obter ID do usuário logado:', error);
+    alert('Erro ao carregar o usuário. Faça login novamente.');
   }
+}
 
   /** Carrega a lista de tarefas do usuário */
   carregarTarefas(): void {
@@ -115,30 +116,26 @@ inicializarFormularios(): void {
     });
   }
 
-  /** Salva os dados do usuário após edição */
-  salvarDadosUsuario(): void {
-    if (this.usuarioForm.invalid) {
-      alert('Preencha todos os campos corretamente antes de salvar.');
-      return;
-    }
-
-    const dadosAtualizados = this.usuarioForm.value;
-
-    this.authService.atualizarUsuario(this.usuario.id, dadosAtualizados).subscribe({
-      next: () => {
-        alert('Seus dados foram atualizados com sucesso!');
-        this.carregarUsuario(); // Atualiza os dados do usuário no frontend
-        this.fecharModalEditarUsuario(); // Fecha o modal de edição
-      },
-      error: (err) => {
-        console.error('Erro ao atualizar os dados do usuário:', err);
-        const mensagemErro = err.status === 400
-          ? 'Erro na validação dos dados. Verifique os campos e tente novamente.'
-          : 'Ocorreu um erro inesperado ao atualizar os dados. Tente novamente mais tarde.';
-        alert(mensagemErro);
-      },
-    });
+ /** Salva os dados atualizados do usuário */
+ salvarDadosUsuario(): void {
+  if (this.usuarioForm.invalid) {
+    alert('Preencha todos os campos corretamente.');
+    return;
   }
+
+  const dadosAtualizados = this.usuarioForm.value;
+
+  this.authService.atualizarUsuario(dadosAtualizados).subscribe({
+    next: (res) => {
+      alert(res.message || 'Dados atualizados com sucesso!');
+      this.carregarUsuario(); // Atualiza os dados no formulário
+    },
+    error: (err) => {
+      console.error('Erro ao atualizar usuário:', err);
+      alert('Erro ao atualizar os dados. Tente novamente.');
+    },
+  });
+}
 
   /** Abre o modal para exibir os dados do usuário */
   abrirModalUsuario(): void {

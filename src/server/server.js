@@ -189,24 +189,94 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Endpoint para atualizar os dados do usuário
-app.put('/api/usuario', async (req, res) => {
+app.put('/api/usuario/:id', verificarToken, async (req, res) => {
+  const { id } = req.params;
+  const usuarioId = req.usuario; // ID do usuário obtido do token
+
+  // Verifique se o usuário está autorizado a atualizar os dados
+  if (parseInt(id) !== usuario) {
+    return res.status(403).json({ message: 'Você não tem permissão para atualizar este usuário.' });
+  }
+
+  // Atualiza os dados do usuário no banco
   try {
+    const usuarioAtualizado = await Usuario.update(req.body, { where: { id } });
+    return res.json(usuarioAtualizado);
+  } catch (error) {
+    return res.status(500).json({ message: 'Erro ao atualizar usuário.' });
+  }
+});
+
+// Middleware para verificar o token JWT
+function autenticarToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+      return res.status(401).json({ mensagem: 'Token ausente!' });
+  }
+
+  jwt.verify(token, 'ci@tarefassystem2024b', (err, decoded) => {
+      if (err) {
+          if (err.name === 'TokenExpiredError') {
+              return res.status(403).json({ mensagem: 'Token expirado!' });
+          }
+          return res.status(403).json({ mensagem: 'Token inválido!' });
+      }
+      req.usuario = decoded.id; // Salva o ID do usuário na requisição
+      next();
+  });
+}
+
+// Endpoint para atualizar os dados do usuário autenticado;
+
+// Atualizar usuário autenticado
+app.put('/api/usuario/:id', autenticarToken, async (req, res) => {
+  try {
+    const { id } = req.usuario; // Obtém o ID do token JWT
     const { nome, telefone, email } = req.body;
 
-    const usuario = await Usuario.findByPk(1); // Exemplo: Usuário com ID 1
+    // Verifica se o usuário existe no banco
+    const usuario = await Usuario.findByPk(id);
     if (!usuario) {
       return res.status(404).json({ error: 'Usuário não encontrado.' });
     }
 
-    // Atualiza os dados do usuário no banco
+    // Atualiza os dados do usuário
     await usuario.update({ nome, telefone, email });
-    res.json({ message: 'Usuário atualizado com sucesso!' });
+    res.json({ message: 'Usuário atualizado com sucesso!', usuario });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Erro ao atualizar usuário:', error);
+    res.status(500).json({ error: 'Erro ao atualizar usuário.' });
   }
 });
 
+
+
+function verificarToken(req, res, next) {
+  try {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) {
+      return res.status(403).json({ message: 'Token ausente. Acesso negado.' });
+    }
+
+    const token = authHeader.split(' ')[1]; // Extrair o token após "Bearer"
+
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ message: 'Token inválido ou expirado.' });
+      }
+
+      req.usuario = decoded.id; // Salva o ID do usuário no objeto req
+      next(); // Continua para o próximo middleware ou rota
+    });
+  } catch (error) {
+    console.error('Erro ao verificar o token:', error);
+    res.status(500).json({ message: 'Erro interno ao verificar o token.' });
+  }
+}
+
+module.exports = verificarToken;
 
 // 2. Listar todos os usuários (READ)
 app.get('/api/usuario', async (req, res) => {

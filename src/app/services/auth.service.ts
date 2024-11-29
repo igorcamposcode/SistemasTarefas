@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, tap } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
+import { Usuario } from '../menu/menu.model';
 
 export const API_PATH = 'http://localhost:3000/api';
 
@@ -78,8 +79,8 @@ export class AuthService {
     });
   }
 
-  /** Obtém o ID do usuário logado */
-  obterIdUsuarioLogado(): number {
+   /** Obtém o ID do usuário logado */
+   obterIdUsuarioLogado(): number {
     const token = localStorage.getItem('authToken');
     if (!token) {
       throw new Error('Usuário não autenticado. Token não encontrado.');
@@ -103,10 +104,23 @@ export class AuthService {
     );
   }
 
-  /** Atualiza os dados do usuário no backend */
-  atualizarUsuario(id: number, dados: any): Observable<any> {
-    return this.http.put(`${API_PATH}/usuarios/${id}`, dados);
-  }
+   /**
+   * Atualiza os dados do usuário no backend
+   * @param dadosAtualizados
+   * @returns
+   */
 
+   atualizarUsuario(dados: any): Observable<any> {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('Token não encontrado. O usuário precisa estar autenticado.');
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.put(`${API_PATH}/usuario`, dados, { headers });
+  }
 
 }
