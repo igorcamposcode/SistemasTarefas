@@ -7,19 +7,43 @@
     <button
       class="btn btn-primary"
       (click)="abrirModalUsuario()"
+      style="
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+          'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      "
     >
-   Bem Vindo:   {{ usuario.nome }}
+      Usuário: {{ usuario.nome }}
     </button>
-    <button class="btn btn-primary" (click)="isModalVisible = true">
+    <button
+      class="btn btn-primary"
+      (click)="isModalVisible = true"
+      style="
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+          'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      "
+    >
       Nova Tarefa
     </button>
     <button
       class="btn btn-secondary"
       (click)="CliqueMinhaTarefa('minhas-tarefas')"
+      style="
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+          'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      "
     >
       Minhas Tarefas
     </button>
-    <button class="btn btn-danger" (click)="CliqueHome('login')">Sair</button>
+    <button
+      class="btn btn-danger"
+      (click)="CliqueHome('login')"
+      style="
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+          'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      "
+    >
+      Sair
+    </button>
   </div>
 
   <!-- Modal para Exibir Dados do Usuário -->
@@ -43,10 +67,17 @@
             (click)="fecharModalUsuario()"
           ></button>
         </div>
-        <div class="modal-body">
-          <p><strong>Nome:</strong> {{ usuario.nome }}</p>
-          <p><strong>Telefone:</strong> {{ usuario.telefone }}</p>
-          <p><strong>Email:</strong> {{ usuario.email }}</p>
+        <div
+          class="modal-body"
+          style="
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+              'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-family: 1rem;
+          "
+        >
+          <p><strong>Nome :</strong> {{ usuario.nome }}</p>
+          <p><strong>Telefone :</strong> {{ usuario.telefone }}</p>
+          <p><strong>Email :</strong> {{ usuario.email }}</p>
           <button
             class="btn btn-primary mt-3"
             (click)="abrirModalEditarUsuario()"
@@ -207,6 +238,15 @@
                 </option>
               </select>
             </div>
+            <!-- Estado da Tarefa -->
+            <div class="mb-3">
+              <label for="estado" class="form-label">Estado</label>
+              <select id="estado" class="form-select" formControlName="estado">
+                <option *ngFor="let estado of estados" [value]="estado">
+                  {{ estado }}
+                </option>
+              </select>
+            </div>
             <!-- Usuário Responsável -->
             <div class="mb-3">
               <label for="usuario" class="form-label"
@@ -272,7 +312,6 @@
       </div>
     </div>
   </div>
-
   <!-- Cards das Tarefas -->
   <div class="row">
     <div *ngFor="let tarefa of tarefas" class="col-md-4 mb-4">
@@ -313,7 +352,7 @@
             }}</a>
           </p>
           <div class="progress mb-3">
-      <div
+            <div
               class="progress-bar"
               role="progressbar"
               [style.width.%]="calcularProgresso(tarefa)"
@@ -325,9 +364,14 @@
               {{ calcularProgresso(tarefa) }}%
             </div>
           </div>
-     <button class="btn btn-sm btn-outline-primary" (click)="incluirSubTarefa(tarefa)">+ Adicionar Sub-Tarefa</button>
+          <button
+            class="btn btn-sm btn-outline-primary"
+            (click)="incluirSubTarefa(tarefa)"
+          >
+            + Adicionar Sub-Tarefa
+          </button>
         </div>
       </div>
-    </div>    
+    </div>
   </div>
 </div>

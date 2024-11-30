@@ -95,6 +95,16 @@ inicializarFormularios(): void {
   }
 }
 
+carregarMetadados(): void {
+  this.taskService.obterMetadados().subscribe({
+    next: ({ prioridades, estados }) => {
+      this.prioridades = prioridades.map((p: any) => p.nome);
+      this.estados = estados.map((e: any) => e.nome);
+    },
+    error: () => alert('Erro ao carregar prioridades e estados.'),
+  });
+}
+
   /** Carrega a lista de tarefas do usuário */
   carregarTarefas(): void {
     this.taskService.obterTarefas().subscribe({

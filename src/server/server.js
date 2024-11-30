@@ -323,6 +323,47 @@ app.get('/api/usuario', async (req, res) => {
   }
 });
 
+// Rota para criar tarefa
+app.post('/api/tarefa', async (req, res) => {
+  try {
+    const { idusuario, idprioridade, titulo, descricao, estado, dthrfim } = req.body;
+
+    // Criação da tarefa
+    const tarefa = await Tarefa.create({
+      idusuario,
+      idprioridade,
+      titulo,
+      descricao,
+      dthrinicio: new Date(),
+      dthrfim: dthrfim ? new Date(dthrfim) : null,
+    });
+
+    // Criação do estado inicial da tarefa
+    await TarefasEstado.create({
+      idtarefa: tarefa.id,
+      idusuario: idusuario,
+      idestado: estado,
+      dthrinicio: new Date(),
+      dthrfim: null,
+    });
+
+    res.status(201).json({ message: 'Tarefa criada com sucesso.', tarefa });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao criar tarefa.', details: error.message });
+  }
+});
+
+// Rota para listar prioridades e estados
+app.get('/api/tarefa', async (req, res) => {
+  try {
+    const prioridades = await Prioridade.findAll();
+    const estado = await Estado.findAll();
+    res.json({ prioridade, estado });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao carregar metadados.', details: error.message });
+  }
+});
+
 // Sincronizar o banco de dados e iniciar o servidor
 sequelize.sync({ alter: true })
   .then(() => {

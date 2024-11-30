@@ -5,7 +5,7 @@
   margin: 0;
   box-shadow: 2px 3px 3px 2px rgb(199, 47, 0);
   text-align: center;
-  font-size: 25px;
+  font-size: 2rem;
   justify-content: center;
 }
 
@@ -18,37 +18,32 @@
   margin-inline-start: 1.5%;
 }
 
-.btn1 {
+.btn btn-primary {
   height: 35px;
   border-radius: 10px;
   margin-right: 5px;
   background-color: #E64C07;
   color: white;
-  font-size: 18px;
+  font-size: 2rem;
 }
 
-.btn2 {
+.btn btn-secondary {
   height: 35px;
   border-radius: 10px;
   margin-top: 4.5%;
   margin-right: 5px;
   background-color: #E64C07;
   color: white;
-  font-size: 18px;
+  font-size: 2rem;
 }
 
-.btn3 {
+.btn btn-danger{
   height: 35px;
   border-radius: 10px;
   margin-top: 4.5%;
   margin-right: 2%;
   background-color: #E64C07;
   color: white;
-  font-size: 18px;
+  font-size: 2rem;
 }
 
-/* Incluir Tarefas Modal */
-
- .NomeTarefa{
-  top: 2rem;
- }
