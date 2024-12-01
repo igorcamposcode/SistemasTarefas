@@ -2,50 +2,52 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from 'rxjs';
 
-export const API_PATH = 'http://localhost:3000/api/tarefa';
+export const API_PATH = 'http://localhost:3000/api';
 
 @Injectable({
   providedIn: "root",
 })
 export class TaskService {
 
+  constructor(private http: HttpClient) {}
 
+  /** Obter prioridades e estados disponíveis */
+  obterMetadados(): Observable<any> {
+    return this.http.get(`${API_PATH}/tarefa/meta`);
+  }
+
+  /** Obter estados relacionados às tarefas */
+  obterEstadosTarefa(): Observable<any> {
+    return this.http.get(`${API_PATH}/tarefa-estados`);
+  }
+
+  obterPrioridades(): Observable<any> {
+    return this.http.get(`${API_PATH}/prioridades`);
+  }
+
+
+  /** Criar uma nova tarefa */
   criarTarefa(tarefa: any): Observable<any> {
     return this.http.post(`${API_PATH}/tarefa`, tarefa);
   }
 
-  obterMetadados(): Observable<any> {
-    return this.http.get(`${API_PATH}/tarefa`);
+  /** Concluir uma tarefa, atualizando dthrfim */
+  concluirTarefa(id: number, data: any): Observable<any> {
+    return this.http.put(`${API_PATH}/tarefa/${id}/concluir`, data);
   }
 
-  atualizarTarefa(id: any, tarefa: any) {
-    return this.http.post(`${API_PATH}/tarefa`,tarefa);
+  /** Obter subtarefas pelo ID do usuário */
+  obterSubtarefas(idUsuario: number): Observable<any> {
+    return this.http.get(`${API_PATH}/subtarefa/${idUsuario}`);
   }
 
-  constructor(private http: HttpClient) {}
-
-  obterEstados(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_PATH}/estado`);
+  /** Obter todas as tarefas de um usuário */
+  obterTarefas(idUsuario: number): Observable<any> {
+    return this.http.get(`${API_PATH}/usuario/${idUsuario}`);
   }
 
-  obterPrioridades(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_PATH}/prioridade`);
-  }
-
-  obterTarefas(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_PATH}/tarefa`);
-  }
-
-  atualizarEstadoTarefa(idtarefa: number, idestado: number): Observable<any> {
-    return this.http.put(`${API_PATH}/tarefa/${idtarefa}`, { idestado, dthrfim: new Date() });
-  }
-  // Excluir tarefa
+  /** Excluir uma tarefa pelo ID */
   excluirTarefa(id: number): Observable<any> {
     return this.http.delete(`${API_PATH}/tarefa/${id}`);
-  }
-
-  // Obter prioridades
-  getPrioridades(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_PATH}/prioridade`);
   }
 }

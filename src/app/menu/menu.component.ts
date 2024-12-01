@@ -23,8 +23,8 @@ export class MenuComponent implements OnInit {
 
   usuario: any = {}; // Dados do usuário logado
   tarefas: any[] = []; // Lista de tarefas do usuário
-  prioridades: string[] = []; // Prioridades disponíveis (ex.: Muito alta, Alta)
-  estados: string[] = []; // Estados disponíveis (ex.: Aberto, Concluído)
+  prioridades: any[] = []; // Prioridades disponíveis (ex.: Muito alta, Alta)
+  estados: any[] = []; // Estados disponíveis (ex.: Aberto, Concluído)
 
   usuarioForm!: FormGroup; // Formulário para edição de dados do usuário
   tarefaForm!: FormGroup; // Formulário para criação/edição de tarefas
@@ -45,7 +45,7 @@ export class MenuComponent implements OnInit {
   ngOnInit(): void {
     this.carregarUsuario(); // Obter dados do usuário logado
     this.carregarTarefas(); // Obter lista de tarefas do usuário
-    this.carregarPrioridadesEEstados(); // Obter prioridades e estados disponíveis
+    this.carregarPrioridadesEstados(); // Obter prioridades e estados disponíveis
     this.inicializarFormularios(); // Configurar formulários reativos
   }
 
@@ -66,12 +66,27 @@ inicializarFormularios(): void {
 
   // Formulário para criação/edição de tarefas
   this.tarefaForm = this.fb.group({
-    titulo: ['', Validators.required],
-    descricao: [''],
-    prioridade: ['', Validators.required],
-    usuario: [this.usuario.nome || '', Validators.required],
-    dataInicio: [new Date().toISOString().substring(0, 16), Validators.required],
-    dataFim: [''],
+    titulo: ['', Validators.required], // Campo para título
+    descricao: [''], // Campo para descrição
+    idPrioridade: ['', Validators.required], // Prioridade da tarefa
+    idEstado: ['', Validators.required], // Estado da tarefa
+    idUsuario: ['', Validators.required], // ID do usuário responsável
+    dthrInicio: [new Date().toISOString().substring(0, 16), Validators.required], // Data e hora de início
+    dthrFim: [''], // Data e hora de finalização (opcional)
+    idmae: [null], // Para subtarefas (opcional)
+  });
+}
+
+ /** Carregar o usuário logado */
+ carregarUsuarioLogado(): void {
+  this.authService.obterUsuarioLogado().subscribe({
+    next: (usuario) => {
+      this.usuario = usuario;
+
+      // Atualiza o formulário com o ID do usuário logado
+      this.tarefaForm.patchValue({ idUsuario: usuario.id });
+    },
+    error: () => alert('Erro ao carregar usuário logado.'),
   });
 }
 
@@ -94,37 +109,6 @@ inicializarFormularios(): void {
     alert('Erro ao carregar o usuário. Faça login novamente.');
   }
 }
-
-carregarMetadados(): void {
-  this.taskService.obterMetadados().subscribe({
-    next: ({ prioridades, estados }) => {
-      this.prioridades = prioridades.map((p: any) => p.nome);
-      this.estados = estados.map((e: any) => e.nome);
-    },
-    error: () => alert('Erro ao carregar prioridades e estados.'),
-  });
-}
-
-  /** Carrega a lista de tarefas do usuário */
-  carregarTarefas(): void {
-    this.taskService.obterTarefas().subscribe({
-      next: (res) => (this.tarefas = res),
-      error: () => alert('Erro ao carregar tarefas.'),
-    });
-  }
-
-  /** Carrega as prioridades e estados disponíveis */
-  carregarPrioridadesEEstados(): void {
-    this.taskService.obterPrioridades().subscribe({
-      next: (res) => (this.prioridades = res),
-      error: () => alert('Erro ao carregar prioridades.'),
-    });
-
-    this.taskService.obterEstados().subscribe({
-      next: (res) => (this.estados = res),
-      error: () => alert('Erro ao carregar estados.'),
-    });
-  }
 
  /** Salva os dados atualizados do usuário */
  salvarDadosUsuario(): void {
@@ -169,61 +153,85 @@ carregarMetadados(): void {
     this.isEditarUsuarioModalVisible = false;
   }
 
-  /** Salva uma nova tarefa ou atualiza uma existente */
-  salvarTarefa(): void {
-    if (this.tarefaForm.invalid) {
-      alert('Preencha todos os campos obrigatórios.');
-      return;
-    }
+ /** Carregar prioridades e estados */
+ carregarPrioridadesEstados(): void {
+  this.taskService.obterMetadados().subscribe({
+    next: (res) => {
+      this.prioridades = res.prioridades;
+      this.estados = res.estados;
+    },
+    error: () => alert('Erro ao carregar prioridades e estados.'),
+  });
+}
 
-    const tarefa = this.tarefaForm.getRawValue();
+/** Carrega as prioridades diretamente da tabela prioridade */
+carregarPrioridades(): void {
+  this.taskService.obterPrioridades().subscribe({
+    next: (res) => {
+      this.prioridades = res;
+      console.log('Prioridades carregadas:', this.prioridades);
+    },
+    error: (err) => {
+      console.error('Erro ao carregar prioridades:', err);
+      alert('Erro ao carregar prioridades. Verifique a conexão com o servidor.');
+    },
+  });
+}
 
-    if (this.tarefaEditando) {
-      this.taskService.atualizarTarefa(this.tarefaEditando.id, tarefa).subscribe({
-        next: () => {
-          alert('Tarefa atualizada com sucesso!');
-          this.carregarTarefas();
-          this.fecharModal();
-        },
-        error: () => alert('Erro ao atualizar tarefa.'),
-      });
-    } else {
-      this.taskService.criarTarefa(tarefa).subscribe({
-        next: () => {
-          alert('Tarefa criada com sucesso!');
-          this.carregarTarefas();
-          this.fecharModal();
-        },
-        error: () => alert('Erro ao criar tarefa.'),
-      });
-    }
+/** Carregar todas as tarefas do usuário */
+carregarTarefas(): void {
+  this.taskService.obterTarefas(this.usuario.id).subscribe({
+    next: (res) => (this.tarefas = res),
+    error: () => alert('Erro ao carregar tarefas.'),
+  });
+}
+
+/** Salvar uma nova tarefa ou editar uma existente */
+/** Salvar tarefa */
+salvarTarefa(): void {
+  if (this.tarefaForm.invalid) {
+    alert('Preencha todos os campos obrigatórios.');
+    return;
   }
 
-  /** Abre o modal para criar ou editar tarefa */
-  editarTarefa(tarefa: any): void {
-    this.tarefaForm.patchValue(tarefa);
-    this.tarefaEditando = tarefa;
-    this.isModalVisible = true;
-  }
+  const tarefa = this.tarefaForm.value;
+  this.taskService.criarTarefa(tarefa).subscribe({
+    next: () => {
+      alert('Tarefa criada com sucesso!');
+      this.carregarTarefas();
+      this.fecharModal();
+    },
+    error: () => alert('Erro ao criar tarefa.'),
+  });
+}
 
-  /** Exclui uma tarefa */
-  excluirTarefa(id: number): void {
-    this.taskService.excluirTarefa(id).subscribe({
-      next: () => {
-        alert('Tarefa excluída com sucesso!');
-        this.carregarTarefas();
-      },
-      error: () => alert('Erro ao excluir tarefa.'),
-    });
-  }
+/** Excluir uma tarefa */
+excluirTarefa(id: number): void {
+  this.taskService.excluirTarefa(id).subscribe({
+    next: () => {
+      alert('Tarefa excluída com sucesso!');
+      this.carregarTarefas();
+    },
+    error: () => alert('Erro ao excluir a tarefa.'),
+  });
+}
 
-  /** Abre o modal para criar uma subtarefa vinculada */
-  incluirSubTarefa(tarefaPai: any): void {
-    this.tarefaForm.reset();
-    this.tarefaForm.patchValue({ usuario: this.usuario.nome, idmae: tarefaPai.id });
-    this.tarefaEditando = null;
-    this.isModalVisible = true;
-  }
+/** Abrir o modal para criar uma subtarefa */
+incluirSubTarefa(tarefa: any): void {
+  this.tarefaForm.reset();
+  this.tarefaForm.patchValue({
+    idUsuario: this.usuario.id,
+    idmae: tarefa.id,
+  });
+  this.isModalVisible = true;
+}
+
+/** Abrir o modal para criar ou editar uma tarefa */
+editarTarefa(tarefa: any): void {
+  this.tarefaForm.patchValue(tarefa);
+  this.tarefaEditando = tarefa;
+  this.isModalVisible = true;
+}
 
   /** Fecha o modal de criação/edição de tarefa */
   fecharModal(): void {

@@ -323,46 +323,149 @@ app.get('/api/usuario', async (req, res) => {
   }
 });
 
-// Rota para criar tarefa
+app.get('/api/usuario/:id', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1]; // "Bearer token"
+    if (!token) {
+      return res.status(401).json({ error: 'Token não fornecido.' });
+    }
+
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const usuario = await Usuario.findByPk(decoded.id);
+
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuário não encontrado.' });
+    }
+
+    res.status(200).json(usuario);
+  } catch (error) {
+    console.error('Erro ao buscar usuário logado:', error);
+    res.status(500).json({ error: 'Erro ao buscar usuário logado.' });
+  }
+});
+
+app.get('/api/tarefa-estados', async (req, res) => {
+  try {
+    const estadosRelacionados = await TarefaEstado.findAll({
+      include: [
+        {
+          model: Estado,
+          attributes: ['id', 'nome'],
+        },
+      ],
+      attributes: ['idestado', 'idtarefa', 'idusuario', 'dthrinicio', 'dthrfim'],
+    });
+
+    res.status(200).json(estadosRelacionados);
+  } catch (error) {
+    console.error('Erro ao carregar estados relacionados às tarefas:', error);
+    res.status(500).json({ error: 'Erro ao carregar estados relacionados às tarefas.' });
+  }
+});
+
+app.get('/api/prioridades', async (req, res) => {
+  try {
+    const prioridades = await Prioridade.findAll({
+      attributes: ['id', 'nome'], // Retorna apenas as colunas necessárias
+    });
+
+    res.status(200).json(prioridades);
+  } catch (error) {
+    console.error('Erro ao carregar prioridades:', error);
+    res.status(500).json({ error: 'Erro ao carregar prioridades.' });
+  }
+});
+
+
 app.post('/api/tarefa', async (req, res) => {
   try {
-    const { idusuario, idprioridade, titulo, descricao, estado, dthrfim } = req.body;
+    const { idusuario, idprioridade, titulo, descricao, idestado, idmae } = req.body;
 
-    // Criação da tarefa
+    // Criação da tarefa (ou subtarefa se `idmae` estiver definido)
     const tarefa = await Tarefa.create({
       idusuario,
       idprioridade,
       titulo,
       descricao,
+      idmae: idmae || null,
       dthrinicio: new Date(),
-      dthrfim: dthrfim ? new Date(dthrfim) : null,
     });
 
-    // Criação do estado inicial da tarefa
+    // Registro do estado inicial da tarefa
     await TarefasEstado.create({
       idtarefa: tarefa.id,
-      idusuario: idusuario,
-      idestado: estado,
+      idusuario,
+      idestado,
       dthrinicio: new Date(),
-      dthrfim: null,
     });
 
-    res.status(201).json({ message: 'Tarefa criada com sucesso.', tarefa });
+    res.status(201).json({ message: 'Tarefa criada com sucesso!', tarefa });
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao criar tarefa.', details: error.message });
+    console.error('Erro ao criar tarefa:', error);
+    res.status(500).json({ error: 'Erro ao criar tarefa.' });
   }
 });
 
-// Rota para listar prioridades e estados
-app.get('/api/tarefa', async (req, res) => {
+app.put('/api/tarefa/:id/concluir', async (req, res) => {
   try {
-    const prioridades = await Prioridade.findAll();
-    const estado = await Estado.findAll();
-    res.json({ prioridade, estado });
+    const { id } = req.params;
+    const { idusuario, idestado } = req.body;
+
+    // Atualizar `dthrfim` na tabela `TarefasEstado`
+    await TarefasEstado.update(
+      { dthrfim: new Date() },
+      { where: { idtarefa: id, idusuario, idestado, dthrfim: null } }
+    );
+
+    // Atualizar `dthrfim` na tabela `Tarefa`
+    await Tarefa.update(
+      { dthrfim: new Date() },
+      { where: { id } }
+    );
+
+    res.status(200).json({ message: 'Tarefa concluída com sucesso!' });
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao carregar metadados.', details: error.message });
+    console.error('Erro ao concluir tarefa:', error);
+    res.status(500).json({ error: 'Erro ao concluir tarefa.' });
   }
 });
+
+app.get('/api/tarefa/subtarefa/:idUsuario', async (req, res) => {
+  try {
+    const { idUsuario } = req.params;
+
+    const subtarefas = await Tarefa.findAll({
+      where: { idusuario: idUsuario, idmae: { [sequelize.Op.ne]: null } },
+      include: [
+        { model: Prioridade, attributes: ['nome'] },
+        { model: Estado, through: TarefasEstado, attributes: ['nome'] },
+      ],
+    });
+
+    res.status(200).json(subtarefas);
+  } catch (error) {
+    console.error('Erro ao carregar subtarefas:', error);
+    res.status(500).json({ error: 'Erro ao carregar subtarefas.' });
+  }
+});
+
+app.delete('/api/tarefa/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Excluir subtarefas relacionadas
+    await Tarefa.destroy({ where: { idmae: id } });
+
+    // Excluir tarefa principal
+    await Tarefa.destroy({ where: { id } });
+
+    res.status(200).json({ message: 'Tarefa excluída com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao excluir tarefa:', error);
+    res.status(500).json({ error: 'Erro ao excluir tarefa.' });
+  }
+});
+
 
 // Sincronizar o banco de dados e iniciar o servidor
 sequelize.sync({ alter: true })

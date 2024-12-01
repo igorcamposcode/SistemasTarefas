@@ -79,6 +79,13 @@ export class AuthService {
     });
   }
 
+   /** Obtém os dados do usuário logado */
+   obterUsuarioLogado(): Observable<any> {
+    return this.http.get(`${API_PATH}/usuario/logado`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+    });
+  }
+
    /** Obtém o ID do usuário logado */
    obterIdUsuarioLogado(): number {
     const token = localStorage.getItem('authToken');
