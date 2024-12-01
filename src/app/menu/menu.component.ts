@@ -68,11 +68,11 @@ inicializarFormularios(): void {
   this.tarefaForm = this.fb.group({
     titulo: ['', Validators.required], // Campo para título
     descricao: [''], // Campo para descrição
-    idPrioridade: ['', Validators.required], // Prioridade da tarefa
-    idEstado: ['', Validators.required], // Estado da tarefa
-    idUsuario: ['', Validators.required], // ID do usuário responsável
-    dthrInicio: [new Date().toISOString().substring(0, 16), Validators.required], // Data e hora de início
-    dthrFim: [''], // Data e hora de finalização (opcional)
+    idprioridade: ['', Validators.required], // Prioridade da tarefa
+    idestado: ['', Validators.required], // Estado da tarefa
+    idusuario: ['', Validators.required], // ID do usuário responsável
+    dthrinicio: [new Date().toISOString().substring(0, 16), Validators.required], // Data e hora de início
+    dthrfim: [''], // Data e hora de finalização (opcional)
     idmae: [null], // Para subtarefas (opcional)
   });
 }

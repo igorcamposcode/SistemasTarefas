@@ -432,10 +432,10 @@ app.put('/api/tarefa/:id/concluir', async (req, res) => {
 
 app.get('/api/tarefa/subtarefa/:idUsuario', async (req, res) => {
   try {
-    const { idUsuario } = req.params;
+    const { idusuario } = req.params;
 
     const subtarefas = await Tarefa.findAll({
-      where: { idusuario: idUsuario, idmae: { [sequelize.Op.ne]: null } },
+      where: { idusuario: idusuario, idmae: { [sequelize.Op.ne]: null } },
       include: [
         { model: Prioridade, attributes: ['nome'] },
         { model: Estado, through: TarefasEstado, attributes: ['nome'] },
