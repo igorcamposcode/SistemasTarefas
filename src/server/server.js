@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
-const { Usuario, Tarefa, Prioridade, Documento, Estado } = require('./models');
+const { Usuario, Tarefa, TarefasEstado, Prioridade, Documento, Estado, } = require('./models');
 const sequelize = require("./database"); // Conexão com o banco
 const jwt = require("jsonwebtoken")
 const SECRET_KEY = 'ci@tarefassystem2024b'// Substitua por uma chave segura
@@ -344,6 +344,58 @@ app.get('/api/usuario/:id', async (req, res) => {
   }
 });
 
+app.post('/api/tarefa', async (req, res) => {
+  try {
+    const { idusuario, idprioridade, titulo, descricao, idestado, idmae } = req.body;
+
+    // Verificação de campos obrigatórios
+    if (!idusuario || !idprioridade || !titulo || !idestado) {
+      return res.status(400).json({ error: 'Campos obrigatórios ausentes.' });
+    }
+
+    // Criação da tarefa
+    const tarefa = await Tarefa.create({
+      idusuario,
+      idprioridade,
+      titulo,
+      descricao: descricao || null,
+      idmae: idmae || null,
+      dthrinicio: new Date(),
+      dthrfim: new Date() || null,
+    });
+
+    // Criação do estado inicial na tabela tarefa_estado
+    const tarefaEstado = await TarefasEstado.create({
+      idtarefa: tarefa.id,
+      idusuario,
+      idestado,
+      dthrinicio: new Date(),
+      dthrfim: new Date() || null,
+    });
+
+    res.status(201).json({
+      message: 'Tarefa criada com sucesso!',
+      tarefa,
+      tarefaEstado,
+    });
+  } catch (error) {
+    console.error('Erro ao criar tarefa:', error);
+    res.status(500).json({ error: 'Erro interno ao criar tarefa.', details: error.message });
+  }
+});
+
+app.get('/api/tarefa/meta', async (req, res) => {
+  try {
+    const prioridades = await Prioridade.findAll(); // Busca todas as prioridades
+    const estados = await Estado.findAll(); // Busca todos os estados
+
+    res.status(200).json({ prioridades, estados });
+  } catch (error) {
+    console.error('Erro ao carregar prioridades e estados:', error);
+    res.status(500).json({ error: 'Erro ao carregar prioridades e estados.' });
+  }
+});
+
 app.get('/api/tarefa-estados', async (req, res) => {
   try {
     const estadosRelacionados = await TarefaEstado.findAll({
@@ -376,33 +428,44 @@ app.get('/api/prioridades', async (req, res) => {
   }
 });
 
-
-app.post('/api/tarefa', async (req, res) => {
+app.get('/api/tarefa', async (req, res) => {
   try {
-    const { idusuario, idprioridade, titulo, descricao, idestado, idmae } = req.body;
-
-    // Criação da tarefa (ou subtarefa se `idmae` estiver definido)
-    const tarefa = await Tarefa.create({
-      idusuario,
-      idprioridade,
-      titulo,
-      descricao,
-      idmae: idmae || null,
-      dthrinicio: new Date(),
+    const tarefas = await Tarefa.findAll({
+      include: [
+        {
+          model: Prioridade,
+          attributes: ['id', 'nome'], // Nome da prioridade
+        },
+        {
+          model: TarefasEstado,
+          include: [
+            {
+              model: Estado,
+              attributes: ['id', 'nome'], // Estado atual da tarefa
+            },
+          ],
+          attributes: ['dthrinicio', 'dthrfim'], // Datas de início e fim
+        },
+        {
+          model: Usuario,
+          attributes: ['id', 'nome', 'email'], // Usuário responsável
+        },
+      ],
+      attributes: [
+        'id',
+        'titulo',
+        'descricao',
+        'dthrinicio',
+        'dthrfim',
+        'idusuario',
+        'idprioridade',
+      ],
     });
 
-    // Registro do estado inicial da tarefa
-    await TarefasEstado.create({
-      idtarefa: tarefa.id,
-      idusuario,
-      idestado,
-      dthrinicio: new Date(),
-    });
-
-    res.status(201).json({ message: 'Tarefa criada com sucesso!', tarefa });
+    res.status(200).json(tarefas);
   } catch (error) {
-    console.error('Erro ao criar tarefa:', error);
-    res.status(500).json({ error: 'Erro ao criar tarefa.' });
+    console.error('Erro ao obter tarefas:', error.message);
+    res.status(500).json({ error: 'Erro ao carregar tarefas.' });
   }
 });
 

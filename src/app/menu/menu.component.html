@@ -203,7 +203,7 @@
         ></button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="tarefaForm" (ngSubmit)="salvarTarefa()">
+        <form [formGroup]="tarefaForm" (ngSubmit)="salvarNovaTarefa(tarefaForm.value)">
           <!-- Nome da Tarefa -->
           <div class="mb-3">
             <label for="titulo" class="form-label">Título</label>
@@ -276,7 +276,6 @@
               readonly
               [value]="usuario.nome"
               placeholder="Digite o ID do usuário responsável"
-              required
             />
           </div>
 

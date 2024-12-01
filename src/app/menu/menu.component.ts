@@ -66,14 +66,14 @@ inicializarFormularios(): void {
 
   // Formulário para criação/edição de tarefas
   this.tarefaForm = this.fb.group({
-    titulo: ['', Validators.required], // Campo para título
-    descricao: [''], // Campo para descrição
-    idprioridade: ['', Validators.required], // Prioridade da tarefa
+    idusuario: [this.authService.obterIdUsuarioLogado(), Validators.required], // ID do usuário logado
+    idprioridade: ['', Validators.required], // Prioridade selecionada
+    titulo: ['', Validators.required], // Título da tarefa
+    descricao: [''], // Descrição opcional
     idestado: ['', Validators.required], // Estado da tarefa
-    idusuario: ['', Validators.required], // ID do usuário responsável
-    dthrinicio: [new Date().toISOString().substring(0, 16), Validators.required], // Data e hora de início
-    dthrfim: [''], // Data e hora de finalização (opcional)
-    idmae: [null], // Para subtarefas (opcional)
+    idmae: [''], // Subtarefa (opcional)
+    dthrinicio: [new Date().toISOString().substring(0, 16), Validators.required], // Data de início (atual)
+    dthrfim: [new Date().toISOString().substring(0, 16)], // Data de finalização (opcional)
   });
 }
 
@@ -180,30 +180,70 @@ carregarPrioridades(): void {
 
 /** Carregar todas as tarefas do usuário */
 carregarTarefas(): void {
-  this.taskService.obterTarefas(this.usuario.id).subscribe({
-    next: (res) => (this.tarefas = res),
-    error: () => alert('Erro ao carregar tarefas.'),
+  this.taskService.obterTarefas().subscribe({
+    next: (res) => {
+      this.tarefas = res.map((tarefa) => ({
+        id: tarefa.id,
+        titulo: tarefa.titulo,
+        descricao: tarefa.descricao || 'Sem descrição',
+        usuario: tarefa.Usuario?.nome || 'Desconhecido',
+        prioridade: tarefa.Prioridade?.nome || 'Sem prioridade',
+        estado: tarefa.TarefasEstados[0]?.Estado?.nome || 'Não definido',
+        dthrinicio: tarefa.dthrinicio,
+        dthrfim: tarefa.dthrfim,
+      }));
+      console.log('Tarefas carregadas:', this.tarefas);
+    },
+    error: (err) => {
+      console.error('Erro ao carregar tarefas:', err);
+      alert('Erro ao carregar tarefas.');
+    },
   });
 }
-
 /** Salvar uma nova tarefa ou editar uma existente */
-/** Salvar tarefa */
 salvarTarefa(): void {
   if (this.tarefaForm.invalid) {
-    alert('Preencha todos os campos obrigatórios.');
+    alert('Por favor, preencha todos os campos obrigatórios.');
     return;
   }
 
-  const tarefa = this.tarefaForm.value;
-  this.taskService.criarTarefa(tarefa).subscribe({
-    next: () => {
+  const novaTarefa = this.tarefaForm.value;
+  novaTarefa.dthrinicio = new Date(); // Adiciona data e hora de início
+  novaTarefa.dthrfim = null; // Inicializa como null
+
+  console.log('Enviando dados da tarefa:', novaTarefa);
+
+  this.taskService.criarTarefa(novaTarefa).subscribe({
+    next: (res) => {
       alert('Tarefa criada com sucesso!');
-      this.carregarTarefas();
       this.fecharModal();
+      this.carregarTarefas(); // Atualiza os cards
     },
-    error: () => alert('Erro ao criar tarefa.'),
+    error: (err) => {
+      console.error('Erro ao criar tarefa:', err);
+      alert('Erro ao criar a tarefa. Verifique o console.');
+    },
   });
 }
+
+salvarNovaTarefa(tarefa: any): void {
+  if (!tarefa.idusuario || isNaN(Number(tarefa.idusuario))) {
+    alert('ID do usuário é obrigatório e deve ser um número válido.');
+    return;
+  }
+
+  this.taskService.obterTarefas().subscribe({
+    next: (res: any) => {
+      alert('Tarefa criada com sucesso!');
+      this.carregarTarefas(); // Atualiza a lista de tarefas
+    },
+    error: (err: any) => {
+      console.error('Erro ao criar tarefa:', err);
+      alert('Erro ao criar tarefa. Verifique os dados.');
+    },
+  });
+}
+
 
 /** Excluir uma tarefa */
 excluirTarefa(id: number): void {
