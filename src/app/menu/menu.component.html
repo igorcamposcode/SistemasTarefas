@@ -339,9 +339,7 @@
   <div class="row">
     <div *ngFor="let tarefa of tarefas" class="col-md-4 mb-4">
       <div class="card">
-        <div
-          class="card-header d-flex justify-content-between align-items-center"
-        >
+        <div class="card-header d-flex justify-content-between align-items-center">
           <span>{{ tarefa.titulo }}</span>
           <div>
             <button
@@ -359,21 +357,25 @@
           </div>
         </div>
         <div class="card-body">
-          <h5 class="card-title">Descrição</h5>
+          <strong><h3 class="card-title">Descrição</h3></strong>
           <p class="card-text">{{ tarefa.descricao }}</p>
-          <p><strong>Usuário Responsável:</strong> {{ tarefa.usuario }}</p>
-          <p>
-            <strong>Início:</strong> {{ tarefa.dthrinicio | date : "short" }}
-          </p>
-          <p><strong>Fim:</strong> {{ tarefa.dataFim | date : "short" }}</p>
-          <p><strong>Prioridade:</strong> {{ tarefa.prioridade }}</p>
-          <p><strong>Status:</strong> {{ tarefa.estado }}</p>
+          <p><strong>Usuário Responsável: </strong> {{ tarefa.usuario }}</p>
+          <p><strong>Início: </strong> {{ tarefa.dthrinicio | date: 'short' }}</p>
+          <p><strong>Fim: </strong> {{ tarefa.dthrfim | date: 'short' }}</p>
+          <p><strong>Prioridade: </strong> {{ tarefa.prioridade }}</p>
+          <p><strong>Status: </strong> {{ tarefa.estado }}</p>
           <p *ngIf="tarefa.documento">
             <strong>Documento:</strong>
-            <a [href]="tarefa.documento.url" target="_blank">{{
-              tarefa.documento.nome
-            }}</a>
+            <a [href]="tarefa.documento.url" target="_blank">{{ tarefa.documento.nome }}</a>
           </p>
+
+          <h6>Sub Tarefas</h6>
+          <ul>
+            <li *ngFor="let sub of tarefa.subTarefas">
+              {{ sub.titulo }} - {{ sub.prioridade }} - {{ sub.estado }}
+            </li>
+          </ul>
+
           <div class="progress mb-3">
             <div
               class="progress-bar"
@@ -387,11 +389,21 @@
               {{ calcularProgresso(tarefa) }}%
             </div>
           </div>
+
           <button
-            class="btn btn-sm btn-outline-primary"
+            class="btn btn-sm btn-outline-primary me-2"
             (click)="incluirSubTarefa(tarefa)"
           >
             + Adicionar Sub-Tarefa
+          </button>
+
+          <!-- Botão para Concluir Tarefa -->
+          <button
+            *ngIf="tarefa.estado !== 'Concluído'"
+            class="btn btn-sm btn-outline-success"
+            (click)="concluirTarefa(tarefa.id)"
+          >
+            Concluir
           </button>
         </div>
       </div>

@@ -1,67 +1,80 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
-const { Usuario, Tarefa, TarefasEstado, Prioridade, Documento, Estado, } = require('./models');
+const {
+  Usuario,
+  Tarefa,
+  TarefasEstado,
+  Prioridade,
+  Documento,
+  Estado,
+} = require("./models");
 const sequelize = require("./database"); // Conexão com o banco
-const jwt = require("jsonwebtoken")
-const SECRET_KEY = 'ci@tarefassystem2024b'// Substitua por uma chave segura
+const jwt = require("jsonwebtoken");
+const SECRET_KEY = "ci@tarefassystem2024b"; // Substitua por uma chave segura
 const app = express();
 const PORT = 3000;
 
 // Middleware para habilitar CORS
-app.use(cors({
-  origin: 'http://localhost:4200', // Frontend Angular
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+app.use(
+  cors({
+    origin: "http://localhost:4200", // Frontend Angular
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Middleware para processar JSON
 app.use(express.json());
 
 // Endpoint de login
-app.post('/api/login', async (req, res) => {
+app.post("/api/login", async (req, res) => {
   try {
     const { email, senha } = req.body;
 
     // Verificar se o email existe no banco
     const usuario = await Usuario.findOne({ where: { email } });
     if (!usuario) {
-      return res.status(404).json({ error: 'Usuário não encontrado.' });
+      return res.status(404).json({ error: "Usuário não encontrado." });
     }
 
     // Comparar a senha fornecida com o hash armazenado
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
     if (!senhaValida) {
-      return res.status(401).json({ error: 'Senha inválida.' });
+      return res.status(401).json({ error: "Senha inválida." });
     }
 
     // Gerar um token JWT
     const token = jwt.sign(
       { id: usuario.id, email: usuario.email },
       SECRET_KEY,
-      { expiresIn: '2h' } // Token expira em 2 horas
+      { expiresIn: "2h" } // Token expira em 2 horas
     );
 
     res.status(200).json({
-      message: 'Login bem-sucedido.',
+      message: "Login bem-sucedido.",
       token,
     });
   } catch (error) {
-    console.error('Erro ao efetuar login:', error);
-    res.status(500).json({ error: 'Erro ao efetuar login.', details: error.message });
+    console.error("Erro ao efetuar login:", error);
+    res
+      .status(500)
+      .json({ error: "Erro ao efetuar login.", details: error.message });
   }
 });
 
 function autenticarToken(req, res, next) {
-  const token = req.headers['authorization'];
+  const token = req.headers["authorization"];
 
   if (!token) {
-    return res.status(401).json({ error: 'Acesso negado. Token não fornecido.' });
+    return res
+      .status(401)
+      .json({ error: "Acesso negado. Token não fornecido." });
   }
 
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
-      return res.status(403).json({ error: 'Token inválido.' });
+      return res.status(403).json({ error: "Token inválido." });
     }
 
     req.usuario = decoded; // Dados do token disponíveis na requisição
@@ -69,29 +82,31 @@ function autenticarToken(req, res, next) {
   });
 }
 
-app.get('/api/usuario', autenticarToken, async (req, res) => {
+app.get("/api/usuario", autenticarToken, async (req, res) => {
   try {
     const usuario = await Usuario.findAll();
     res.status(200).json(usuario);
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao buscar usuários.', details: error.message });
+    res
+      .status(500)
+      .json({ error: "Erro ao buscar usuários.", details: error.message });
   }
 });
 
 // Endpoint para recuperação de senha
-app.post('/api/recuperar-senha', async (req, res) => {
+app.post("/api/recuperar-senha", async (req, res) => {
   try {
     const { email, senha, checkPassword } = req.body;
 
     // Verificar se o email existe no banco de dados
     const usuario = await Usuario.findOne({ where: { email } });
     if (!usuario) {
-      return res.status(404).json({ error: 'E-mail não cadastrado.' });
+      return res.status(404).json({ error: "E-mail não cadastrado." });
     }
 
     // Verificar se as senhas coincidem
     if (senha !== checkPassword) {
-      return res.status(400).json({ error: 'As senhas não coincidem.' });
+      return res.status(400).json({ error: "As senhas não coincidem." });
     }
 
     // Hash da nova senha
@@ -100,28 +115,30 @@ app.post('/api/recuperar-senha', async (req, res) => {
     // Atualizar a senha no banco de dados
     await Usuario.update({ senha: senhaHash }, { where: { email } });
 
-    res.status(200).json({ message: 'Senha atualizada com sucesso.' });
+    res.status(200).json({ message: "Senha atualizada com sucesso." });
   } catch (error) {
-    console.error('Erro ao recuperar senha:', error);
-    res.status(500).json({ error: 'Erro ao atualizar senha.', details: error.message });
+    console.error("Erro ao recuperar senha:", error);
+    res
+      .status(500)
+      .json({ error: "Erro ao atualizar senha.", details: error.message });
   }
 });
 
 // Rotas CRUD
 // 1. Criar um novo usuário (CREATE)
-app.post('/api/usuario', async (req, res) => {
+app.post("/api/usuario", async (req, res) => {
   try {
     const { nome, telefone, email, senha, checkPassword } = req.body;
 
     // Validação de senha
     if (senha !== checkPassword) {
-      return res.status(400).json({ error: 'As senhas não coincidem.' });
+      return res.status(400).json({ error: "As senhas não coincidem." });
     }
 
     // Verificar se o e-mail já existe
     const existingUser = await Usuario.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ error: 'E-mail já cadastrado.' });
+      return res.status(400).json({ error: "E-mail já cadastrado." });
     }
 
     // Criar usuário com senha hashada
@@ -133,23 +150,24 @@ app.post('/api/usuario', async (req, res) => {
     });
 
     res.status(201).json({
-      message: 'Usuário criado com sucesso.',
+      message: "Usuário criado com sucesso.",
       usuario: novoUsuario,
     });
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao criar usuário.', details: error.message });
+    res
+      .status(500)
+      .json({ error: "Erro ao criar usuário.", details: error.message });
   }
 });
 
-
 // Endpoint para buscar os dados do usuário pelo ID
-app.get('/api/usuario/:id', async (req, res) => {
+app.get("/api/usuario/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const usuario = await Usuario.findByPk(id);
 
     if (!usuario) {
-      return res.status(404).json({ error: 'Usuário não encontrado.' });
+      return res.status(404).json({ error: "Usuário não encontrado." });
     }
 
     res.json(usuario);
@@ -159,43 +177,47 @@ app.get('/api/usuario/:id', async (req, res) => {
 });
 
 // Buscar usuário por ID
-app.get('/api/usuario/:id', autenticarToken, async (req, res) => {
+app.get("/api/usuario/:id", autenticarToken, async (req, res) => {
   try {
     const usuario = await Usuario.findByPk(req.params.id);
     if (!usuario) {
-      return res.status(404).json({ error: 'Usuário não encontrado.' });
+      return res.status(404).json({ error: "Usuário não encontrado." });
     }
     res.json(usuario);
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao buscar usuário.', details: error.message });
+    res
+      .status(500)
+      .json({ error: "Erro ao buscar usuário.", details: error.message });
   }
 });
 
 // Exemplo de autenticação (retorna ID e token)
-app.post('/api/login', async (req, res) => {
+app.post("/api/login", async (req, res) => {
   const { email, senha } = req.body;
 
   try {
     const usuario = await Usuario.findOne({ where: { email } });
 
     if (!usuario || usuario.senha !== senha) {
-      return res.status(401).json({ error: 'Credenciais inválidas.' });
+      return res.status(401).json({ error: "Credenciais inválidas." });
     }
 
-    const token = 'fake-jwt-token'; // Simulação de token
+    const token = "fake-jwt-token"; // Simulação de token
     res.json({ token, userId: usuario.id });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-app.put('/api/usuario/:id', verificarToken, async (req, res) => {
+app.put("/api/usuario/:id", verificarToken, async (req, res) => {
   const { id } = req.params;
   const usuarioId = req.usuario; // ID do usuário obtido do token
 
   // Verifique se o usuário está autorizado a atualizar os dados
   if (parseInt(id) !== usuario) {
-    return res.status(403).json({ message: 'Você não tem permissão para atualizar este usuário.' });
+    return res
+      .status(403)
+      .json({ message: "Você não tem permissão para atualizar este usuário." });
   }
 
   // Atualiza os dados do usuário no banco
@@ -203,35 +225,35 @@ app.put('/api/usuario/:id', verificarToken, async (req, res) => {
     const usuarioAtualizado = await Usuario.update(req.body, { where: { id } });
     return res.json(usuarioAtualizado);
   } catch (error) {
-    return res.status(500).json({ message: 'Erro ao atualizar usuário.' });
+    return res.status(500).json({ message: "Erro ao atualizar usuário." });
   }
 });
 
 // Middleware para verificar o token JWT
 function autenticarToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-      return res.status(401).json({ mensagem: 'Token ausente!' });
+    return res.status(401).json({ mensagem: "Token ausente!" });
   }
 
-  jwt.verify(token, 'ci@tarefassystem2024b', (err, decoded) => {
-      if (err) {
-          if (err.name === 'TokenExpiredError') {
-              return res.status(403).json({ mensagem: 'Token expirado!' });
-          }
-          return res.status(403).json({ mensagem: 'Token inválido!' });
+  jwt.verify(token, "ci@tarefassystem2024b", (err, decoded) => {
+    if (err) {
+      if (err.name === "TokenExpiredError") {
+        return res.status(403).json({ mensagem: "Token expirado!" });
       }
-      req.usuario = decoded.id; // Salva o ID do usuário na requisição
-      next();
+      return res.status(403).json({ mensagem: "Token inválido!" });
+    }
+    req.usuario = decoded.id; // Salva o ID do usuário na requisição
+    next();
   });
 }
 
 // Endpoint para atualizar os dados do usuário autenticado
 
 // Atualizar usuário autenticado
-app.put('/api/usuario/', autenticarToken, async (req, res) => {
+app.put("/api/usuario/", autenticarToken, async (req, res) => {
   try {
     const { id } = req.usuario; // Obtém o ID do token JWT
     const { nome, telefone, email } = req.body;
@@ -239,33 +261,33 @@ app.put('/api/usuario/', autenticarToken, async (req, res) => {
     // Verifica se o usuário existe no banco
     const usuario = await Usuario.findByPk(id);
     if (!usuario) {
-      return res.status(404).json({ error: 'Usuário não encontrado.' });
+      return res.status(404).json({ error: "Usuário não encontrado." });
     }
 
     // Atualiza os dados do usuário
     await usuario.update({ nome, telefone, email });
-    res.json({ message: 'Usuário atualizado com sucesso!', usuario });
+    res.json({ message: "Usuário atualizado com sucesso!", usuario });
   } catch (error) {
-    console.error('Erro ao atualizar usuário:', error);
-    res.status(500).json({ error: 'Erro ao atualizar usuário.' });
+    console.error("Erro ao atualizar usuário:", error);
+    res.status(500).json({ error: "Erro ao atualizar usuário." });
   }
 });
 
 function autenticarToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
+  const authHeader = req.headers["authorization"];
   if (!authHeader) {
-    console.error('Token não fornecido.');
-    return res.status(401).json({ error: 'Token não fornecido.' });
+    console.error("Token não fornecido.");
+    return res.status(401).json({ error: "Token não fornecido." });
   }
 
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.split(" ")[1];
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
-      console.error('Token inválido ou expirado:', err.message);
-      return res.status(403).json({ error: 'Token inválido ou expirado.' });
+      console.error("Token inválido ou expirado:", err.message);
+      return res.status(403).json({ error: "Token inválido ou expirado." });
     }
 
-    console.log('Token válido. Usuário ID:', decoded.id);
+    console.log("Token válido. Usuário ID:", decoded.id);
     req.usuario = decoded; // Adiciona o ID do usuário à requisição
     next();
   });
@@ -273,84 +295,89 @@ function autenticarToken(req, res, next) {
 
 function verificarToken(req, res, next) {
   try {
-    const authHeader = req.headers['authorization'];
+    const authHeader = req.headers["authorization"];
     if (!authHeader) {
-      return res.status(403).json({ message: 'Token ausente. Acesso negado.' });
+      return res.status(403).json({ message: "Token ausente. Acesso negado." });
     }
 
-    const token = authHeader.split(' ')[1]; // Extrair o token após "Bearer"
+    const token = authHeader.split(" ")[1]; // Extrair o token após "Bearer"
 
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
       if (err) {
-        return res.status(403).json({ message: 'Token inválido ou expirado.' });
+        return res.status(403).json({ message: "Token inválido ou expirado." });
       }
 
       req.usuario = decoded.id; // Salva o ID do usuário no objeto req
       next(); // Continua para o próximo middleware ou rota
     });
   } catch (error) {
-    console.error('Erro ao verificar o token:', error);
-    res.status(500).json({ message: 'Erro interno ao verificar o token.' });
+    console.error("Erro ao verificar o token:", error);
+    res.status(500).json({ message: "Erro interno ao verificar o token." });
   }
 }
 
 module.exports = verificarToken;
 
 // 2. Listar todos os usuários (READ)
-app.get('/api/usuario', async (req, res) => {
+app.get("/api/usuario", async (req, res) => {
   try {
     const usuario = await Usuario.findAll();
     res.status(200).json(usuario);
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao buscar usuário.', details: error.message });
+    res
+      .status(500)
+      .json({ error: "Erro ao buscar usuário.", details: error.message });
   }
 });
 
 // 4. Deletar um usuário (DELETE)
- app.delete('/api/usuario/:id', async (req, res) => {
+app.delete("/api/usuario/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
     const usuario = await Usuario.findByPk(id);
     if (!usuario) {
-      return res.status(404).json({ error: 'Usuário não encontrado.' });
+      return res.status(404).json({ error: "Usuário não encontrado." });
     }
 
     await usuario.destroy();
-    res.status(200).json({ message: 'Usuário deletado com sucesso.' });
+    res.status(200).json({ message: "Usuário deletado com sucesso." });
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao deletar usuário.', details: error.message });
+    res
+      .status(500)
+      .json({ error: "Erro ao deletar usuário.", details: error.message });
   }
 });
 
-app.get('/api/usuario/:id', async (req, res) => {
+app.get("/api/usuario/:id", async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1]; // "Bearer token"
+    const token = req.headers.authorization?.split(" ")[1]; // "Bearer token"
     if (!token) {
-      return res.status(401).json({ error: 'Token não fornecido.' });
+      return res.status(401).json({ error: "Token não fornecido." });
     }
 
     const decoded = jwt.verify(token, SECRET_KEY);
     const usuario = await Usuario.findByPk(decoded.id);
 
     if (!usuario) {
-      return res.status(404).json({ error: 'Usuário não encontrado.' });
+      return res.status(404).json({ error: "Usuário não encontrado." });
     }
 
     res.status(200).json(usuario);
   } catch (error) {
-    console.error('Erro ao buscar usuário logado:', error);
-    res.status(500).json({ error: 'Erro ao buscar usuário logado.' });
+    console.error("Erro ao buscar usuário logado:", error);
+    res.status(500).json({ error: "Erro ao buscar usuário logado." });
   }
 });
 
-app.post('/api/tarefa', async (req, res) => {
+app.post("/api/tarefa", async (req, res) => {
   try {
-    const { idusuario, idprioridade, titulo, descricao, idestado, idmae } = req.body;
+    const { idusuario, idprioridade, titulo, descricao, idestado, idmae } =
+      req.body;
 
     // Verificação de campos obrigatórios
     if (!idusuario || !idprioridade || !titulo || !idestado) {
-      return res.status(400).json({ error: 'Campos obrigatórios ausentes.' });
+      return res.status(400).json({ error: "Campos obrigatórios ausentes." });
     }
 
     // Criação da tarefa
@@ -373,116 +400,266 @@ app.post('/api/tarefa', async (req, res) => {
       dthrfim: new Date() || null,
     });
 
+    // Adicionar documentos
+    if (req.files) {
+      const documentos = req.files.map((file) => ({
+        idtarefa: tarefa.id,
+        idusuario,
+        nome: file.originalname,
+        caminho: file.path,
+        extensao: path.extname(file.originalname),
+        tamanho: `${file.size} bytes`,
+      }));
+
+      await Documento.bulkCreate(documentos, { transaction });
+    }
+
     res.status(201).json({
-      message: 'Tarefa criada com sucesso!',
+      message: "Tarefa criada com sucesso!",
       tarefa,
       tarefaEstado,
     });
   } catch (error) {
-    console.error('Erro ao criar tarefa:', error);
-    res.status(500).json({ error: 'Erro interno ao criar tarefa.', details: error.message });
+    console.error("Erro ao criar tarefa:", error);
+    res
+      .status(500)
+      .json({ error: "Erro interno ao criar tarefa.", details: error.message });
   }
 });
 
-app.get('/api/tarefa/meta', async (req, res) => {
+app.get("/api/tarefa/meta", async (req, res) => {
   try {
     const prioridades = await Prioridade.findAll(); // Busca todas as prioridades
     const estados = await Estado.findAll(); // Busca todos os estados
 
     res.status(200).json({ prioridades, estados });
   } catch (error) {
-    console.error('Erro ao carregar prioridades e estados:', error);
-    res.status(500).json({ error: 'Erro ao carregar prioridades e estados.' });
+    console.error("Erro ao carregar prioridades e estados:", error);
+    res.status(500).json({ error: "Erro ao carregar prioridades e estados." });
   }
 });
 
-app.get('/api/tarefa-estados', async (req, res) => {
+app.get("/api/tarefa-estados", async (req, res) => {
   try {
     const estadosRelacionados = await TarefaEstado.findAll({
       include: [
         {
           model: Estado,
-          attributes: ['id', 'nome'],
+          attributes: ["id", "nome"],
         },
       ],
-      attributes: ['idestado', 'idtarefa', 'idusuario', 'dthrinicio', 'dthrfim'],
+      attributes: [
+        "idestado",
+        "idtarefa",
+        "idusuario",
+        "dthrinicio",
+        "dthrfim",
+      ],
     });
 
     res.status(200).json(estadosRelacionados);
   } catch (error) {
-    console.error('Erro ao carregar estados relacionados às tarefas:', error);
-    res.status(500).json({ error: 'Erro ao carregar estados relacionados às tarefas.' });
+    console.error("Erro ao carregar estados relacionados às tarefas:", error);
+    res
+      .status(500)
+      .json({ error: "Erro ao carregar estados relacionados às tarefas." });
   }
 });
 
-app.get('/api/prioridades', async (req, res) => {
+app.get("/api/prioridades", async (req, res) => {
   try {
     const prioridades = await Prioridade.findAll({
-      attributes: ['id', 'nome'], // Retorna apenas as colunas necessárias
+      attributes: ["id", "nome"], // Retorna apenas as colunas necessárias
     });
 
     res.status(200).json(prioridades);
   } catch (error) {
-    console.error('Erro ao carregar prioridades:', error);
-    res.status(500).json({ error: 'Erro ao carregar prioridades.' });
+    console.error("Erro ao carregar prioridades:", error);
+    res.status(500).json({ error: "Erro ao carregar prioridades." });
   }
 });
 
-app.get('/api/tarefa', async (req, res) => {
+app.get("/api/tarefa", autenticarToken, async (req, res) => {
   try {
+    const idusuario = req.usuario; // ID do usuário obtido do token JWT
+
     const tarefas = await Tarefa.findAll({
+      where: { idusuario }, // Filtra pelo usuário logado
       include: [
         {
+          model: Usuario,
+          as: 'Usuario', // Use o mesmo alias definido no modelo
+          attributes: ['nome'], // Nome do usuário responsável
+        },
+        {
           model: Prioridade,
-          attributes: ['id', 'nome'], // Nome da prioridade
+          as: "Prioridade",
+          attributes: ["nome"], // Nome da prioridade
         },
         {
           model: TarefasEstado,
+          as: "TarefasEstados",
           include: [
             {
               model: Estado,
-              attributes: ['id', 'nome'], // Estado atual da tarefa
+              as: "Estado",
+              attributes: ["nome"], // Nome do estado
             },
           ],
-          attributes: ['dthrinicio', 'dthrfim'], // Datas de início e fim
         },
         {
-          model: Usuario,
-          attributes: ['id', 'nome', 'email'], // Usuário responsável
+          model: Documento,
+          as: "Documentos",
+          attributes: ["nome", "caminho"], // Inclua os documentos
         },
-      ],
-      attributes: [
-        'id',
-        'titulo',
-        'descricao',
-        'dthrinicio',
-        'dthrfim',
-        'idusuario',
-        'idprioridade',
+        {
+          model: Tarefa,
+          as: "SubTarefas",
+          include: [
+            {
+              model: Prioridade,
+              as: "Prioridade",
+              attributes: ["nome"],
+            },
+            {
+              model: TarefasEstado,
+              as: "TarefasEstados",
+              include: [
+                {
+                  model: Estado,
+                  as: "Estado",
+                  attributes: ["nome"],
+                },
+              ],
+            },
+          ],
+        },
       ],
     });
 
     res.status(200).json(tarefas);
   } catch (error) {
-    console.error('Erro ao obter tarefas:', error.message);
-    res.status(500).json({ error: 'Erro ao carregar tarefas.' });
+    console.error("Erro ao carregar tarefas:", error);
+    res.status(500).json({ error: "Erro ao carregar tarefas." });
   }
 });
 
-app.put('/api/tarefa/:id/concluir', async (req, res) => {
+function autenticarToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ error: "Token não fornecido." });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ error: "Token inválido ou expirado." });
+    }
+
+    req.usuario = decoded.id; // Adiciona o ID do usuário à requisição
+    next();
+  });
+}
+
+app.put('/api/tarefa/:id', autenticarToken, async (req, res) => {
+  try {
+    const { id } = req.params; // ID da tarefa a ser atualizada
+    const { titulo, descricao, idprioridade, idestado, dthrinicio, dthrfim } = req.body;
+    const idusuario = req.usuario; // ID do usuário autenticado
+
+    console.log('Dados recebidos para atualização:', { id, titulo, descricao, idprioridade, idestado, dthrinicio, dthrfim });
+
+    // Busca a tarefa para garantir que pertence ao usuário
+    const tarefa = await Tarefa.findOne({ where: { id, idusuario } });
+    if (!tarefa) {
+      console.log('Tarefa não encontrada ou não pertence ao usuário.');
+      return res.status(404).json({ error: 'Tarefa não encontrada ou não pertence ao usuário.' });
+    }
+
+    // Atualiza os dados da tarefa
+    console.log('Tarefa encontrada, atualizando...');
+    await tarefa.update({
+      titulo,
+      descricao,
+      idprioridade,
+      dthrinicio: dthrinicio || tarefa.dthrinicio,
+      dthrfim: dthrfim || tarefa.dthrfim,
+    });
+
+    console.log('Tarefa atualizada com sucesso:', tarefa);
+
+    // Atualiza o estado, se necessário
+    if (idestado) {
+      const [estadoAtualizado] = await TarefasEstado.update(
+        { idestado },
+        {
+          where: {
+            idtarefa: id,
+            idusuario,
+            dthrfim: null,
+          },
+        }
+      );
+
+      if (!estadoAtualizado) {
+        console.log('Estado ativo não encontrado, criando novo estado.');
+        await TarefasEstado.create({
+          idtarefa: id,
+          idusuario,
+          idestado,
+          dthrinicio: new Date(),
+        });
+      }
+    }
+
+    res.status(200).json({ message: 'Tarefa atualizada com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao atualizar tarefa:', error.message);
+    res.status(500).json({ error: 'Erro ao atualizar tarefa.', details: error.message });
+  }
+});
+
+app.get("/api/tarefa", autenticarToken, async (req, res) => {
+  try {
+    const idusuario = req.usuario; // ID do usuário do token JWT
+
+    // Busca todas as tarefas associadas ao usuário logado
+    const tarefas = await Tarefa.findAll({
+      where: { idusuario },
+      include: [
+        { model: Prioridade, attributes: ["id", "descricao"] },
+        { model: Estado, attributes: ["id", "descricao"] },
+      ],
+    });
+
+    res.status(200).json(tarefas);
+  } catch (error) {
+    console.error("Erro ao buscar tarefas do usuário:", error);
+    res.status(500).json({ error: "Erro ao buscar tarefas do usuário." });
+  }
+});
+
+app.put('/api/tarefa/:id/concluir', autenticarToken, async (req, res) => {
   try {
     const { id } = req.params;
-    const { idusuario, idestado } = req.body;
+    const idusuario = req.usuario; // Obtém o ID do usuário logado do token JWT
 
-    // Atualizar `dthrfim` na tabela `TarefasEstado`
+    // Atualiza a data de conclusão na tabela `TarefasEstado`
     await TarefasEstado.update(
       { dthrfim: new Date() },
-      { where: { idtarefa: id, idusuario, idestado, dthrfim: null } }
+      {
+        where: {
+          idtarefa: id,
+          idusuario,
+          dthrfim: null, // Apenas tarefas não concluídas
+        },
+      }
     );
 
-    // Atualizar `dthrfim` na tabela `Tarefa`
+    // Atualiza o estado da tarefa na tabela `Tarefa`
     await Tarefa.update(
-      { dthrfim: new Date() },
+      { estado: 'Concluído', dthrfim: new Date() },
       { where: { id } }
     );
 
@@ -493,45 +670,53 @@ app.put('/api/tarefa/:id/concluir', async (req, res) => {
   }
 });
 
-app.get('/api/tarefa/subtarefa/:idUsuario', async (req, res) => {
+
+app.get("/api/tarefa/subtarefa/:idUsuario", async (req, res) => {
   try {
     const { idusuario } = req.params;
 
     const subtarefas = await Tarefa.findAll({
       where: { idusuario: idusuario, idmae: { [sequelize.Op.ne]: null } },
       include: [
-        { model: Prioridade, attributes: ['nome'] },
-        { model: Estado, through: TarefasEstado, attributes: ['nome'] },
+        { model: Prioridade, attributes: ["nome"] },
+        { model: Estado, through: TarefasEstado, attributes: ["nome"] },
       ],
     });
 
     res.status(200).json(subtarefas);
   } catch (error) {
-    console.error('Erro ao carregar subtarefas:', error);
-    res.status(500).json({ error: 'Erro ao carregar subtarefas.' });
+    console.error("Erro ao carregar subtarefas:", error);
+    res.status(500).json({ error: "Erro ao carregar subtarefas." });
   }
 });
 
-app.delete('/api/tarefa/:id', async (req, res) => {
+app.delete("/api/tarefa/:id", async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Excluir estados relacionados à tarefa
+    await TarefasEstado.destroy({ where: { idtarefa: id } });
 
     // Excluir subtarefas relacionadas
     await Tarefa.destroy({ where: { idmae: id } });
 
-    // Excluir tarefa principal
-    await Tarefa.destroy({ where: { id } });
+    // Excluir a tarefa principal
+    const result = await Tarefa.destroy({ where: { id } });
 
-    res.status(200).json({ message: 'Tarefa excluída com sucesso!' });
+    if (result === 0) {
+      return res.status(404).json({ error: "Tarefa não encontrada." });
+    }
+
+    res.status(200).json({ message: "Tarefa excluída com sucesso." });
   } catch (error) {
-    console.error('Erro ao excluir tarefa:', error);
-    res.status(500).json({ error: 'Erro ao excluir tarefa.' });
+    console.error("Erro ao excluir tarefa:", error);
+    res.status(500).json({ error: "Erro ao excluir tarefa." });
   }
 });
 
-
 // Sincronizar o banco de dados e iniciar o servidor
-sequelize.sync({ alter: true })
+sequelize
+  .sync({ alter: true })
   .then(() => {
     console.log("Banco de dados sincronizado.");
     app.listen(PORT, () => {

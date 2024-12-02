@@ -10,7 +10,28 @@ import {
 import { AuthService } from '../services/auth.service';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { TaskService } from '../services/task.service';
-import { Tarefa, Prioridade, Usuario } from '../menu/menu.model';
+
+interface Tarefa {
+  id: number;
+  titulo: string;
+  descricao?: string;
+  usuario: string;
+  prioridade: string;
+  estado: string;
+  dthrfim: Date| number | string;
+  dthrinicio: Date| number | string;
+  documento?: { nome: string; url: string };
+  subTarefas: SubTarefa[];
+}
+
+interface SubTarefa {
+  id: number;
+  titulo: string;
+  prioridade: string;
+  estado: string;
+  dthrinicio: Date;
+  dthrfim?: Date;
+}
 
 @Component({
   selector: 'app-menu',
@@ -66,6 +87,7 @@ inicializarFormularios(): void {
 
   // Formulário para criação/edição de tarefas
   this.tarefaForm = this.fb.group({
+    id: [null], // ID da tarefa, essencial para atualizações
     idusuario: [this.authService.obterIdUsuarioLogado(), Validators.required], // ID do usuário logado
     idprioridade: ['', Validators.required], // Prioridade selecionada
     titulo: ['', Validators.required], // Título da tarefa
@@ -181,17 +203,40 @@ carregarPrioridades(): void {
 /** Carregar todas as tarefas do usuário */
 carregarTarefas(): void {
   this.taskService.obterTarefas().subscribe({
-    next: (res) => {
-      this.tarefas = res.map((tarefa) => ({
-        id: tarefa.id,
-        titulo: tarefa.titulo,
-        descricao: tarefa.descricao || 'Sem descrição',
-        usuario: tarefa.Usuario?.nome || 'Desconhecido',
-        prioridade: tarefa.Prioridade?.nome || 'Sem prioridade',
-        estado: tarefa.TarefasEstados[0]?.Estado?.nome || 'Não definido',
-        dthrinicio: tarefa.dthrinicio,
-        dthrfim: tarefa.dthrfim,
-      }));
+    next: (res: any[]) => {
+      this.tarefas = res.map((tarefa) => {
+        // Estrutura do objeto tarefa
+        const tarefaCompleta = {
+          id: tarefa.id,
+          titulo: tarefa.titulo,
+          descricao: tarefa.descricao || 'Sem descrição',
+          usuario: tarefa.Usuario?.nome || 'Desconhecido',
+          prioridade: tarefa.Prioridade?.nome || 'Sem prioridade',
+          estado: tarefa.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
+          dthrinicio: tarefa.dthrinicio,
+          dthrfim: tarefa.dthrfim,
+          documento: tarefa.Documentos?.[0]
+            ? {
+                nome: tarefa.Documentos[0].nome,
+                url: tarefa.Documentos[0].caminho,
+              }
+            : undefined,
+          subTarefas: tarefa.SubTarefas?.map((sub: any) => ({
+            id: sub.id,
+            titulo: sub.titulo,
+            prioridade: sub.Prioridade?.nome || 'Sem prioridade',
+            estado: sub.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
+            dthrinicio: sub.dthrinicio,
+            dthrfim: sub.dthrfim,
+          })) || [],
+        };
+
+        // Atualizar progresso (assumindo que a lógica está em `atualizarProgresso`)
+        this.atualizarProgresso(tarefaCompleta);
+
+        return tarefaCompleta;
+      });
+
       console.log('Tarefas carregadas:', this.tarefas);
     },
     error: (err) => {
@@ -200,28 +245,37 @@ carregarTarefas(): void {
     },
   });
 }
+
+
 /** Salvar uma nova tarefa ou editar uma existente */
 salvarTarefa(): void {
   if (this.tarefaForm.invalid) {
-    alert('Por favor, preencha todos os campos obrigatórios.');
+    alert('Preencha todos os campos obrigatórios.');
     return;
   }
 
-  const novaTarefa = this.tarefaForm.value;
-  novaTarefa.dthrinicio = new Date(); // Adiciona data e hora de início
-  novaTarefa.dthrfim = null; // Inicializa como null
+  const tarefa = this.tarefaForm.value;
 
-  console.log('Enviando dados da tarefa:', novaTarefa);
+  if (!tarefa.id) {
+    alert('ID da tarefa não encontrado. Verifique a seleção da tarefa.');
+    return;
+  }
 
-  this.taskService.criarTarefa(novaTarefa).subscribe({
+  this.taskService.atualizarTarefa(tarefa.id, tarefa).subscribe({
     next: (res) => {
-      alert('Tarefa criada com sucesso!');
+      alert(res.message);
+
+      // Atualiza o card no array local
+      const index = this.tarefas.findIndex((t) => t.id === tarefa.id);
+      if (index !== -1) {
+        this.tarefas[index] = res.tarefa;
+      }
+
       this.fecharModal();
-      this.carregarTarefas(); // Atualiza os cards
     },
     error: (err) => {
-      console.error('Erro ao criar tarefa:', err);
-      alert('Erro ao criar a tarefa. Verifique o console.');
+      console.error('Erro ao atualizar tarefa:', err);
+      alert('Erro ao atualizar tarefa.');
     },
   });
 }
@@ -244,17 +298,35 @@ salvarNovaTarefa(tarefa: any): void {
   });
 }
 
+concluirTarefa(idTarefa: number): void {
+  this.taskService.concluirTarefa(idTarefa).subscribe({
+    next: () => {
+      alert('Tarefa concluída com sucesso!');
+      this.carregarTarefas(); // Recarrega as tarefas atualizadas
+    },
+    error: (err) => {
+      console.error('Erro ao concluir a tarefa:', err);
+      alert('Erro ao concluir a tarefa.');
+    },
+  });
+}
+
+
 
 /** Excluir uma tarefa */
 excluirTarefa(id: number): void {
   this.taskService.excluirTarefa(id).subscribe({
     next: () => {
-      alert('Tarefa excluída com sucesso!');
-      this.carregarTarefas();
+      alert('Tarefa excluída com sucesso.');
+      this.carregarTarefas(); // Recarrega os cards após exclusão
     },
-    error: () => alert('Erro ao excluir a tarefa.'),
+    error: (err) => {
+      console.error('Erro ao excluir tarefa:', err);
+      alert('Erro ao excluir tarefa.');
+    },
   });
 }
+
 
 /** Abrir o modal para criar uma subtarefa */
 incluirSubTarefa(tarefa: any): void {
@@ -268,7 +340,7 @@ incluirSubTarefa(tarefa: any): void {
 
 /** Abrir o modal para criar ou editar uma tarefa */
 editarTarefa(tarefa: any): void {
-  this.tarefaForm.patchValue(tarefa);
+  this.tarefaForm.patchValue(tarefa); // Preenche o formulário com os dados da tarefa
   this.tarefaEditando = tarefa;
   this.isModalVisible = true;
 }
@@ -311,6 +383,19 @@ editarTarefa(tarefa: any): void {
     const total = new Date(tarefa.dthrfim).getTime() - new Date(tarefa.dthrinicio).getTime();
     const elapsed = new Date().getTime() - new Date(tarefa.dthrinicio).getTime();
     return Math.min((elapsed / total) * 100, 100);
+  }
+
+   // Atualiza o progresso de uma tarefa
+   atualizarProgresso(tarefa: any): void {
+    this.taskService.getProgresso(tarefa.id).subscribe({
+      next: (res) => {
+        tarefa.progresso = res.progresso; // Adiciona o progresso à tarefa
+      },
+      error: (err) => {
+        console.error(`Erro ao carregar progresso da tarefa ${tarefa.id}:`, err);
+        tarefa.progresso = 0; // Define progresso zero em caso de erro
+      },
+    });
   }
 
 }

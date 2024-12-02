@@ -8,7 +8,7 @@ export const API_PATH = 'http://localhost:3000/api';
   providedIn: 'root',
 })
 export class TaskService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /** Obter prioridades e estados disponíveis */
   obterMetadados(): Observable<any> {
@@ -33,15 +33,26 @@ export class TaskService {
     return this.http.post(`${API_PATH}/tarefa`, tarefa, { headers });
   }
 
-  // Concluir tarefa
-  concluirTarefa(id: number, dados: any): Observable<any> {
+  // Busca o progresso da tarefa pelo ID
+  getProgresso(id: number): Observable<{ progresso: number }> {
+    return this.http.get<{ progresso: number }>(`${API_PATH}/tarefa/${id}/progresso`);
+  }
+
+  // Concluir Tarefa
+  concluirTarefa(idTarefa: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('authToken')}`, // Inclui o token JWT
+    });
+
+    return this.http.put(`${API_PATH}/tarefa/${idTarefa}/concluir`, {}, { headers });
+  }
+
+  atualizarTarefa(id: number, tarefaData: any): Observable<any> {
     const headers = new HttpHeaders().set(
       'Authorization',
-      `Bearer ${localStorage.getItem('authToken')}`
+      `Bearer ${localStorage.getItem('authToken')}` // Certifique-se de que o token está armazenado corretamente
     );
-    return this.http.put(`${API_PATH}/tarefa/${id}/concluir`, dados, {
-      headers,
-    });
+    return this.http.put(`${API_PATH}/tarefa/${id}`, tarefaData, { headers });
   }
 
   // Excluir tarefa
@@ -59,12 +70,11 @@ export class TaskService {
   }
 
   /** Obter todas as tarefas de um usuário */
-  obterTarefas():Observable<any[]> {
-    return this.http.get<any[]>(`${API_PATH}/tarefa`).pipe(
-      catchError((err) => {
-        console.error('Erro ao obter tarefas:', err);
-        return throwError(() => new Error('Erro ao carregar tarefas.'));
-      })
-    );
+  obterTarefas(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('authToken')}`, // Inclui o token JWT
+    });
+
+    return this.http.get(`${API_PATH}/tarefa`, { headers });
   }
 }

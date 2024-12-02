@@ -1,23 +1,32 @@
-'use strict';
-const { Model } = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Tarefa extends Model {
     static associate(models) {
+      Tarefa.hasMany(models.TarefasEstado, {
+        foreignKey: 'idtarefa', // Nome correto da chave estrangeira
+        as: 'TarefasEstados',
+      });
+
       Tarefa.belongsTo(models.Usuario, {
         foreignKey: 'idusuario',
+        as: 'Usuario',
       });
+
       Tarefa.belongsTo(models.Prioridade, {
         foreignKey: 'idprioridade',
+        as: 'Prioridade',
       });
-      Tarefa.belongsTo(models.Tarefa, {
+
+      Tarefa.hasMany(models.Tarefa, {
         foreignKey: 'idmae',
+        as: 'SubTarefas',
       });
+
       Tarefa.hasMany(models.Documento, {
-        foreignKey: ['idtarefa', 'idusuario'],
-      });
-      Tarefa.hasMany(models.TarefasEstado, {
-        foreignKey: ['idtarefa', 'idusuario'],
+        foreignKey: 'idtarefa',
+        as: 'Documentos',
       });
     }
   }
@@ -60,8 +69,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Tarefa',
-      tableName: 'tarefa',
+      modelName: "Tarefa",
+      tableName: "tarefa",
       timestamps: false,
     }
   );
