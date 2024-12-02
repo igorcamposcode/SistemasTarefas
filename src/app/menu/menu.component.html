@@ -360,8 +360,8 @@
           <strong><h3 class="card-title">Descrição</h3></strong>
           <p class="card-text">{{ tarefa.descricao }}</p>
           <p><strong>Usuário Responsável: </strong> {{ tarefa.usuario }}</p>
-          <p><strong>Início: </strong> {{ tarefa.dthrinicio | date: 'short' }}</p>
-          <p><strong>Fim: </strong> {{ tarefa.dthrfim | date: 'short' }}</p>
+          <p><strong>Início: </strong> {{ tarefa.dthrinicio ? (tarefa.dthrinicio | date: 'dd/MM/yyyy HH:mm') : 'Não definido' }}</p>
+          <p><strong>Fim: </strong> {{ tarefa.dthrfim ? (tarefa.dthrfim | date: 'dd/MM/yyyy HH:mm') : 'Não definido' }}</p>
           <p><strong>Prioridade: </strong> {{ tarefa.prioridade }}</p>
           <p><strong>Status: </strong> {{ tarefa.estado }}</p>
           <p *ngIf="tarefa.documento">

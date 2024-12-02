@@ -370,38 +370,50 @@ app.get("/api/usuario/:id", async (req, res) => {
   }
 });
 
+const path = require("path");
+const { parseISO, format } = require('date-fns');
 app.post("/api/tarefa", async (req, res) => {
   try {
-    const { idusuario, idprioridade, titulo, descricao, idestado, idmae } =
-      req.body;
+    const {
+      idusuario,
+      idprioridade,
+      titulo,
+      descricao,
+      idestado,
+      idmae,
+      dthrinicio, // Data e hora de início
+      dthrfim,    // Data e hora de fim
+    } = req.body;
 
-    // Verificação de campos obrigatórios
+    // Validação de campos obrigatórios
     if (!idusuario || !idprioridade || !titulo || !idestado) {
       return res.status(400).json({ error: "Campos obrigatórios ausentes." });
     }
 
-    // Criação da tarefa
+    // Verifica e atribui `dthrinicio` para garantir que sempre tenha um valor
+    const dataInicio = dthrinicio ? new Date(dthrinicio) : new Date();
+
+    // Criação da tarefa principal
     const tarefa = await Tarefa.create({
       idusuario,
       idprioridade,
       titulo,
       descricao: descricao || null,
       idmae: idmae || null,
-      dthrinicio: new Date(),
-      dthrfim: new Date() || null,
+      dthrinicio: format(parseISO(dthrinicio), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"),
+      dthrfim: dthrfim ? format(parseISO(dthrfim), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
     });
 
-    // Criação do estado inicial na tabela tarefa_estado
+    // Registro do estado inicial na tabela `tarefasestado`
     const tarefaEstado = await TarefasEstado.create({
       idtarefa: tarefa.id,
       idusuario,
       idestado,
-      dthrinicio: new Date(),
-      dthrfim: new Date() || null,
+      dthrinicio: dataInicio, // Estado inicial da tarefa
     });
 
-    // Adicionar documentos
-    if (req.files) {
+    // Adicionar documentos, se enviados
+    if (req.files && req.files.length > 0) {
       const documentos = req.files.map((file) => ({
         idtarefa: tarefa.id,
         idusuario,
@@ -411,7 +423,7 @@ app.post("/api/tarefa", async (req, res) => {
         tamanho: `${file.size} bytes`,
       }));
 
-      await Documento.bulkCreate(documentos, { transaction });
+      await Documento.bulkCreate(documentos); // Adiciona documentos em lote
     }
 
     res.status(201).json({
@@ -421,11 +433,13 @@ app.post("/api/tarefa", async (req, res) => {
     });
   } catch (error) {
     console.error("Erro ao criar tarefa:", error);
-    res
-      .status(500)
-      .json({ error: "Erro interno ao criar tarefa.", details: error.message });
+    res.status(500).json({
+      error: "Erro interno ao criar tarefa.",
+      details: error.message,
+    });
   }
 });
+
 
 app.get("/api/tarefa/meta", async (req, res) => {
   try {
@@ -562,111 +576,57 @@ function autenticarToken(req, res, next) {
   });
 }
 
-app.put('/api/tarefa/:id', autenticarToken, async (req, res) => {
+app.put("/api/tarefa/:id", async (req, res) => {
   try {
-    const { id } = req.params; // ID da tarefa a ser atualizada
-    const { titulo, descricao, idprioridade, idestado, dthrinicio, dthrfim } = req.body;
-    const idusuario = req.usuario; // ID do usuário autenticado
+    const { id } = req.params; // ID da tarefa
+    const { idprioridade, titulo, descricao, idestado, dthrfim } = req.body;
 
-    console.log('Dados recebidos para atualização:', { id, titulo, descricao, idprioridade, idestado, dthrinicio, dthrfim });
+    // 1. Busca a tarefa pelo ID no banco de dados
+    const tarefa = await Tarefa.findByPk(id);
 
-    // Busca a tarefa para garantir que pertence ao usuário
-    const tarefa = await Tarefa.findOne({ where: { id, idusuario } });
     if (!tarefa) {
-      console.log('Tarefa não encontrada ou não pertence ao usuário.');
-      return res.status(404).json({ error: 'Tarefa não encontrada ou não pertence ao usuário.' });
+      return res.status(404).json({ error: "Tarefa não encontrada." });
     }
 
-    // Atualiza os dados da tarefa
-    console.log('Tarefa encontrada, atualizando...');
+    // 2. Atualiza os dados principais da tarefa
     await tarefa.update({
-      titulo,
-      descricao,
-      idprioridade,
-      dthrinicio: dthrinicio || tarefa.dthrinicio,
-      dthrfim: dthrfim || tarefa.dthrfim,
+      idprioridade: idprioridade || tarefa.idprioridade,
+      titulo: titulo || tarefa.titulo,
+      descricao: descricao || tarefa.descricao,
+      dthrfim: dthrfim ? new Date(dthrfim) : tarefa.dthrfim, // Atualiza a data/hora de finalização, se fornecida
     });
 
-    console.log('Tarefa atualizada com sucesso:', tarefa);
+    // 3. Busca ou cria um estado na tabela TarefaEstado
+    const [estadoAtual, criado] = await TarefasEstado.findOrCreate({
+      where: { idtarefa: id, idestado },
+      defaults: {
+        idusuario: tarefa.idusuario,
+        idestado,
+        dthrinicio: new Date(),
+        dthrfim: dthrfim ? new Date(dthrfim) : null,
+      },
+    });
 
-    // Atualiza o estado, se necessário
-    if (idestado) {
-      const [estadoAtualizado] = await TarefasEstado.update(
-        { idestado },
-        {
-          where: {
-            idtarefa: id,
-            idusuario,
-            dthrfim: null,
-          },
-        }
-      );
-
-      if (!estadoAtualizado) {
-        console.log('Estado ativo não encontrado, criando novo estado.');
-        await TarefasEstado.create({
-          idtarefa: id,
-          idusuario,
-          idestado,
-          dthrinicio: new Date(),
-        });
-      }
+    if (!criado) {
+      // Se já existir, atualiza os campos necessários
+      await estadoAtual.update({
+        idestado: idestado || estadoAtual.idestado, // Atualiza o estado se fornecido
+        dthrfim: dthrfim ? new Date(dthrfim) : estadoAtual.dthrfim, // Atualiza a data/hora de finalização
+      });
     }
 
-    res.status(200).json({ message: 'Tarefa atualizada com sucesso!' });
-  } catch (error) {
-    console.error('Erro ao atualizar tarefa:', error.message);
-    res.status(500).json({ error: 'Erro ao atualizar tarefa.', details: error.message });
-  }
-});
-
-app.get("/api/tarefa", autenticarToken, async (req, res) => {
-  try {
-    const idusuario = req.usuario; // ID do usuário do token JWT
-
-    // Busca todas as tarefas associadas ao usuário logado
-    const tarefas = await Tarefa.findAll({
-      where: { idusuario },
-      include: [
-        { model: Prioridade, attributes: ["id", "descricao"] },
-        { model: Estado, attributes: ["id", "descricao"] },
-      ],
+    // 4. Retorna os dados atualizados
+    res.status(200).json({
+      message: "Tarefa e estado atualizados com sucesso!",
+      tarefa,
+      estadoAtual,
     });
-
-    res.status(200).json(tarefas);
   } catch (error) {
-    console.error("Erro ao buscar tarefas do usuário:", error);
-    res.status(500).json({ error: "Erro ao buscar tarefas do usuário." });
-  }
-});
-
-app.put('/api/tarefa/:id/concluir', autenticarToken, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const idusuario = req.usuario; // Obtém o ID do usuário logado do token JWT
-
-    // Atualiza a data de conclusão na tabela `TarefasEstado`
-    await TarefasEstado.update(
-      { dthrfim: new Date() },
-      {
-        where: {
-          idtarefa: id,
-          idusuario,
-          dthrfim: null, // Apenas tarefas não concluídas
-        },
-      }
-    );
-
-    // Atualiza o estado da tarefa na tabela `Tarefa`
-    await Tarefa.update(
-      { estado: 'Concluído', dthrfim: new Date() },
-      { where: { id } }
-    );
-
-    res.status(200).json({ message: 'Tarefa concluída com sucesso!' });
-  } catch (error) {
-    console.error('Erro ao concluir tarefa:', error);
-    res.status(500).json({ error: 'Erro ao concluir tarefa.' });
+    console.error("Erro ao atualizar tarefa e estado:", error);
+    res.status(500).json({
+      error: "Erro ao atualizar tarefa.",
+      details: error.message,
+    });
   }
 });
 

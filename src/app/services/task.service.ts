@@ -52,7 +52,14 @@ export class TaskService {
       'Authorization',
       `Bearer ${localStorage.getItem('authToken')}` // Certifique-se de que o token está armazenado corretamente
     );
-    return this.http.put(`${API_PATH}/tarefa/${id}`, tarefaData, { headers });
+
+    // Garante que os campos `dthrfim` e outros dados estão no formato correto
+    const body = {
+      ...tarefaData,
+      dthrfim: tarefaData.dthrfim ? new Date(tarefaData.dthrfim).toISOString() : null, // Formata `dthrfim` corretamente
+    };
+
+    return this.http.put(`${API_PATH}/tarefa/${id}`, body, { headers });
   }
 
   // Excluir tarefa
