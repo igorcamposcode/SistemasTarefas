@@ -180,160 +180,167 @@
 
   <!-- Modal para Cadastro de Tarefas -->
   <div
-  class="modal fade"
-  id="tarefaModal"
-  tabindex="-1"
-  aria-labelledby="tarefaModalLabel"
-  aria-hidden="true"
-  [class.show]="isModalVisible"
-  [style.display]="isModalVisible ? 'block' : 'none'"
-  (keydown.esc)="fecharModal()"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="tarefaModalLabel">
-          {{ tarefaEditando ? "Editar Tarefa" : "Nova Tarefa" }}
-        </h5>
-        <button
-          type="button"
-          class="btn-close"
-          aria-label="Close"
-          (click)="fecharModal()"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="tarefaForm" (ngSubmit)="salvarNovaTarefa(tarefaForm.value)">
-          <!-- Nome da Tarefa -->
-          <div class="mb-3">
-            <label for="titulo" class="form-label">Título</label>
-            <input
-              id="titulo"
-              type="text"
-              class="form-control"
-              formControlName="titulo"
-              placeholder="Digite o título da tarefa"
-              required
-            />
-          </div>
+    class="modal fade"
+    id="tarefaModal"
+    tabindex="-1"
+    aria-labelledby="tarefaModalLabel"
+    aria-hidden="true"
+    [class.show]="isModalVisible"
+    [style.display]="isModalVisible ? 'block' : 'none'"
+    (keydown.esc)="fecharModal()"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tarefaModalLabel">
+            {{ tarefaEditando ? "Editar Tarefa" : "Nova Tarefa" }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="fecharModal()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form
+            [formGroup]="tarefaForm"
+            (ngSubmit)="salvarNovaTarefa(tarefaForm.value)"
+          >
+            <!-- Nome da Tarefa -->
+            <div class="mb-3">
+              <label for="titulo" class="form-label">Título</label>
+              <input
+                id="titulo"
+                type="text"
+                class="form-control"
+                formControlName="titulo"
+                placeholder="Digite o título da tarefa"
+                required
+              />
+            </div>
 
-          <!-- Descrição -->
-          <div class="mb-3">
-            <label for="descricao" class="form-label">Descrição</label>
-            <textarea
-              id="descricao"
-              class="form-control"
-              formControlName="descricao"
-              rows="3"
-              placeholder="Digite uma descrição para a tarefa"
-              required
-            ></textarea>
-          </div>
+            <!-- Descrição -->
+            <div class="mb-3">
+              <label for="descricao" class="form-label">Descrição</label>
+              <textarea
+                id="descricao"
+                class="form-control"
+                formControlName="descricao"
+                rows="3"
+                placeholder="Digite uma descrição para a tarefa"
+                required
+              ></textarea>
+            </div>
 
-          <!-- Prioridade -->
-          <div class="mb-3">
-            <label for="prioridade" class="form-label">Prioridade</label>
-            <select
-              id="prioridade"
-              class="form-select"
-              formControlName="idprioridade"
-              required
-            >
-              <option value="" disabled selected>Selecione uma prioridade</option>
-              <option
-                *ngFor="let prioridade of prioridades"
-                [value]="prioridade.id"
+            <!-- Prioridade -->
+            <div class="mb-3">
+              <label for="prioridade" class="form-label">Prioridade</label>
+              <select
+                id="prioridade"
+                class="form-select"
+                formControlName="idprioridade"
+                required
               >
-                {{ prioridade.nome }}
-              </option>
-            </select>
-          </div>
+                <option value="" disabled selected>
+                  Selecione uma prioridade
+                </option>
+                <option
+                  *ngFor="let prioridade of prioridades"
+                  [value]="prioridade.id"
+                >
+                  {{ prioridade.nome }}
+                </option>
+              </select>
+            </div>
 
-          <!-- Estado da Tarefa -->
-          <div class="mb-3">
-            <label for="estado" class="form-label">Estado</label>
-            <select
-              id="estado"
-              class="form-select"
-              formControlName="idestado"
-              required
-            >
-              <option value="" disabled selected>Selecione um estado</option>
-              <option *ngFor="let estado of estados" [value]="estado.id">
-                {{ estado.nome }}
-              </option>
-            </select>
-          </div>
+            <!-- Estado da Tarefa -->
+            <div class="mb-3">
+              <label for="estado" class="form-label">Estado</label>
+              <select
+                id="estado"
+                class="form-select"
+                formControlName="idestado"
+                required
+              >
+                <option value="" disabled selected>Selecione um estado</option>
+                <option *ngFor="let estado of estados" [value]="estado.id">
+                  {{ estado.nome }}
+                </option>
+              </select>
+            </div>
 
-          <!-- Usuário Responsável -->
-          <div class="mb-3">
-            <label for="usuario" class="form-label">Usuário Responsável</label>
-            <input
-              id="usuario"
-              type="text"
-              class="form-control"
-              formControlName="idusuario"
-              readonly
-              [value]="usuario.nome"
-              placeholder="Digite o ID do usuário responsável"
-            />
-          </div>
+            <!-- Usuário Responsável -->
+            <div class="mb-3">
+              <label for="usuario" class="form-label"
+                >Usuário Responsável</label
+              >
+              <input
+                id="usuario"
+                type="text"
+                class="form-control"
+                formControlName="idusuario"
+                readonly
+                [value]="usuario.nome"
+                placeholder="Digite o ID do usuário responsável"
+              />
+            </div>
 
-          <!-- Datas -->
-          <div class="mb-3">
-            <label for="dataInicio" class="form-label"
-              >Data e Hora de Início</label
-            >
-            <input
-              id="dataInicio"
-              type="datetime-local"
-              class="form-control"
-              formControlName="dthrinicio"
-              readonly
-            />
-          </div>
-          <div class="mb-3">
-            <label for="dataFim" class="form-label">Data e Hora de Fim</label>
-            <input
-              id="dataFim"
-              type="datetime-local"
-              class="form-control"
-              formControlName="dthrfim"
-            />
-          </div>
+            <!-- Datas -->
+            <div class="mb-3">
+              <label for="dataInicio" class="form-label"
+                >Data e Hora de Início</label
+              >
+              <input
+                id="dataInicio"
+                type="datetime-local"
+                class="form-control"
+                formControlName="dthrinicio"
+                readonly
+              />
+            </div>
+            <div class="mb-3">
+              <label for="dataFim" class="form-label">Data e Hora de Fim</label>
+              <input
+                id="dataFim"
+                type="datetime-local"
+                class="form-control"
+                formControlName="dthrfim"
+              />
+            </div>
 
-          <!-- Documento -->
-          <div class="mb-3">
-            <label for="documento" class="form-label">Anexar Documento</label>
-            <input
-              id="documento"
-              type="file"
-              class="form-control"
-              (change)="onFileSelected($event)"
-            />
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          (click)="fecharModal()"
-        >
-          Cancelar
-        </button>
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="tarefaForm.invalid"
-          (click)="salvarTarefa()"
-        >
-          Salvar
-        </button>
+            <!-- Documento -->
+            <div class="mb-3">
+              <label for="documento" class="form-label">Anexar Documento</label>
+              <input
+                id="documento"
+                type="file"
+                class="form-control"
+                (change)="onFileSelected($event)"
+              />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="fecharModal()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="tarefaForm.invalid"
+            (click)="salvarTarefa()"
+          >
+            Salvar
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <!-- Cards das Tarefas -->
   <div class="row">
@@ -372,7 +379,15 @@
           <h6>Sub Tarefas</h6>
           <ul>
             <li *ngFor="let sub of tarefa.subTarefas">
-              {{ sub.titulo }} - {{ sub.prioridade }} - {{ sub.estado }}
+              <span [class.text-decoration-line-through]="sub.estado === 'Concluído'">
+                {{ sub.titulo }} - {{ sub.prioridade }}
+              </span>
+              <button
+                class="btn btn-sm btn-outline-secondary ms-2"
+                (click)="editarSubTarefa(sub, tarefa)"
+              >
+                Editar
+              </button>
             </li>
           </ul>
 

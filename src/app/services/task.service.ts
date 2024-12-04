@@ -33,6 +33,33 @@ export class TaskService {
     return this.http.post(`${API_PATH}/tarefa`, tarefa, { headers });
   }
 
+  // Incluir subtarefa vinculada à tarefa pai
+  criarSubTarefa(idmae: number, subtarefaData: any): Observable<any> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${localStorage.getItem('authToken')}`
+    );
+    return this.http.post(`${API_PATH}/tarefa/${idmae}/subtarefa`, subtarefaData, { headers });
+  }
+
+  atualizarSubTarefa(id: number, subTarefaData: any): Observable<any> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${localStorage.getItem('authToken')}`
+    );
+    return this.http.put(`${API_PATH}/tarefa/subtarefa/${id}`, subTarefaData, {
+      headers,
+    });
+  }
+
+  excluirSubTarefa(id: number): Observable<any> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${localStorage.getItem('authToken')}`
+    );
+    return this.http.delete(`${API_PATH}/tarefa/subtarefa/${id}`, { headers });
+  }
+
   // Busca o progresso da tarefa pelo ID
   getProgresso(id: number): Observable<{ progresso: number }> {
     return this.http.get<{ progresso: number }>(`${API_PATH}/tarefa/${id}/progresso`);

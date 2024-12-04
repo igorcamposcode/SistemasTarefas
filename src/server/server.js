@@ -440,7 +440,6 @@ app.post("/api/tarefa", async (req, res) => {
   }
 });
 
-
 app.get("/api/tarefa/meta", async (req, res) => {
   try {
     const prioridades = await Prioridade.findAll(); // Busca todas as prioridades
@@ -671,6 +670,69 @@ app.delete("/api/tarefa/:id", async (req, res) => {
   } catch (error) {
     console.error("Erro ao excluir tarefa:", error);
     res.status(500).json({ error: "Erro ao excluir tarefa." });
+  }
+});
+
+// Sub tarefas
+app.post("/api/tarefa/:idmae/subtarefa", async (req, res) => {
+  try {
+    const { idmae } = req.params; // ID da tarefa mãe
+    const { titulo, descricao, idprioridade, dthrinicio, dthrfim } = req.body;
+
+    // Busca a tarefa mãe para obter o idusuario
+    const tarefaMae = await Tarefa.findByPk(idmae);
+
+    if (!tarefaMae) {
+      return res.status(404).json({ error: "Tarefa mãe não encontrada." });
+    }
+
+    // Cria a subtarefa associada
+    const subtarefa = await Tarefa.create({
+      titulo,
+      descricao,
+      idprioridade,
+      dthrinicio: dthrinicio ? new Date(dthrinicio) : null,
+      dthrfim: dthrfim ? new Date(dthrfim) : null,
+      idusuario: tarefaMae.idusuario, // Copia o idusuario da tarefa mãe
+      idmae: tarefaMae.id, // Relaciona com a tarefa mãe
+    });
+
+    res.status(201).json({
+      message: "Subtarefa criada com sucesso.",
+      subtarefa,
+    });
+  } catch (error) {
+    console.error("Erro ao criar subtarefa:", error);
+    res.status(500).json({
+      error: "Erro ao criar subtarefa.",
+      details: error.message,
+    });
+  }
+});
+
+app.put('/api/tarefa/:id/subtarefa', autenticarToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { titulo, descricao, idprioridade, idestado, dthrfim } = req.body;
+    const idusuario = req.usuario; // Obtém o usuário autenticado
+
+    const subtarefa = await Tarefa.findOne({ where: { id, idusuario } });
+    if (!subtarefa) {
+      return res.status(404).json({ error: 'Subtarefa não encontrada ou não pertence ao usuário.' });
+    }
+
+    await subtarefa.update({
+      titulo,
+      descricao,
+      idprioridade,
+      idestado,
+      dthrfim: dthrfim ? new Date(dthrfim) : subtarefa.dthrfim,
+    });
+
+    res.status(200).json({ message: 'Subtarefa atualizada com sucesso!', subtarefa });
+  } catch (error) {
+    console.error('Erro ao atualizar subtarefa:', error);
+    res.status(500).json({ error: 'Erro ao atualizar subtarefa.' });
   }
 });
 
