@@ -253,45 +253,49 @@ function autenticarToken(req, res, next) {
 // Endpoint para atualizar os dados do usuário autenticado
 
 // Atualizar usuário autenticado
-app.put("/api/usuario/", autenticarToken, async (req, res) => {
+app.put('/api/usuario', autenticarToken, async (req, res) => {
   try {
-    const { id } = req.usuario; // Obtém o ID do token JWT
     const { nome, telefone, email } = req.body;
+    const idusuario = req.usuario; // ID do usuário autenticado
 
-    // Verifica se o usuário existe no banco
-    const usuario = await Usuario.findByPk(id);
-    if (!usuario) {
-      return res.status(404).json({ error: "Usuário não encontrado." });
+    if (!nome || !telefone || !email) {
+      return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
     }
 
-    // Atualiza os dados do usuário
-    await usuario.update({ nome, telefone, email });
-    res.json({ message: "Usuário atualizado com sucesso!", usuario });
+    const usuario = await Usuario.update(
+      { nome, telefone, email },
+      { where: { id: idusuario } }
+    );
+
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuário não encontrado.' });
+    }
+
+    res.status(200).json({ message: 'Usuário atualizado com sucesso.' });
   } catch (error) {
-    console.error("Erro ao atualizar usuário:", error);
-    res.status(500).json({ error: "Erro ao atualizar usuário." });
+    console.error('Erro ao atualizar usuário:', error);
+    res.status(500).json({ error: 'Erro interno ao atualizar usuário.' });
   }
 });
 
+
 function autenticarToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  if (!authHeader) {
-    console.error("Token não fornecido.");
-    return res.status(401).json({ error: "Token não fornecido." });
+  const token = req.headers["authorization"]?.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ error: "Token de autenticação não fornecido." });
   }
 
-  const token = authHeader.split(" ")[1];
-  jwt.verify(token, SECRET_KEY, (err, decoded) => {
-    if (err) {
-      console.error("Token inválido ou expirado:", err.message);
-      return res.status(403).json({ error: "Token inválido ou expirado." });
-    }
-
-    console.log("Token válido. Usuário ID:", decoded.id);
-    req.usuario = decoded; // Adiciona o ID do usuário à requisição
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    req.usuario = { id: decoded.id }; // Inclui o ID do usuário
+    console.log("ID do usuário autenticado:", decoded.id); // Log para depuração
     next();
-  });
+  } catch (error) {
+    console.error("Erro ao autenticar token:", error);
+    return res.status(403).json({ error: "Token inválido ou expirado." });
+  }
 }
+
 
 function verificarToken(req, res, next) {
   try {

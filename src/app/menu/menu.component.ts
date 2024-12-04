@@ -159,23 +159,26 @@ export class MenuComponent implements OnInit {
   /** Salva os dados atualizados do usuário */
   salvarDadosUsuario(): void {
     if (this.usuarioForm.invalid) {
-      alert('Preencha todos os campos corretamente.');
+      alert("Preencha todos os campos corretamente.");
       return;
     }
 
     const dadosAtualizados = this.usuarioForm.value;
 
+    console.log("Dados enviados ao backend:", dadosAtualizados);
+
     this.authService.atualizarUsuario(dadosAtualizados).subscribe({
       next: (res) => {
-        alert(res.message || 'Dados atualizados com sucesso!');
+        alert(res.message || "Dados atualizados com sucesso!");
         this.carregarUsuario(); // Atualiza os dados no formulário
       },
       error: (err) => {
-        console.error('Erro ao atualizar usuário:', err);
-        alert('Erro ao atualizar os dados. Tente novamente.');
+        console.error("Erro ao atualizar usuário:", err);
+        alert("Erro ao atualizar os dados. Tente novamente.");
       },
     });
   }
+
 
   /** Abre o modal para exibir os dados do usuário */
   abrirModalUsuario(): void {
