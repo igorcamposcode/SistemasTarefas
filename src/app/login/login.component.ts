@@ -56,6 +56,7 @@ export class LoginComponent {
       senha: ['', Validators.required],
       remember: [false] // Checkbox para "Lembrar-me", com valor inicial false
     });
+
   }
 
   onSubmit(): void {
