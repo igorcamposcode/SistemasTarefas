@@ -417,7 +417,9 @@ app.post("/api/tarefa", async (req, res) => {
     });
 
     // Adicionar documentos, se enviados
-    if (req.files && req.files.length > 0) {
+    /*Não é o local exato para executar o end point
+     para adicionar documentos a uma tarefa*/
+  /*  if (req.files && req.files.length > 0) {
       const documentos = req.files.map((file) => ({
         idtarefa: tarefa.id,
         idusuario,
@@ -428,7 +430,7 @@ app.post("/api/tarefa", async (req, res) => {
       }));
 
       await Documento.bulkCreate(documentos); // Adiciona documentos em lote
-    }
+    } */
 
     res.status(201).json({
       message: "Tarefa criada com sucesso!",
