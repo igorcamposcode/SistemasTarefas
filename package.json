@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -36,7 +37,8 @@
     "@angular/localize": "^18.2.11",
     "@eslint/js": "^9.13.0",
     "@types/jasmine": "~5.1.0",
-    "eslint": "^9.13.0",
+    "angular-eslint": "19.0.2",
+    "eslint": "^9.16.0",
     "globals": "^15.11.0",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
@@ -45,7 +47,7 @@
     "karma-jasmine": "^4.0.2",
     "karma-jasmine-html-reporter": "^1.7.0",
     "typescript": "~5.4.2",
-    "typescript-eslint": "^8.11.0"
+    "typescript-eslint": "8.18.0"
   },
   "resolutions": {
     "jasmine-core": "5.1.2",

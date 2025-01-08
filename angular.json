@@ -16,7 +16,10 @@
             "outputPath": "dist/projeto-sistema-tarefa",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": ["zone.js", "@angular/localize/init"],
+            "polyfills": [
+              "zone.js",
+              "@angular/localize/init"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -69,7 +72,7 @@
             },
             "development": {
               "buildTarget": "projeto-sistema-tarefa:build:development",
-               "proxyConfig": "proxy.conf.json"
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -98,11 +101,23 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
   "cli": {
-    "analytics": "34fb0492-8a94-44b6-bef4-21e3112cfefa"
+    "analytics": "34fb0492-8a94-44b6-bef4-21e3112cfefa",
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   }
 }
