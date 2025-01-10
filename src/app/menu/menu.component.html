@@ -12,6 +12,18 @@
           'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
       "
     >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-house-door"
+        viewBox="1 1 16 16"
+      >
+        <path
+          d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z"
+        />
+      </svg>
       Usuário: {{ usuario.nome }}
     </button>
     <button
@@ -22,6 +34,18 @@
           'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
       "
     >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-file-earmark-plus-fill"
+        viewBox="1 1 16 16"
+      >
+        <path
+          d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"
+        />
+      </svg>
       Nova Tarefa
     </button>
     <button
@@ -32,6 +56,26 @@
           'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
       "
     >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-list-task"
+        viewBox="1 1 16 16"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5zM3 3H2v1h1z"
+        />
+        <path
+          d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1z"
+        />
+        <path
+          fill-rule="evenodd"
+          d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z"
+        />
+      </svg>
       Minhas Tarefas
     </button>
     <button
@@ -42,6 +86,19 @@
           'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
       "
     >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-door-closed"
+        viewBox="1 1 16 16"
+      >
+        <path
+          d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3zm1 13h8V2H4z"
+        />
+        <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0" />
+      </svg>
       Sair
     </button>
   </div>
@@ -346,13 +403,31 @@
   <div class="row">
     <div *ngFor="let tarefa of tarefas" class="col-md-4 mb-4">
       <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
           <span>{{ tarefa.titulo }}</span>
           <div>
             <button
               class="btn btn-sm btn-outline-secondary me-2"
               (click)="editarTarefa(tarefa)"
             >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-pencil-square"
+                viewBox="1 1 16 16"
+              >
+                <path
+                  d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                />
+              </svg>
               Editar
             </button>
             <button
@@ -364,28 +439,66 @@
           </div>
         </div>
         <div class="card-body">
-          <strong><h3 class="card-title">Descrição</h3></strong>
+          <strong>
+            <h3 class="card-title">Descrição</h3>
+          </strong>
           <p class="card-text">{{ tarefa.descricao }}</p>
           <p><strong>Usuário Responsável: </strong> {{ tarefa.usuario }}</p>
-          <p><strong>Início: </strong> {{ tarefa.dthrinicio ? (tarefa.dthrinicio | date: 'dd/MM/yyyy HH:mm') : 'Não definido' }}</p>
-          <p><strong>Fim: </strong> {{ tarefa.dthrfim ? (tarefa.dthrfim | date: 'dd/MM/yyyy HH:mm') : 'Não definido' }}</p>
+          <p>
+            <strong>Início: </strong>
+            {{
+              tarefa.dthrinicio
+                ? (tarefa.dthrinicio | date : "dd/MM/yyyy HH:mm")
+                : "Não definido"
+            }}
+          </p>
+          <p>
+            <strong>Fim: </strong>
+            {{
+              tarefa.dthrfim
+                ? (tarefa.dthrfim | date : "dd/MM/yyyy HH:mm")
+                : "Não definido"
+            }}
+          </p>
           <p><strong>Prioridade: </strong> {{ tarefa.prioridade }}</p>
           <p><strong>Status: </strong> {{ tarefa.estado }}</p>
           <p *ngIf="tarefa.documento">
             <strong>Documento:</strong>
-            <a [href]="tarefa.documento.url" target="_blank">{{ tarefa.documento.nome }}</a>
+            <a [href]="tarefa.documento.url" target="_blank">{{
+              tarefa.documento.nome
+            }}</a>
           </p>
 
           <h6>Sub Tarefas</h6>
           <ul>
             <li *ngFor="let sub of tarefa.subTarefas">
-              <span [class.text-decoration-line-through]="sub.estado === 'Concluído'">
+              <span
+                [class.text-decoration-line-through]="
+                  sub.estado === 'Concluído'
+                "
+              >
                 {{ sub.titulo }} - {{ sub.prioridade }}
               </span>
               <button
                 class="btn btn-sm btn-outline-secondary ms-2"
                 (click)="editarSubTarefa(sub, tarefa)"
               >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-pencil-square"
+                  viewBox="1 1 16 16"
+                >
+                  <path
+                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                  />
+                </svg>
                 Editar
               </button>
             </li>
@@ -409,7 +522,19 @@
             class="btn btn-sm btn-outline-primary me-2"
             (click)="incluirSubTarefa(tarefa)"
           >
-            + Adicionar Sub-Tarefa
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-file-earmark-plus-fill"
+              viewBox="0 1 16 16"
+            >
+              <path
+                d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"
+              />
+            </svg>
+            Adicionar Sub-Tarefa
           </button>
 
           <!-- Botão para Concluir Tarefa -->
@@ -418,6 +543,21 @@
             class="btn btn-sm btn-outline-success"
             (click)="concluirTarefa(tarefa.id)"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-check-circle"
+              viewBox="0 1 16 16"
+            >
+              <path
+                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+              />
+              <path
+                d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"
+              />
+            </svg>
             Concluir
           </button>
         </div>

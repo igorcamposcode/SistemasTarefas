@@ -17,32 +17,3 @@
   margin-inline-start: 1.5%;
 }
 
-.btn btn-primary {
-  height: 35px;
-  border-radius: 10px;
-  margin-right: 5px;
-  background-color: #E64C07;
-  color: white;
-  font-size: 2rem;
-}
-
-.btn btn-secondary {
-  height: 35px;
-  border-radius: 10px;
-  margin-top: 4.5%;
-  margin-right: 5px;
-  background-color: #E64C07;
-  color: white;
-  font-size: 2rem;
-}
-
-.btn btn-danger{
-  height: 35px;
-  border-radius: 10px;
-  margin-top: 4.5%;
-  margin-right: 2%;
-  background-color: #E64C07;
-  color: white;
-  font-size: 2rem;
-}
-

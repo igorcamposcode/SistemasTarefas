@@ -15,8 +15,7 @@
       "min": 0,
       "idle": 10000
     }
-  }
-  ,
+  },
   "test": {
     "username": "starefassystem",
     "password": "ci@systemtarefas2024b",
