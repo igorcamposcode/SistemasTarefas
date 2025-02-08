@@ -18,10 +18,11 @@ interface Tarefa {
   usuario: string;
   prioridade: string;
   estado: string;
-  dthrfim: Date | number | string;
-  dthrinicio: Date | number | string;
+  dthrfim: Date | number | string | null;
+  dthrinicio: Date | number | string | null;
   documento?: { nome: string; url: string };
   subTarefas: SubTarefa[];
+  progresso: number; // Adiciona a propriedade 'progresso'
 }
 
 interface SubTarefa {
@@ -29,6 +30,7 @@ interface SubTarefa {
   titulo: string;
   prioridade: string;
   estado: string;
+  progresso: number; // ✅ Adicionando a propriedade progresso
 }
 
 @Component({
@@ -234,40 +236,32 @@ export class MenuComponent implements OnInit {
     this.taskService.obterTarefas().subscribe({
       next: (res: any[]) => {
         this.tarefas = res.map((tarefa) => {
-          // Estrutura do objeto tarefa
-          const tarefaCompleta = {
+          const tarefaCompleta: Tarefa = {
             id: tarefa.id,
             titulo: tarefa.titulo,
             descricao: tarefa.descricao || 'Sem descrição',
             usuario: tarefa.Usuario?.nome || 'Desconhecido',
             prioridade: tarefa.Prioridade?.nome || 'Sem prioridade',
             estado: tarefa.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
-            dthrinicio: tarefa.dthrinicio ? new Date(tarefa.dthrinicio) : null,
-            dthrfim: tarefa.dthrfim ? new Date(tarefa.dthrfim) : null,
+            dthrinicio: tarefa.dthrinicio ? new Date(tarefa.dthrinicio) : '',
+            dthrfim: tarefa.dthrfim ? new Date(tarefa.dthrfim) : '',
             documento: tarefa.Documentos?.[0]
-              ? {
-                nome: tarefa.Documentos[0].nome,
-                url: tarefa.Documentos[0].caminho,
-              }
+              ? { nome: tarefa.Documentos[0].nome, url: tarefa.Documentos[0].caminho }
               : undefined,
-              subTarefas:
-              tarefa.SubTarefas?.map((sub: any) => ({
-                id: sub.id,
-                titulo: sub.titulo,
-                prioridade: sub.Prioridade?.nome || 'Sem prioridade',
-                estado: sub.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
-                dthrinicio: sub.dthrinicio,
-                dthrfim: sub.dthrfim,
-              })) || [],
+            subTarefas: tarefa.SubTarefas?.map((sub: any) => ({
+              id: sub.id,
+              titulo: sub.titulo,
+              prioridade: sub.Prioridade?.nome || 'Sem prioridade',
+              estado: sub.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
+            })) || [],
+            progresso: 0, // ✅ Inicialize com 0
           };
 
-          // Atualizar progresso (assumindo que a lógica está em `atualizarProgresso`)
-          this.atualizarProgresso(tarefaCompleta);
+          // ✅ Calcula o progresso da tarefa
+          tarefaCompleta.progresso = this.calcularProgresso(tarefaCompleta);
 
           return tarefaCompleta;
         });
-
-        console.log('Tarefas carregadas:', this.tarefas);
       },
       error: (err) => {
         console.error('Erro ao carregar tarefas:', err);
@@ -372,39 +366,16 @@ export class MenuComponent implements OnInit {
     });
   }
 
-  marcarSubTarefaConcluida(subTarefa: any, tarefa: any): void {
-    const novoEstado =
-      subTarefa.estado === 'Concluído' ? 'Pendente' : 'Concluído';
-
-    this.taskService
-      .atualizarSubTarefa(subTarefa.id, { idestado: novoEstado })
-      .subscribe({
-        next: () => {
-          subTarefa.estado = novoEstado; // Atualiza o estado no frontend
-          this.atualizarProgresso(tarefa); // Atualiza o progresso da tarefa principal
-          alert('Subtarefa atualizada com sucesso!');
-        },
-        error: (err) => {
-          console.error('Erro ao atualizar subtarefa:', err);
-          alert('Erro ao atualizar subtarefa.');
-        },
-      });
-  }
-
-  concluirTarefa(idTarefa: number): void {
-    const tarefa = this.tarefas.find((t) => t.id === idTarefa);
-
-    if (tarefa.subTarefas.some((sub: any) => sub.estado !== 'Concluído')) {
-      alert(
-        'Conclua todas as subtarefas antes de concluir a tarefa principal.'
-      );
-      return;
-    }
-
-    this.taskService.concluirTarefa(idTarefa).subscribe({
+  concluirTarefa(id: number): void {
+    this.taskService.concluirTarefa(id).subscribe({
       next: () => {
         alert('Tarefa concluída com sucesso!');
-        this.carregarTarefas(); // Recarrega as tarefas atualizadas
+        const tarefa = this.tarefas.find((t) => t.id === id);
+        if (tarefa) {
+          tarefa.estado = 'Concluído';
+          tarefa.progresso = this.calcularProgresso(tarefa);
+        }
+        this.carregarTarefas(); // Recarrega para refletir no frontend
       },
       error: (err) => {
         console.error('Erro ao concluir a tarefa:', err);
@@ -512,28 +483,53 @@ incluirSubTarefa(tarefa: any): void {
   // Calculate task progress
   calcularProgresso(tarefa: Tarefa): number {
     if (!tarefa.subTarefas || tarefa.subTarefas.length === 0) {
-      return 0;
+      return tarefa.estado === 'Concluído' ? 100 : 0;
     }
 
-    const concluidas = tarefa.subTarefas.filter(
-      (sub) => sub.estado === 'Concluído'
-    ).length;
-    return Math.round((concluidas / tarefa.subTarefas.length) * 100);
+    const totalSubTarefas = tarefa.subTarefas.length;
+    const concluidas = tarefa.subTarefas.filter((sub) => sub.estado === 'Concluído').length;
+
+    // ✅ Retorna o progresso calculado
+    return Math.round((concluidas / totalSubTarefas) * 100);
   }
 
-  // Atualiza o progresso de uma tarefa
-  atualizarProgresso(tarefa: any): void {
-    this.taskService.getProgresso(tarefa.id).subscribe({
-      next: (res) => {
-        tarefa.progresso = res.progresso; // Adiciona o progresso à tarefa
-      },
-      error: (err) => {
-        console.error(
-          `Erro ao carregar progresso da tarefa ${tarefa.id}:`,
-          err
-        );
-        tarefa.progresso = 0; // Define progresso zero em caso de erro
-      },
-    });
-  }
+
+ marcarSubTarefaConcluida(subTarefa: any, tarefa: any): void {
+  // Alterna o estado entre "Concluído" e "Pendente"
+  subTarefa.estado = subTarefa.estado === 'Concluído' ? 'Pendente' : 'Concluído';
+
+  // Atualiza o progresso da tarefa principal
+  tarefa.progresso = this.calcularProgresso(tarefa);
+
+  // Atualiza o backend para salvar o estado da subtarefa
+  this.taskService.atualizarSubTarefa(subTarefa.id, { estado: subTarefa.estado }).subscribe({
+    next: () => {
+      alert('Subtarefa atualizada com sucesso!');
+    },
+    error: (err) => {
+      console.error('Erro ao atualizar subtarefa:', err);
+      alert('Erro ao atualizar subtarefa.');
+    },
+  });
+}
+
+
+// Atualiza o progresso de uma tarefa no frontend e backend
+atualizarProgresso(tarefa: any): void {
+  const concluidas = tarefa.subTarefas.filter((sub: any) => sub.estado === 'Concluído').length;
+  const progresso = Math.round((concluidas / tarefa.subTarefas.length) * 100) || 0;
+
+  // Atualiza o progresso no frontend
+  tarefa.progresso = progresso;
+
+  // Atualiza o progresso no backend
+  this.taskService.atualizarProgresso(tarefa.id, progresso).subscribe({
+    next: () => alert('Progresso atualizado com sucesso!'),
+    error: (err) => {
+      console.error('Erro ao atualizar progresso:', err);
+      alert('Erro ao atualizar progresso.');
+    },
+  });
+}
+
 }
