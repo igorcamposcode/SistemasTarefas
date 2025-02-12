@@ -284,6 +284,12 @@ export class MenuComponent implements OnInit {
         alert('Erro ao carregar tarefas.');
       },
     });
+
+  }
+
+  atualizarTarefa(): void {
+    this.carregarTarefas();
+    window.location.reload();
   }
 
   /** Salvar uma nova tarefa ou editar uma existente */

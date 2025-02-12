@@ -1,4 +1,5 @@
-const { Tarefa, TarefasEstado, Prioridade, Estado, Documento } = require('../models');
+// controllers/tarefaController.js
+const { Tarefa, TarefasEstado, Prioridade, Estado, Usuario, Documento } = require('../models');
 
 exports.getMeta = async (req, res) => {
   try {
@@ -9,6 +10,7 @@ exports.getMeta = async (req, res) => {
     res.status(500).json({ error: "Erro ao carregar meta" });
   }
 };
+
 // Criação de tarefa com transação
 exports.criarTarefa = async (req, res) => {
   const transaction = await Tarefa.sequelize.transaction();
@@ -101,6 +103,11 @@ exports.buscarTarefas = async (req, res) => {
       where: { idusuario },
       include: [
         {
+          model: Usuario,
+          as: 'Usuario', // Use o mesmo alias definido no modelo
+          attributes: ['id', 'nome'] // Nome do usuário responsável
+        },
+        {
           model: Prioridade,
           as: 'Prioridade',
           attributes: ['id', 'nome']
@@ -115,6 +122,11 @@ exports.buscarTarefas = async (req, res) => {
           }],
           order: [['dthrinicio', 'DESC']],
           separate: true
+        },
+        {
+          model: Documento,
+          as: 'Documentos',
+          attributes: ['nome', 'caminho'] // Inclua os documentos
         },
         {
           model: Tarefa,
@@ -149,6 +161,7 @@ exports.buscarTarefas = async (req, res) => {
     if (Array.isArray(tarefas)) {
       const resposta = tarefas.map(tarefa => ({
         ...tarefa.toJSON(),
+        UsuarioResponsavel: tarefa.Usuario?.nome || 'Desconhecido', // Inclui o nome do usuário responsável
         EstadoAtual: tarefa.TarefasEstados?.[0]?.Estado,
         SubTarefas: tarefa.SubTarefas.map(sub => ({
           ...sub.toJSON(),
@@ -271,26 +284,57 @@ exports.atualizarTarefa = async (req, res) => {
   }
 };
 
-// Exclui uma tarefa
+// Controlador para deletar tarefa
 exports.deletarTarefa = async (req, res) => {
+  const transaction = await Tarefa.sequelize.transaction();
   try {
     const { id } = req.params;
 
-    // Exclui os estados relacionados à tarefa
-    await TarefasEstado.destroy({ where: { idtarefa: id } });
+    // Verifique se a tarefa existe
+    const tarefa = await Tarefa.findByPk(id, {
+      include: [
+        {
+          model: TarefasEstado,
+          as: 'TarefasEstados'
+        },
+        {
+          model: Tarefa,
+          as: 'SubTarefas',
+          include: [
+            {
+              model: TarefasEstado,
+              as: 'TarefasEstados'
+            }
+          ]
+        }
+      ],
+      transaction
+    });
 
-    // Exclui as subtarefas relacionadas
-    await Tarefa.destroy({ where: { idmae: id } });
-
-    // Exclui a tarefa principal
-    const result = await Tarefa.destroy({ where: { id } });
-
-    if (result === 0) {
+    if (!tarefa) {
+      await transaction.rollback();
       return res.status(404).json({ error: "Tarefa não encontrada." });
     }
 
+    // Exclui os estados relacionados às subtarefas
+    for (const subTarefa of tarefa.SubTarefas) {
+      await TarefasEstado.destroy({ where: { idtarefa: subTarefa.id }, transaction });
+    }
+
+    // Exclui as subtarefas
+    await Tarefa.destroy({ where: { idmae: id }, transaction });
+
+    // Exclui os estados relacionados à tarefa principal
+    await TarefasEstado.destroy({ where: { idtarefa: id }, transaction });
+
+    // Exclui a tarefa principal
+    await Tarefa.destroy({ where: { id }, transaction });
+
+    await transaction.commit();
+
     res.status(200).json({ message: "Tarefa excluída com sucesso." });
   } catch (error) {
+    await transaction.rollback();
     console.error("Erro ao excluir tarefa:", error);
     res.status(500).json({ error: "Erro ao excluir tarefa." });
   }
