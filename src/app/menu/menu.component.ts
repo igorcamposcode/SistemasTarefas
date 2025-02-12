@@ -45,6 +45,7 @@ export class MenuComponent implements OnInit {
   tarefas: any[] = []; // Lista de tarefas do usuário
   prioridades: any[] = []; // Prioridades disponíveis (ex.: Muito alta, Alta)
   estados: any[] = []; // Estados disponíveis (ex.: Aberto, Concluído)
+  loading: boolean = false;
 
   usuarioForm!: FormGroup; // Formulário para edição de dados do usuário
   tarefaForm!: FormGroup; // Formulário para criação/edição de tarefas
@@ -233,37 +234,52 @@ export class MenuComponent implements OnInit {
 
   /** Carregar todas as tarefas do usuário */
   carregarTarefas(): void {
+    this.loading = true; // Inicia o carregamento
+
     this.taskService.obterTarefas().subscribe({
-      next: (res: any[]) => {
-        this.tarefas = res.map((tarefa) => {
-          const tarefaCompleta: Tarefa = {
-            id: tarefa.id,
-            titulo: tarefa.titulo,
-            descricao: tarefa.descricao || 'Sem descrição',
-            usuario: tarefa.Usuario?.nome || 'Desconhecido',
-            prioridade: tarefa.Prioridade?.nome || 'Sem prioridade',
-            estado: tarefa.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
-            dthrinicio: tarefa.dthrinicio ? new Date(tarefa.dthrinicio) : '',
-            dthrfim: tarefa.dthrfim ? new Date(tarefa.dthrfim) : '',
-            documento: tarefa.Documentos?.[0]
-              ? { nome: tarefa.Documentos[0].nome, url: tarefa.Documentos[0].caminho }
-              : undefined,
-            subTarefas: tarefa.SubTarefas?.map((sub: any) => ({
-              id: sub.id,
-              titulo: sub.titulo,
-              prioridade: sub.Prioridade?.nome || 'Sem prioridade',
-              estado: sub.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
-            })) || [],
-            progresso: 0, // ✅ Inicialize com 0
-          };
+      next: (res: any) => {
+        this.loading = false; // Finaliza o carregamento
 
-          // ✅ Calcula o progresso da tarefa
-          tarefaCompleta.progresso = this.calcularProgresso(tarefaCompleta);
+        console.log(res); // Inspeciona a resposta
 
-          return tarefaCompleta;
-        });
+        if (res && Array.isArray(res.tarefas)) {
+          this.tarefas = res.tarefas.map((tarefa: any) => {
+            const tarefaCompleta: Tarefa = {
+              id: tarefa.id,
+              titulo: tarefa.titulo,
+              descricao: tarefa.descricao || 'Sem descrição',
+              usuario: tarefa.Usuario?.nome || 'Desconhecido',
+              prioridade: tarefa.Prioridade?.nome || 'Sem prioridade',
+              estado: tarefa.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
+              dthrinicio: tarefa.dthrinicio ? new Date(tarefa.dthrinicio) : '',
+              dthrfim: tarefa.dthrfim ? new Date(tarefa.dthrfim) : '',
+              documento: tarefa.Documentos?.[0]
+                ? { nome: tarefa.Documentos[0].nome, url: tarefa.Documentos[0].caminho }
+                : undefined,
+              subTarefas: tarefa.SubTarefas?.map((sub: any) => ({
+                id: sub.id,
+                titulo: sub.titulo,
+                prioridade: sub.Prioridade?.nome || 'Sem prioridade',
+                estado: sub.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
+              })) || [],
+              progresso: 0, // ✅ Inicialize com 0
+            };
+
+            // ✅ Calcula o progresso da tarefa
+            tarefaCompleta.progresso = this.calcularProgresso(tarefaCompleta);
+
+            return tarefaCompleta;
+          });
+
+          // Atualiza as prioridades e estados
+          this.prioridades = res.opcoes.prioridades;
+          this.estados = res.opcoes.estados;
+        } else {
+          console.error("res não é um array ou não contém a propriedade tarefas:", res);
+        }
       },
       error: (err) => {
+        this.loading = false; // Finaliza o carregamento em caso de erro
         console.error('Erro ao carregar tarefas:', err);
         alert('Erro ao carregar tarefas.');
       },

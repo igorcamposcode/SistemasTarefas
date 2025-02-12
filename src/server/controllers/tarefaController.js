@@ -1,33 +1,14 @@
-const { Tarefa, TarefasEstado, Prioridade, Estado, Usuario, Documento } = require('../models');
-const { Op } = require('sequelize');
+const { Tarefa, TarefasEstado, Prioridade, Estado, Documento } = require('../models');
 
-// Métodos auxiliares otimizados
-exports.listarPrioridades = async (req, res) => {
+exports.getMeta = async (req, res) => {
   try {
-    const prioridades = await Prioridade.findAll({
-      attributes: ['id', 'nome', 'cor', 'nivel'],
-      order: [['nivel', 'ASC']]
-    });
-    res.status(200).json(prioridades);
+    const meta = await Tarefa.findAll();
+    res.status(200).json(meta);
   } catch (error) {
-    console.error("Erro ao listar prioridades:", error);
-    res.status(500).json({ error: "Erro ao buscar prioridades" });
+    console.error("Erro ao carregar meta:", error);
+    res.status(500).json({ error: "Erro ao carregar meta" });
   }
 };
-
-exports.listarEstados = async (req, res) => {
-  try {
-    const estados = await Estado.findAll({
-      attributes: ['id', 'nome', 'icone', 'ordem'],
-      order: [['ordem', 'ASC']]
-    });
-    res.status(200).json(estados);
-  } catch (error) {
-    console.error("Erro ao listar estados:", error);
-    res.status(500).json({ error: "Erro ao buscar estados" });
-  }
-};
-
 // Criação de tarefa com transação
 exports.criarTarefa = async (req, res) => {
   const transaction = await Tarefa.sequelize.transaction();
@@ -77,7 +58,7 @@ exports.criarTarefa = async (req, res) => {
         { model: Prioridade, as: 'Prioridade' },
         {
           model: TarefasEstado,
-          as: 'HistoricoEstados',
+          as: 'TarefasEstados',
           include: [{ model: Estado, as: 'Estado' }],
           order: [['dthrinicio', 'DESC']],
           limit: 1
@@ -89,7 +70,7 @@ exports.criarTarefa = async (req, res) => {
       message: "Tarefa criada com sucesso!",
       tarefa: {
         ...tarefaCompleta.toJSON(),
-        EstadoAtual: tarefaCompleta.HistoricoEstados[0]?.Estado
+        EstadoAtual: tarefaCompleta.TarefasEstados[0]?.Estado
       },
       opcoes: {
         prioridades: await Prioridade.findAll(),
@@ -122,15 +103,15 @@ exports.buscarTarefas = async (req, res) => {
         {
           model: Prioridade,
           as: 'Prioridade',
-          attributes: ['id', 'nome', 'cor']
+          attributes: ['id', 'nome']
         },
         {
           model: TarefasEstado,
-          as: 'HistoricoEstados',
+          as: 'TarefasEstados',
           include: [{
             model: Estado,
             as: 'Estado',
-            attributes: ['id', 'nome', 'icone']
+            attributes: ['id', 'nome']
           }],
           order: [['dthrinicio', 'DESC']],
           separate: true
@@ -142,15 +123,15 @@ exports.buscarTarefas = async (req, res) => {
             {
               model: Prioridade,
               as: 'Prioridade',
-              attributes: ['id', 'nome', 'cor']
+              attributes: ['id', 'nome']
             },
             {
               model: TarefasEstado,
-              as: 'HistoricoEstados',
+              as: 'TarefasEstados',
               include: [{
                 model: Estado,
                 as: 'Estado',
-                attributes: ['id', 'nome', 'icone']
+                attributes: ['id', 'nome']
               }],
               order: [['dthrinicio', 'DESC']],
               separate: true,
@@ -165,24 +146,27 @@ exports.buscarTarefas = async (req, res) => {
       ]
     });
 
-    // Formatação otimizada
-    const resposta = tarefas.map(tarefa => ({
-      ...tarefa.toJSON(),
-      EstadoAtual: tarefa.HistoricoEstados[0]?.Estado,
-      SubTarefas: tarefa.SubTarefas.map(sub => ({
-        ...sub.toJSON(),
-        EstadoAtual: sub.HistoricoEstados[0]?.Estado
-      }))
-    }));
+    if (Array.isArray(tarefas)) {
+      const resposta = tarefas.map(tarefa => ({
+        ...tarefa.toJSON(),
+        EstadoAtual: tarefa.TarefasEstados?.[0]?.Estado,
+        SubTarefas: tarefa.SubTarefas.map(sub => ({
+          ...sub.toJSON(),
+          EstadoAtual: sub.TarefasEstados?.[0]?.Estado
+        }))
+      }));
 
-    res.status(200).json({
-      tarefas: resposta,
-      opcoes: {
-        prioridades: await Prioridade.findAll(),
-        estados: await Estado.findAll()
-      }
-    });
-
+      res.status(200).json({
+        tarefas: resposta,
+        opcoes: {
+          prioridades: await Prioridade.findAll(),
+          estados: await Estado.findAll()
+        }
+      });
+    } else {
+      console.error("tarefas não é um array");
+      res.status(500).json({ error: "Erro ao carregar tarefas, resultado inesperado" });
+    }
   } catch (error) {
     console.error("Erro ao carregar tarefas:", error);
     res.status(500).json({
@@ -207,7 +191,7 @@ exports.atualizarTarefa = async (req, res) => {
       include: [
         {
           model: TarefasEstado,
-          as: 'HistoricoEstados',
+          as: 'TarefasEstados',
           order: [['dthrinicio', 'DESC']],
           limit: 1
         }
@@ -253,7 +237,7 @@ exports.atualizarTarefa = async (req, res) => {
         { model: Prioridade, as: 'Prioridade' },
         {
           model: TarefasEstado,
-          as: 'HistoricoEstados',
+          as: 'TarefasEstados',
           include: [{ model: Estado, as: 'Estado' }],
           order: [['dthrinicio', 'DESC']],
           limit: 1
@@ -265,7 +249,7 @@ exports.atualizarTarefa = async (req, res) => {
       message: "Tarefa atualizada com sucesso!",
       tarefa: {
         ...tarefaAtualizada.toJSON(),
-        EstadoAtual: tarefaAtualizada.HistoricoEstados[0]?.Estado
+        EstadoAtual: tarefaAtualizada.TarefasEstados[0]?.Estado
       },
       opcoes: {
         prioridades: await Prioridade.findAll(),
