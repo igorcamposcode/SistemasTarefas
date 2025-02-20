@@ -63,7 +63,8 @@ export class MenuComponent implements OnInit {
     private taskService: TaskService,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {
+   }
 
   ngOnInit(): void {
     this.carregarUsuario(); // Obter dados do usuário logado
