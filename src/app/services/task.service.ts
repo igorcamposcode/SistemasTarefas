@@ -46,14 +46,22 @@ export class TaskService {
     );
   }
 
-  atualizarSubTarefa(id: number, subTarefaData: any): Observable<any> {
+  atualizarSubTarefa(id: number,idmae: number ,subTarefaData: any): Observable<any> {
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${localStorage.getItem('authToken')}`
     );
-    return this.http.put(`${API_PATH}/tarefa/subtarefa/${id}`, subTarefaData, {
-      headers,
-    });
+
+    // Garante que os campos `dthrfim` e outros dados estão no formato correto
+    const body = {
+      ...subTarefaData,
+      dthrfim: subTarefaData.dthrfim
+        ? new Date(subTarefaData.dthrfim).toISOString()
+        : null,
+    };
+
+    // Constrói a URL correta para a API
+    return this.http.put(`${API_PATH}/tarefa/${id}/subtarefa/${idmae}`, body, { headers });
   }
 
   excluirSubTarefa(id: number): Observable<any> {

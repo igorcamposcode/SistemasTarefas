@@ -63,7 +63,7 @@ export class MenuComponent implements OnInit {
     private taskService: TaskService,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.carregarUsuario(); // Obter dados do usuário logado
@@ -162,26 +162,25 @@ export class MenuComponent implements OnInit {
   /** Salva os dados atualizados do usuário */
   salvarDadosUsuario(): void {
     if (this.usuarioForm.invalid) {
-      alert("Preencha todos os campos corretamente.");
+      alert('Preencha todos os campos corretamente.');
       return;
     }
 
     const dadosAtualizados = this.usuarioForm.value;
 
-    console.log("Dados enviados ao backend:", dadosAtualizados);
+    console.log('Dados enviados ao backend:', dadosAtualizados);
 
     this.authService.atualizarUsuario(dadosAtualizados).subscribe({
       next: (res) => {
-        alert(res.message || "Dados atualizados com sucesso!");
+        alert(res.message || 'Dados atualizados com sucesso!');
         this.carregarUsuario(); // Atualiza os dados no formulário
       },
       error: (err) => {
-        console.error("Erro ao atualizar usuário:", err);
-        alert("Erro ao atualizar os dados. Tente novamente.");
+        console.error('Erro ao atualizar usuário:', err);
+        alert('Erro ao atualizar os dados. Tente novamente.');
       },
     });
   }
-
 
   /** Abre o modal para exibir os dados do usuário */
   abrirModalUsuario(): void {
@@ -243,30 +242,43 @@ export class MenuComponent implements OnInit {
         console.log(res); // Inspeciona a resposta
 
         if (res && Array.isArray(res.tarefas)) {
-          this.tarefas = res.tarefas.map((tarefa: any) => {
+          const tarefasPrincipais = res.tarefas.filter((t: any) => !t.idmae);
+
+          this.tarefas = tarefasPrincipais.map((tarefa: any) => {
+            const subTarefasAssociadas = res.tarefas
+              .filter((sub: any) => sub.idmae === tarefa.id)
+              .map((sub: any) => ({
+                id: sub.id,
+                titulo: sub.titulo,
+                prioridade: sub.Prioridade?.nome || 'Sem prioridade',
+                estado: sub.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
+                progresso: 0, // Progresso de subtarefa individual (pode ser ajustado)
+              }));
+
             const tarefaCompleta: Tarefa = {
               id: tarefa.id,
               titulo: tarefa.titulo,
               descricao: tarefa.descricao || 'Sem descrição',
               usuario: tarefa.Usuario?.nome || 'Desconhecido',
               prioridade: tarefa.Prioridade?.nome || 'Sem prioridade',
-              estado: tarefa.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
+              estado:
+                tarefa.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
               dthrinicio: tarefa.dthrinicio ? new Date(tarefa.dthrinicio) : '',
               dthrfim: tarefa.dthrfim ? new Date(tarefa.dthrfim) : '',
               documento: tarefa.Documentos?.[0]
-                ? { nome: tarefa.Documentos[0].nome, url: tarefa.Documentos[0].caminho }
+                ? {
+                    nome: tarefa.Documentos[0].nome,
+                    url: tarefa.Documentos[0].caminho,
+                  }
                 : undefined,
-              subTarefas: tarefa.SubTarefas?.map((sub: any) => ({
-                id: sub.id,
-                titulo: sub.titulo,
-                prioridade: sub.Prioridade?.nome || 'Sem prioridade',
-                estado: sub.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
-              })) || [],
-              progresso: 0, // ✅ Inicialize com 0
+              subTarefas: subTarefasAssociadas, // Usa a lista de subtarefas corrigida
+              progresso: tarefa.progresso || 0,
             };
 
-            // ✅ Calcula o progresso da tarefa
-            tarefaCompleta.progresso = this.calcularProgresso(tarefaCompleta);
+            // Se o progresso não vier do backend, calcula localmente
+            if (tarefa.progresso === undefined || tarefa.progresso === null) {
+              tarefaCompleta.progresso = this.calcularProgresso(tarefaCompleta);
+            }
 
             return tarefaCompleta;
           });
@@ -275,7 +287,10 @@ export class MenuComponent implements OnInit {
           this.prioridades = res.opcoes.prioridades;
           this.estados = res.opcoes.estados;
         } else {
-          console.error("res não é um array ou não contém a propriedade tarefas:", res);
+          console.error(
+            'res não é um array ou não contém a propriedade tarefas:',
+            res
+          );
         }
       },
       error: (err) => {
@@ -284,7 +299,6 @@ export class MenuComponent implements OnInit {
         alert('Erro ao carregar tarefas.');
       },
     });
-
   }
 
   atualizarTarefa(): void {
@@ -312,13 +326,15 @@ export class MenuComponent implements OnInit {
       this.taskService.criarSubTarefa(tarefaData.idmae, tarefaData).subscribe({
         next: (res) => {
           alert('Subtarefa criada com sucesso!');
-          const tarefaMae = this.tarefas.find((tarefa) => tarefa.id === tarefaData.idmae);
+          const tarefaMae = this.tarefas.find(
+            (tarefa) => tarefa.id === tarefaData.idmae
+          );
           if (tarefaMae) {
             tarefaMae.subTarefas = tarefaMae.subTarefas || [];
             tarefaMae.subTarefas.push(res.subtarefa); // Atualiza localmente sem duplicar
           }
           this.fecharModal();
-          window.location.reload()
+          window.location.reload();
         },
         error: (err) => {
           console.error('Erro ao criar subtarefa:', err);
@@ -327,18 +343,20 @@ export class MenuComponent implements OnInit {
       });
     } else if (this.tarefaEditando) {
       // Atualização de uma tarefa existente
-      this.taskService.atualizarTarefa(this.tarefaEditando.id, tarefaData).subscribe({
-        next: () => {
-          alert('Tarefa atualizada com sucesso!');
-          this.carregarTarefas();
-          this.fecharModal();
-          window.location.reload()
-        },
-        error: (err) => {
-          console.error('Erro ao atualizar tarefa:', err);
-          alert('Erro ao atualizar tarefa.');
-        },
-      });
+      this.taskService
+        .atualizarTarefa(this.tarefaEditando.id, tarefaData)
+        .subscribe({
+          next: () => {
+            alert('Tarefa atualizada com sucesso!');
+            this.carregarTarefas();
+            this.fecharModal();
+            window.location.reload();
+          },
+          error: (err) => {
+            console.error('Erro ao atualizar tarefa:', err);
+            alert('Erro ao atualizar tarefa.');
+          },
+        });
     } else {
       // Criação de uma nova tarefa
       this.taskService.criarTarefa(tarefaData).subscribe({
@@ -346,7 +364,7 @@ export class MenuComponent implements OnInit {
           alert('Nova tarefa criada com sucesso!');
           this.carregarTarefas();
           this.fecharModal();
-          window.location.reload()
+          window.location.reload();
         },
         error: (err) => {
           console.error('Erro ao criar nova tarefa:', err);
@@ -406,32 +424,31 @@ export class MenuComponent implements OnInit {
     });
   }
 
-/** Abrir o modal para criar uma subtarefa */
-incluirSubTarefa(tarefa: any): void {
-  this.isSubTarefa = true; // Define que estamos criando uma subtarefa
-  this.tarefaMae = tarefa; // Armazena a tarefa pai
+  /** Abrir o modal para criar uma subtarefa */
+  incluirSubTarefa(tarefa: any): void {
+    this.isSubTarefa = true; // Define que estamos criando uma subtarefa
+    this.tarefaMae = tarefa; // Armazena a tarefa pai
 
+    // Obtém o nome do usuário logado
+    const nomeUsuario =
+      this.authService.obterIdUsuarioLogado() || 'Usuário desconhecido';
 
-  // Obtém o nome do usuário logado
-  const nomeUsuario = this.authService.obterIdUsuarioLogado() || 'Usuário desconhecido';
+    // Atualiza o formulário com os valores da tarefa pai e bloqueia os campos necessários
+    this.tarefaForm.patchValue({
+      idmae: tarefa.id, // ID da tarefa pai
+      titulo: '', // Campo editável para o título da subtarefa
+      descricao: '', // Campo editável para a descrição da subtarefa
+    });
 
-  // Atualiza o formulário com os valores da tarefa pai e bloqueia os campos necessários
-  this.tarefaForm.patchValue({
-    idmae: tarefa.id, // ID da tarefa pai
-    titulo: '', // Campo editável para o título da subtarefa
-    descricao: '', // Campo editável para a descrição da subtarefa
-  });
+    // Bloqueia os campos que não podem ser editados
+    this.tarefaForm.get('idprioridade')?.enable(); // Bloqueia prioridade
+    this.tarefaForm.get('idestado')?.disable(); // Bloqueia estado
+    this.tarefaForm.get('idusuario')?.enable(); // Exibe nome do usuário, mas bloqueado
+    this.tarefaForm.get('dthrinicio')?.enable(); // Bloqueia data de início
+    this.tarefaForm.get('dthrfim')?.disable(); // Bloqueia data de início
 
-  // Bloqueia os campos que não podem ser editados
-  this.tarefaForm.get('idprioridade')?.enable(); // Bloqueia prioridade
-  this.tarefaForm.get('idestado')?.disable(); // Bloqueia estado
-  this.tarefaForm.get('idusuario')?.enable(); // Exibe nome do usuário, mas bloqueado
-  this.tarefaForm.get('dthrinicio')?.enable(); // Bloqueia data de início
-  this.tarefaForm.get('dthrfim')?.disable(); // Bloqueia data de início
-
-  this.isModalVisible = true; // Exibe o modal
-}
-
+    this.isModalVisible = true; // Exibe o modal
+  }
 
   /** Abrir o modal para criar ou editar uma tarefa */
   editarTarefa(tarefa: any): void {
@@ -509,49 +526,94 @@ incluirSubTarefa(tarefa: any): void {
     }
 
     const totalSubTarefas = tarefa.subTarefas.length;
-    const concluidas = tarefa.subTarefas.filter((sub) => sub.estado === 'Concluído').length;
+    const concluidas = tarefa.subTarefas.filter(
+      (sub) => sub.estado === 'Concluído'
+    ).length;
 
     // ✅ Retorna o progresso calculado
     return Math.round((concluidas / totalSubTarefas) * 100);
   }
 
+  marcarSubTarefaConcluida(subTarefa: any, tarefa: any): void {
+    // 1. Bloqueia a ação se a subtarefa já estiver concluída.
+    if (subTarefa.estado === 'Concluído') {
+      return;
+    }
 
- marcarSubTarefaConcluida(subTarefa: any, tarefa: any): void {
-  // Alterna o estado entre "Concluído" e "Pendente"
-  subTarefa.estado = subTarefa.estado === 'Concluído' ? 'Pendente' : 'Concluído';
+    // 2. Prepara o corpo da requisição com os dados para o backend.
+    const dadosParaAtualizar = {
+      estado: 'Concluído', // Define o novo estado explicitamente.
+      dthrfim: new Date().toISOString(), // Define a data/hora de conclusão.
+      idusuario: this.authService.obterIdUsuarioLogado(), // Pega o usuário logado.
+    };
 
-  // Atualiza o progresso da tarefa principal
-  tarefa.progresso = this.calcularProgresso(tarefa);
+    // 3. CORREÇÃO: Usa o método 'atualizarTarefa' com o ID da SUBTAREFA.
+    // Uma subtarefa é apenas uma tarefa com um 'idmae', então usamos o endpoint principal.
+    this.taskService
+      .atualizarTarefa(subTarefa.id, dadosParaAtualizar)
+      .subscribe({
+        next: () => {
+          // 4. Em caso de sucesso, atualiza a interface do usuário.
+          subTarefa.estado = 'Concluído';
+          this.atualizarProgresso(tarefa);
+          alert('Subtarefa concluída com sucesso!');
+        },
+        error: (err) => {
+          // 5. Em caso de erro, informa o usuário e loga o erro.
+          console.error('Erro ao concluir a subtarefa:', err);
+          alert('Não foi possível concluir a subtarefa. Verifique a API.');
+        },
+      });
+  }
 
-  // Atualiza o backend para salvar o estado da subtarefa
-  this.taskService.atualizarSubTarefa(subTarefa.id, { estado: subTarefa.estado }).subscribe({
-    next: () => {
-      alert('Subtarefa atualizada com sucesso!');
-    },
-    error: (err) => {
-      console.error('Erro ao atualizar subtarefa:', err);
-      alert('Erro ao atualizar subtarefa.');
-    },
-  });
-}
+  // Atualiza o progresso de uma tarefa no frontend e backend
+  atualizarProgresso(tarefa: any): void {
+    // 1. Calcula o novo progresso
+    const concluidas = tarefa.subTarefas.filter(
+      (sub: any) => sub.estado === 'Concluído'
+    ).length;
+    const progresso =
+      tarefa.subTarefas.length > 0
+        ? Math.round((concluidas / tarefa.subTarefas.length) * 100)
+        : 0;
 
+    // 2. Atualiza o progresso no objeto da tarefa no frontend.
+    tarefa.progresso = progresso;
 
-// Atualiza o progresso de uma tarefa no frontend e backend
-atualizarProgresso(tarefa: any): void {
-  const concluidas = tarefa.subTarefas.filter((sub: any) => sub.estado === 'Concluído').length;
-  const progresso = Math.round((concluidas / tarefa.subTarefas.length) * 100) || 0;
+    // 3. Prepara o corpo da requisição apenas com o campo a ser atualizado.
+    const dadosParaAtualizar = { progresso: progresso };
 
-  // Atualiza o progresso no frontend
-  tarefa.progresso = progresso;
+    // 4. CORREÇÃO: Usa o método 'atualizarTarefa' para salvar o progresso no backend.
+    this.taskService.atualizarTarefa(tarefa.id, dadosParaAtualizar).subscribe({
+      next: () => {
+        // Log silencioso para evitar múltiplos alertas ao usuário.
+        console.log(
+          `Progresso da tarefa ${tarefa.id} atualizado para ${progresso}%`
+        );
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar progresso no backend:', err);
+        // Opcional: alertar o usuário se a sincronização do progresso falhar.
+        // alert('Não foi possível sincronizar o progresso com o servidor.');
+      },
+    });
+  }
 
-  // Atualiza o progresso no backend
-  this.taskService.atualizarProgresso(tarefa.id, progresso).subscribe({
-    next: () => alert('Progresso atualizado com sucesso!'),
-    error: (err) => {
-      console.error('Erro ao atualizar progresso:', err);
-      alert('Erro ao atualizar progresso.');
-    },
-  });
-}
+  /**
+   * Verifica se uma subtarefa está concluída.
+   * Usado no template para desativar o botão de conclusão.
+   */
+  isSubTarefaConcluida(subTarefa: any): boolean {
+    return subTarefa.estado === 'Concluído';
+  }
 
+  /**
+   * Retorna as classes CSS para uma subtarefa.
+   * Usado no template para aplicar o estilo de texto riscado.
+   */
+  getSubTarefaClasses(subTarefa: any): { [key: string]: boolean } {
+    return {
+      'subtarefa-concluida': this.isSubTarefaConcluida(subTarefa),
+    };
+  }
 }
