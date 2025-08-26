@@ -63,6 +63,7 @@ export class MenuComponent implements OnInit {
     private taskService: TaskService,
     private authService: AuthService,
     private router: Router
+
   ) {}
 
   ngOnInit(): void {

@@ -22,16 +22,6 @@ app.use('/api/usuario', usuarioRoutes);
 app.use('/api/tarefa', tarefaRoutes);
 app.use('/api/tarefa', subtarefaRoutes);
 
-// Exemplo de chamada inicial
-const loadOptions = async () => {
-  const [prioridades, estados] = await Promise.all([
-    fetch('/api/prioridades').then(res => res.json()),
-    fetch('/api/estados').then(res => res.json())
-  ]);
-
-  // Preencher selects/dropdowns com os dados
-};
-
 sequelize.sync({ alter: true })
   .then(() => {
     console.log("Banco de dados sincronizado.");
