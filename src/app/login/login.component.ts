@@ -12,12 +12,11 @@ import { AuthService } from '../services/auth.service';
 
 // Declaração do componente
 @Component({
-  selector: 'app-login', // Seletor do componente (como ele será referenciado no HTML)
-  standalone: true, // Define que o componente é autônomo
-  // Importa os módulos necessários para o funcionamento do formulário e componentes NG-ZORRO
-  imports: [FormsModule, ReactiveFormsModule, NzFormModule, NzIconModule, NzInputModule, NzButtonModule, NzCheckboxModule],
-  templateUrl: './login.component.html', // Caminho do arquivo HTML associado ao componente
-  styleUrl: './login.component.css' // Caminho do arquivo CSS associado ao componente
+    selector: 'app-login', // Define que o componente é autônomo
+    // Importa os módulos necessários para o funcionamento do formulário e componentes NG-ZORRO
+    imports: [FormsModule, ReactiveFormsModule, NzFormModule, NzIconModule, NzInputModule, NzButtonModule, NzCheckboxModule],
+    templateUrl: './login.component.html', // Caminho do arquivo HTML associado ao componente
+    styleUrl: './login.component.css' // Caminho do arquivo CSS associado ao componente
 })
 
 // Declaração da classe LoginComponent

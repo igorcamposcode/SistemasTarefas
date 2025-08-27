@@ -19,19 +19,18 @@ import { Router } from '@angular/router';
 
 // Definindo o componente recuperar-senha com seu seletor, template e estilo
 @Component({
-  selector: 'app-recuperar-senha',
-  standalone: true,
-  imports: [
-    NzFormModule,
-    NzIconModule,
-    NzInputModule,
-    NzButtonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-  ],
-  templateUrl: './recuperar-senha.component.html',
-  styleUrl: './recuperar-senha.component.css',
+    selector: 'app-recuperar-senha',
+    imports: [
+        NzFormModule,
+        NzIconModule,
+        NzInputModule,
+        NzButtonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+    ],
+    templateUrl: './recuperar-senha.component.html',
+    styleUrl: './recuperar-senha.component.css'
 })
 export class RecuperarSenhaComponent {
   // Definindo os campos do formulário: email, senha e confirmação de senha

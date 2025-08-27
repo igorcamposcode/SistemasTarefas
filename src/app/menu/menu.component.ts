@@ -35,7 +35,6 @@ interface SubTarefa {
 
 @Component({
   selector: 'app-menu',
-  standalone: true,
   imports: [ReactiveFormsModule, FormsModule, NgFor, DatePipe, NgIf, NgClass],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
@@ -63,7 +62,6 @@ export class MenuComponent implements OnInit {
     private taskService: TaskService,
     private authService: AuthService,
     private router: Router
-
   ) {}
 
   ngOnInit(): void {
@@ -247,14 +245,15 @@ export class MenuComponent implements OnInit {
 
           this.tarefas = tarefasPrincipais.map((tarefa: any) => {
             const subTarefasAssociadas = res.tarefas
-              .filter((sub: any) => sub.idmae === tarefa.id)
-              .map((sub: any) => ({
-                id: sub.id,
-                titulo: sub.titulo,
-                prioridade: sub.Prioridade?.nome || 'Sem prioridade',
-                estado: sub.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
-                progresso: 0, // Progresso de subtarefa individual (pode ser ajustado)
-              }));
+            .filter((sub: any) => sub.idmae === tarefa.id)
+            .map((sub: any) => ({
+              id: sub.id,
+              titulo: sub.titulo,
+              prioridade: sub.Prioridade?.nome || 'Sem prioridade',
+              estado: sub.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
+              dthrfim: sub.dthrfim ? new Date(sub.dthrfim) : null
+            }));
+
 
             const tarefaCompleta: Tarefa = {
               id: tarefa.id,
@@ -276,17 +275,18 @@ export class MenuComponent implements OnInit {
               progresso: tarefa.progresso || 0,
             };
 
-            // Se o progresso não vier do backend, calcula localmente
-            if (tarefa.progresso === undefined || tarefa.progresso === null) {
-              tarefaCompleta.progresso = this.calcularProgresso(tarefaCompleta);
-            }
+          // Calcula o progresso baseado no estado das subtarefas
+          tarefaCompleta.progresso = this.calcularProgresso(tarefaCompleta);
 
-            return tarefaCompleta;
+          return tarefaCompleta;
           });
 
           // Atualiza as prioridades e estados
           this.prioridades = res.opcoes.prioridades;
           this.estados = res.opcoes.estados;
+
+           // Carrega o estado salvo do localStorage
+           this.carregarLocalStorage();
         } else {
           console.error(
             'res não é um array ou não contém a propriedade tarefas:',
@@ -407,24 +407,64 @@ export class MenuComponent implements OnInit {
     });
   }
 
-  concluirTarefa(id: number): void {
-    this.taskService.concluirTarefa(id).subscribe({
-      next: () => {
-        alert('Tarefa concluída com sucesso!');
-        const tarefa = this.tarefas.find((t) => t.id === id);
-        if (tarefa) {
-          tarefa.estado = 'Concluído';
-          tarefa.progresso = this.calcularProgresso(tarefa);
+  salvarLocalStorage(): void {
+    const progressoTarefas = {
+      tarefas: this.tarefas.map(tarefa => ({
+        id: tarefa.id,
+        progresso: tarefa.progresso,
+        estado: tarefa.estado,
+        subTarefas: tarefa.subTarefas.map((sub: { id: any; estado: any; }) => ({
+          id: sub.id,
+          estado: sub.estado
+        }))
+      })),
+      timestamp: new Date().getTime()
+    };
+
+    localStorage.setItem('progressoTarefas', JSON.stringify(progressoTarefas));
+  }
+  carregarLocalStorage(): void {
+    const progressoSalvo = localStorage.getItem('progressoTarefas');
+
+    if (progressoSalvo) {
+      try {
+        const estado = JSON.parse(progressoSalvo);
+        const agora = new Date().getTime();
+        const umDia = 24 * 60 * 60 * 1000; // 24 horas em milissegundos
+
+        // Verifica se o estado não é muito antigo (mais de 1 dia)
+        if (agora - estado.timestamp < umDia) {
+          this.aplicarProgressoSalvo(estado.tarefas);
+        } else {
+          // Remove estado antigo
+          localStorage.removeItem('progressoTarefas');
         }
-        this.carregarTarefas(); // Recarrega para refletir no frontend
-      },
-      error: (err) => {
-        console.error('Erro ao concluir a tarefa:', err);
-        alert('Erro ao concluir a tarefa.');
-      },
-    });
+      } catch (error) {
+        console.error('Erro ao carregar o progresso do localStorage:', error);
+        localStorage.removeItem('progressoTarefas');
+      }
+    }
   }
 
+  aplicarProgressoSalvo(progressoSalvo: any[]): void {
+    progressoSalvo.forEach(progressoTarefa => {
+      const tarefa = this.tarefas.find(t => t.id === progressoTarefa.id);
+
+      if (tarefa) {
+        // Aplica o progresso salvo
+        tarefa.progresso = progressoTarefa.progresso || 0;
+        tarefa.estado = progressoTarefa.estado || tarefa.estado;
+
+        // Aplica o estado das subtarefas
+        progressoTarefa.subTarefas.forEach((progressoSub: any) => {
+          const subTarefa = tarefa.subTarefas.find((s: { id: any; }) => s.id === progressoSub.id);
+          if (subTarefa) {
+            subTarefa.estado = progressoSub.estado || subTarefa.estado;
+          }
+        });
+      }
+    });
+  }
   /** Abrir o modal para criar uma subtarefa */
   incluirSubTarefa(tarefa: any): void {
     this.isSubTarefa = true; // Define que estamos criando uma subtarefa
@@ -450,7 +490,6 @@ export class MenuComponent implements OnInit {
 
     this.isModalVisible = true; // Exibe o modal
   }
-
   /** Abrir o modal para criar ou editar uma tarefa */
   editarTarefa(tarefa: any): void {
     this.tarefaEditando = tarefa;
@@ -467,7 +506,6 @@ export class MenuComponent implements OnInit {
 
     this.isModalVisible = true;
   }
-
   /** Editar uma subtarefa */
   editarSubTarefa(subTarefa: any, tarefaMae: any): void {
     this.tarefaEditando = subTarefa;
@@ -507,66 +545,64 @@ export class MenuComponent implements OnInit {
       });
     }
   }
-
   // Navigate to "My Tasks"
   CliqueMinhaTarefa(pageName: string): void {
     this.router.navigate([pageName]);
   }
-
   // Logout and navigate to login
   CliqueHome(pageName: string): void {
     this.authService.removerToken();
     alert('Você saiu do sistema!');
     this.router.navigate([pageName]);
   }
-
-  // Calculate task progress
-  calcularProgresso(tarefa: Tarefa): number {
-    if (!tarefa.subTarefas || tarefa.subTarefas.length === 0) {
-      return tarefa.estado === 'Concluído' ? 100 : 0;
-    }
-
-    const totalSubTarefas = tarefa.subTarefas.length;
-    const concluidas = tarefa.subTarefas.filter(
-      (sub) => sub.estado === 'Concluído'
-    ).length;
-
-    // ✅ Retorna o progresso calculado
-    return Math.round((concluidas / totalSubTarefas) * 100);
+ // Calculate task progress
+calcularProgresso(tarefa: Tarefa): number {
+  if (!tarefa.subTarefas || tarefa.subTarefas.length === 0) {
+    return tarefa.estado === 'Concluído' ? 100 : 0;
   }
 
-  marcarSubTarefaConcluida(subTarefa: any, tarefa: any): void {
-    // 1. Bloqueia a ação se a subtarefa já estiver concluída.
-    if (subTarefa.estado === 'Concluído') {
-      return;
-    }
+  const totalSubTarefas = tarefa.subTarefas.length;
+  const concluidas = tarefa.subTarefas.filter(
+    (sub) => sub.estado === 'Concluído'
+  ).length;
 
-    // 2. Prepara o corpo da requisição com os dados para o backend.
-    const dadosParaAtualizar = {
-      estado: 'Concluído', // Define o novo estado explicitamente.
-      dthrfim: new Date().toISOString(), // Define a data/hora de conclusão.
-      idusuario: this.authService.obterIdUsuarioLogado(), // Pega o usuário logado.
-    };
-
-    // 3. CORREÇÃO: Usa o método 'atualizarTarefa' com o ID da SUBTAREFA.
-    // Uma subtarefa é apenas uma tarefa com um 'idmae', então usamos o endpoint principal.
-    this.taskService
-      .atualizarTarefa(subTarefa.id, dadosParaAtualizar)
-      .subscribe({
-        next: () => {
-          // 4. Em caso de sucesso, atualiza a interface do usuário.
-          subTarefa.estado = 'Concluído';
-          this.atualizarProgresso(tarefa);
-          alert('Subtarefa concluída com sucesso!');
-        },
-        error: (err) => {
-          // 5. Em caso de erro, informa o usuário e loga o erro.
-          console.error('Erro ao concluir a subtarefa:', err);
-          alert('Não foi possível concluir a subtarefa. Verifique a API.');
-        },
-      });
+  // Retorna o progresso calculado
+  return Math.round((concluidas / totalSubTarefas) * 100);
+}
+marcarSubTarefaConcluida(subTarefa: any, tarefa: any): void {
+  // 1. Bloqueia a ação se a subtarefa já estiver concluída.
+  if (subTarefa.estado === 'Concluído') {
+    return;
   }
+  // 2. Prepara o corpo da requisição com os dados para o backend.
+  const dadosParaAtualizar = {
+    estado: 'Concluído', // Define o novo estado explicitamente.
+    dthrfim: new Date().toISOString(), // Define a data/hora de conclusão.
+    idusuario: this.authService.obterIdUsuarioLogado(), // Pega o usuário logado.
+  };
+  // 3. Atualiza a subtarefa no backend
+  this.taskService
+    .atualizarTarefa(subTarefa.id, dadosParaAtualizar)
+    .subscribe({
+      next: () => {
+        // 4. Em caso de sucesso, atualiza a interface do usuário.
+        subTarefa.estado = 'Concluído';
 
+        // 5. Atualiza o progresso da tarefa principal
+        this.atualizarProgresso(tarefa);
+
+        // 6. Salva o estado no localStorage
+        this.salvarLocalStorage();
+
+        alert('Subtarefa concluída com sucesso!');
+      },
+      error: (err) => {
+        // 7. Em caso de erro, informa o usuário e loga o erro.
+        console.error('Erro ao concluir a subtarefa:', err);
+        alert('Não foi possível concluir a subtarefa. Verifique a API.');
+      },
+    });
+}
   // Atualiza o progresso de uma tarefa no frontend e backend
   atualizarProgresso(tarefa: any): void {
     // 1. Calcula o novo progresso
@@ -577,44 +613,49 @@ export class MenuComponent implements OnInit {
       tarefa.subTarefas.length > 0
         ? Math.round((concluidas / tarefa.subTarefas.length) * 100)
         : 0;
-
     // 2. Atualiza o progresso no objeto da tarefa no frontend.
     tarefa.progresso = progresso;
-
-    // 3. Prepara o corpo da requisição apenas com o campo a ser atualizado.
-    const dadosParaAtualizar = { progresso: progresso };
-
-    // 4. CORREÇÃO: Usa o método 'atualizarTarefa' para salvar o progresso no backend.
+    // 3. Prepara o corpo da requisição com o progresso e estado
+    const dadosParaAtualizar = {
+      progresso: progresso,
+      // Se todas as subtarefas estiverem concluídas, marca a tarefa principal como concluída
+      estado: progresso === 100 ? 'Concluído' : tarefa.estado
+    };
+    // 4. Atualiza a tarefa no backend
     this.taskService.atualizarTarefa(tarefa.id, dadosParaAtualizar).subscribe({
       next: () => {
-        // Log silencioso para evitar múltiplos alertas ao usuário.
         console.log(
           `Progresso da tarefa ${tarefa.id} atualizado para ${progresso}%`
         );
+
+        // 5. Se a tarefa foi concluída, atualiza a interface
+        if (progresso === 100) {
+          tarefa.estado = 'Concluído';
+          tarefa.dthrfim = new Date();
+        }
       },
       error: (err) => {
         console.error('Erro ao atualizar progresso no backend:', err);
-        // Opcional: alertar o usuário se a sincronização do progresso falhar.
-        // alert('Não foi possível sincronizar o progresso com o servidor.');
       },
     });
   }
-
   /**
    * Verifica se uma subtarefa está concluída.
-   * Usado no template para desativar o botão de conclusão.
    */
-  isSubTarefaConcluida(subTarefa: any): boolean {
-    return subTarefa.estado === 'Concluído';
+  isSubTarefaConcluida(sub: any): boolean {
+    return sub.estado === 'Concluído';
   }
 
+  isSubTarefaDesabilitada(sub: any): boolean {
+    return sub.estado === 'Concluído';
+  }
   /**
    * Retorna as classes CSS para uma subtarefa.
-   * Usado no template para aplicar o estilo de texto riscado.
    */
-  getSubTarefaClasses(subTarefa: any): { [key: string]: boolean } {
+  getSubTarefaClasses(sub: any): { [key: string]: boolean } {
     return {
-      'subtarefa-concluida': this.isSubTarefaConcluida(subTarefa),
-    };
+    'subtarefa-concluida': this.isSubTarefaConcluida(sub),
+    'subtarefa-desabilitada': this.isSubTarefaDesabilitada(sub),
+  };
   }
 }

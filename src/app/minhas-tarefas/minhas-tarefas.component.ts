@@ -14,18 +14,17 @@ interface itensTarefas {
 }
 
 @Component({
-  selector: 'app-minhas-tarefas',
-  standalone: true,
-  imports: [
-    NzTableModule,
-    NzIconModule,
-    NzInputModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NzDropdownMenuComponent,
-  ],
-  templateUrl: './minhas-tarefas.component.html',
-  styleUrl: './minhas-tarefas.component.css',
+    selector: 'app-minhas-tarefas',
+    imports: [
+        NzTableModule,
+        NzIconModule,
+        NzInputModule,
+        ReactiveFormsModule,
+        FormsModule,
+        NzDropdownMenuComponent,
+    ],
+    templateUrl: './minhas-tarefas.component.html',
+    styleUrl: './minhas-tarefas.component.css'
 })
 export class MinhasTarefasComponent {
   searchValue = '';

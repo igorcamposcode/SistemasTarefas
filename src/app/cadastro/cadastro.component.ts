@@ -19,20 +19,19 @@ import { AuthService } from '../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({
-  selector: 'app-cadastro',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    NzFormModule,
-    NzInputModule,
-    NzIconModule,
-    NzButtonModule,
-    NzCheckboxModule,
-    HttpClientModule
-  ],
-  templateUrl: './cadastro.component.html',
-  styleUrl: './cadastro.component.css',
+    selector: 'app-cadastro',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        NzFormModule,
+        NzInputModule,
+        NzIconModule,
+        NzButtonModule,
+        NzCheckboxModule,
+        HttpClientModule
+    ],
+    templateUrl: './cadastro.component.html',
+    styleUrl: './cadastro.component.css'
 })
 export class CadastroComponent {
   nome: FormControl<String> | undefined;
