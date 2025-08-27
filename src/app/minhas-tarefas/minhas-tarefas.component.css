@@ -8,49 +8,267 @@
   justify-content: center;
 }
 
-.Retornar {
-  width: 125px;
-  display: inline-block;
-  /* Define a largura como 100% */
-  border-radius: 5px;
-  /* Aplica bordas arredondadas de 10px */
-  background-color: #e64c07;
-  /* Define a cor de fundo laranja */
-  color: white;
-  /* Define a cor do texto como branca */
-  font-size: 1rem;
-  margin-top: 2%;
-  margin-inline-start: 49%;
-  text-align: center;
-}
-
+/* Estilos para a tabela de consulta de tarefas */
 .ConsultaTarefa {
-  width: 100%;
-  display: inline-block;
-  align-items: center;
-  justify-content: center;
-  margin-top: 2%;
-  margin-right: auto;
-  margin-left: auto;
+  margin: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
+.ConsultaTarefa ::ng-deep .ant-table-thead > tr > th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #d9d9d9;
+}
+
+.ConsultaTarefa ::ng-deep .ant-table-tbody > tr > td {
+  padding: 12px 8px;
+  vertical-align: top;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.ConsultaTarefa ::ng-deep .ant-table-tbody > tr:hover > td {
+  background-color: #fafafa;
+}
+
+/* Estilos para as tags */
+.ConsultaTarefa ::ng-deep .ant-tag {
+  margin: 2px;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* Estilos para o painel de subtarefas */
+.ConsultaTarefa ::ng-deep .ant-collapse {
+  border: none;
+  background: transparent;
+}
+
+.ConsultaTarefa ::ng-deep .ant-collapse-item {
+  border: none;
+  margin-bottom: 0;
+}
+
+.ConsultaTarefa ::ng-deep .ant-collapse-header {
+  padding: 8px 12px !important;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #1890ff;
+}
+
+.ConsultaTarefa ::ng-deep .ant-collapse-content {
+  border: none;
+  background: transparent;
+}
+
+.ConsultaTarefa ::ng-deep .ant-collapse-content-box {
+  padding: 12px 0;
+}
+
+/* Estilos para as subtarefas */
+.subtarefa-item {
+  border: 1px solid #d9d9d9;
+  margin: 8px 0;
+  padding: 12px;
+  border-radius: 6px;
+  background-color: #fafafa;
+}
+
+.subtarefa-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.subtarefa-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.subtarefa-id {
+  font-size: 12px;
+  color: #666;
+}
+
+.subtarefa-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.subtarefa-details strong {
+  color: #555;
+}
+
+/* Estilos para o botão Retornar */
+.Retornar {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.Retornar:hover {
+  background-color: #5a6268;
+}
+
+
+
+/* Estilos para os botões da barra de pesquisa */
+.search-button {
+  background-color: #3d7db4;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(248, 162, 1, 0.3);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
+.search-button:hover {
+  background-color: #3281be;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.5);
+}
+
+.search-button:active {
+  transform: translateY(0);
+}
+
+.reset-button {
+  background-color: #6c757d;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
+.reset-button:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.5);
+}
+
+.reset-button:active {
+  transform: translateY(0);
+}
+
+/* Estilos para a barra de pesquisa */
 .search-box {
-  padding: 1rem;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+  margin: 10px;
 }
 
 .search-box input {
-  width: 13.2rem;
-  margin-bottom: 1rem;
-  display: block;
+  flex: 1;
+  min-width: 200px;
+  border: 2px solid transparent;
+  border-radius: 20px;
+  padding: 10px 16px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.search-box button {
-  width: 6.5rem;
-  background-color: #e64c07;
-  border-radius: 10rem;
-  color: white;
+.search-box input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transform: translateY(-1px);
 }
 
-.search-button {
-  margin-right: 8px;
+/* Estilos para o filtro dropdown */
+.ant-table-filter-dropdown {
+  min-width: 300px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Container dos botões principais */
+.botoes-container {
+  margin-top: 25px;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+  .ConsultaTarefa {
+    margin: 10px;
+  }
+
+  .ConsultaTarefa ::ng-deep .ant-table-tbody > tr > td {
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+
+  .subtarefa-details {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .botoes-container {
+    margin: 15px 10px;
+    padding: 15px;
+  }
+
+  .Retornar {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+/* Estilos para o estado de carregamento */
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+/* Estilos para mensagens de erro */
+.error-message {
+  color: #ff4d4f;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+}
+
+/* Estilos para dados vazios */
+.empty-data {
+  text-align: center;
+  padding: 40px 20px;
+  color: #ffffff;
+  font-size: 14px;
 }

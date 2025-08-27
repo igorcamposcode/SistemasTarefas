@@ -8,6 +8,7 @@ import {
 import {
   provideHttpClient,
   withInterceptorsFromDi,
+  withInterceptors,
 } from '@angular/common/http';
 import { PoHttpRequestModule } from '@po-ui/ng-components';
 import { pt_PT, provideNzI18n } from 'ng-zorro-antd/i18n';
@@ -17,20 +18,21 @@ import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { icons } from './icons-provider';
 import { provideNzIcons } from 'ng-zorro-antd/icon';
+import { AuthInterceptor } from './auth.interceptor';
 
 registerLocaleData(pt);
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(
+      withInterceptors([AuthInterceptor])
+    ),
     importProvidersFrom([PoHttpRequestModule]),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideHttpClient(withInterceptorsFromDi()),
     provideNzI18n(pt_PT),
     importProvidersFrom(FormsModule),
     provideAnimationsAsync(),
-    provideHttpClient(),
     provideNzIcons(icons),
   ],
 };

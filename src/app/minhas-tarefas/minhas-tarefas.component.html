@@ -1,5 +1,5 @@
 <div>
-  <h3 class="h3" style="text-align: center">Sistemas de Tarefas - 2024</h3>
+  <h3 class="h3" style="text-align: center">Sistemas de Tarefas - Minhas Tarefas Inclusas</h3>
 
   <!--https://ng.ant.design/components/table/en-->
 
@@ -8,10 +8,12 @@
     [nzData]="listOfDisplayData"
     nzTableLayout="fixed"
     class="ConsultaTarefa"
+    [nzLoading]="loading"
+    [nzScroll]="{ x: '1200px' }"
   >
     <thead>
       <tr style="text-align: center; font-weight: bold">
-        <th nzCustomFilter>
+        <th nzCustomFilter style="width: 300px">
           NOME DA TAREFA
           <nz-filter-trigger
             [(nzVisible)]="visible"
@@ -21,43 +23,114 @@
             <span nz-icon nzType="search"></span>
           </nz-filter-trigger>
         </th>
-        <th>ID</th>
-        <th>ESTADO DA TAREFA</th>
-        <th>DATA & HORA</th>
+        <th style="width: 65px">ID</th>
+        <th style="width: 190px">USUÁRIO RESPONSÁVEL</th>
+        <th style="width: 120px">TIPO</th>
+        <th style="width: 135px">ESTADO DA TAREFA</th>
+        <th style="width: 135px">PRIORIDADE</th>
+        <th style="width: 200px">DATA & HORA INÍCIO</th>
+        <th style="width: 200px">DATA & HORA FIM</th>
+        <th style="width: 400px">SUBTAREFAS</th>
       </tr>
     </thead>
     <tbody>
       @for (data of nzTable.data; track data) {
       <tr>
-        <td>{{ data.NOME }}</td>
-        <td>{{ data.ID }}</td>
-        <td>{{ data.ESTADO }}</td>
-        <td>{{ data.DATA }}</td>
+        <td>
+          <strong>{{ data.titulo }}</strong>
+          @if (data.descricao) {
+            <br><small style="color: #666;">{{ data.descricao }}</small>
+          }
+        </td>
+        <td>{{ data.id }}</td>
+        <td>{{ data.UsuarioResponsavel }}</td>
+        <td>
+          @if (data.idmae) {
+            <nz-tag nzColor="blue">Subtarefa</nz-tag>
+            <br><small>ID Mãe: {{ data.idmae }}</small>
+          } @else {
+            <nz-tag nzColor="green">Tarefa Principal</nz-tag>
+          }
+        </td>
+        <td>
+          <nz-tag [nzColor]="obterCorEstado(data.EstadoAtual?.nome || '')">
+            {{ data.EstadoAtual?.nome || 'Não definido' }}
+          </nz-tag>
+        </td>
+        <td>
+          <nz-tag nzColor="purple">{{ data.Prioridade?.nome || 'Não definida' }}</nz-tag>
+        </td>
+        <td>{{ formatarData(data.dthrinicio) }}</td>
+        <td>{{ formatarData(data.dthrfim) }}</td>
+        <td>
+          @if (data.SubTarefas && data.SubTarefas.length > 0) {
+            <nz-collapse>
+              <nz-collapse-panel
+                [nzHeader]="'Ver ' + data.SubTarefas.length + ' subtarefa(s)'"
+                [nzActive]="false"
+              >
+                <div style="max-height: 300px; overflow-y: auto;">
+                  @for (subtarefa of data.SubTarefas; track subtarefa) {
+                    <div style="border: 1px solid #d9d9d9; margin: 8px 0; padding: 12px; border-radius: 6px;">
+                      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong>{{ subtarefa.titulo }}</strong>
+                        <span style="font-size: 12px; color: #ff0000;">ID: {{ subtarefa.id }}</span>
+                      </div>
+                      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+                        <div>
+                          <strong>Estado:</strong>
+                          <nz-tag [nzColor]="obterCorEstado(subtarefa.EstadoAtual?.nome || '')" style="margin-left: 4px;">
+                            {{ subtarefa.EstadoAtual?.nome || 'Não definido' }}
+                          </nz-tag>
+                        </div>
+                        <div>
+                          <strong>Prioridade:</strong>
+                          <nz-tag nzColor="purple" style="margin-left: 4px;">
+                            {{ subtarefa.Prioridade?.nome || 'Não definida' }}
+                          </nz-tag>
+                        </div>
+                        <div>
+                          <strong>Início:</strong> {{ formatarData(subtarefa.dthrinicio) }}
+                        </div>
+                        <div>
+                          <strong>Fim:</strong> {{ formatarData(subtarefa.dthrfim) }}
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </nz-collapse-panel>
+            </nz-collapse>
+          } @else {
+            <span style="color: #999;">Nenhuma subtarefa</span>
+          }
+        </td>
       </tr>
       }
     </tbody>
   </nz-table>
+
   <nz-dropdown-menu #menu="nzDropdownMenu">
     <div class="ant-table-filter-dropdown">
       <div class="search-box">
         <input
           type="text"
           nz-input
-          placeholder="Pesquisar Tarefa"
+          placeholder="Pesquisar por Tarefa ou Usuário"
           [(ngModel)]="searchValue"
         />
         <button
-          nz-button
-          nzSize="small"
-          nzType="primary"
           (click)="search()"
           class="search-button"
         >
           Pesquisar
         </button>
-        <button nz-button nzSize="small" (click)="reset()">Resetar</button>
+        <button class="reset-button" (click)="reset()">Resetar</button>
       </div>
     </div>
   </nz-dropdown-menu>
-  <button class="Retornar" (click)="Clique_Retornar('menu')">Retornar</button>
+
+  <div class="botoes-container">
+    <button class="Retornar" (click)="Clique_Retornar('menu')">Retornar</button>
+  </div>
 </div>

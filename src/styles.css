@@ -14,7 +14,7 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   align-items: center;
   justify-content: center;
-  background-color: #cccccc;
+  background-color: #fae8e8;
 }
 
 @media screen and (max-width: 768px) {
@@ -25,6 +25,6 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
     align-items: center;
     justify-content: center;
-    background-color: #cccccc;
+    background-color: #fae8e8;
   }
 }
