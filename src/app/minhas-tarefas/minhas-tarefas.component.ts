@@ -118,7 +118,7 @@ export class MinhasTarefasComponent implements OnInit {
   obterTarefaMae(idmae: number | null): string {
     if (!idmae) return 'Tarefa Principal';
     const tarefaMae = this.listOfData.find(t => t.id === idmae);
-    return tarefaMae ? `Subtarefa de: ${tarefaMae.titulo}` : `ID: ${idmae}`;
+    return tarefaMae ? `Sub Tarefa de: ${tarefaMae.titulo}` : `ID: ${idmae}`;
   }
 
   obterCorEstado(estado: string): string {

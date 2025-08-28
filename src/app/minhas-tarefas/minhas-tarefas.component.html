@@ -30,7 +30,7 @@
         <th style="width: 135px">PRIORIDADE</th>
         <th style="width: 200px">DATA & HORA INÍCIO</th>
         <th style="width: 200px">DATA & HORA FIM</th>
-        <th style="width: 400px">SUBTAREFAS</th>
+        <th style="width: 400px">SUB TAREFAS</th>
       </tr>
     </thead>
     <tbody>
@@ -46,7 +46,7 @@
         <td>{{ data.UsuarioResponsavel }}</td>
         <td>
           @if (data.idmae) {
-            <nz-tag nzColor="blue">Subtarefa</nz-tag>
+            <nz-tag nzColor="blue">Sub Tarefa</nz-tag>
             <br><small>ID Mãe: {{ data.idmae }}</small>
           } @else {
             <nz-tag nzColor="green">Tarefa Principal</nz-tag>
