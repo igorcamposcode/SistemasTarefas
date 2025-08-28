@@ -17,6 +17,21 @@ exports.criarTarefa = async (req, res) => {
   try {
     const { idusuario, idprioridade, titulo, descricao, idestado, idmae, dthrinicio, dthrfim } = req.body;
 
+    console.log('Dados recebidos para criação:', { idusuario, idprioridade, titulo, descricao, idestado, idmae, dthrinicio, dthrfim });
+
+    // Validação dos campos obrigatórios
+    if (!idusuario || !idprioridade || !titulo || !idestado) {
+      await transaction.rollback();
+      return res.status(400).json({
+        error: "Campos obrigatórios não preenchidos",
+        required: { idusuario, idprioridade, titulo, idestado },
+        opcoes: {
+          prioridades: await Prioridade.findAll(),
+          estados: await Estado.findAll()
+        }
+      });
+    }
+
     // Validação reforçada
     const [prioridade, estado] = await Promise.all([
       Prioridade.findByPk(idprioridade, { transaction }),
@@ -193,12 +208,80 @@ exports.buscarTarefas = async (req, res) => {
   }
 };
 
+// Criação de subtarefa
+exports.criarSubTarefa = async (req, res) => {
+  const transaction = await Tarefa.sequelize.transaction();
+  try {
+    const { idmae } = req.params;
+    const { idusuario, idprioridade, titulo, descricao, dthrinicio, dthrfim } = req.body;
+
+    console.log('Criando subtarefa:', { idmae, idusuario, idprioridade, titulo, descricao, dthrinicio, dthrfim });
+
+    // Verifica se a tarefa pai existe
+    const tarefaMae = await Tarefa.findByPk(idmae, { transaction });
+    if (!tarefaMae) {
+      await transaction.rollback();
+      return res.status(404).json({ error: "Tarefa pai não encontrada" });
+    }
+
+    // Cria a subtarefa
+    const subtarefa = await Tarefa.create({
+      idusuario,
+      idprioridade,
+      titulo,
+      descricao: descricao || null,
+      idmae: parseInt(idmae),
+      dthrinicio: dthrinicio ? new Date(dthrinicio) : new Date(),
+      dthrfim: dthrfim ? new Date(dthrfim) : null
+    }, { transaction });
+
+    // Cria o estado inicial da subtarefa (usando o estado da tarefa pai)
+    const estadoTarefaMae = await TarefasEstado.findOne({
+      where: { idtarefa: idmae },
+      order: [['dthrinicio', 'DESC']],
+      transaction
+    });
+
+    if (estadoTarefaMae) {
+      await TarefasEstado.create({
+        idtarefa: subtarefa.id,
+        idusuario,
+        idestado: estadoTarefaMae.idestado,
+        dthrinicio: subtarefa.dthrinicio,
+        dthrfim: subtarefa.dthrfim
+      }, { transaction });
+    }
+
+    await transaction.commit();
+
+    res.status(201).json({
+      message: "Subtarefa criada com sucesso!",
+      subtarefa: {
+        ...subtarefa.toJSON(),
+        idmae: parseInt(idmae)
+      }
+    });
+
+  } catch (error) {
+    await transaction.rollback();
+    console.error("Erro ao criar subtarefa:", error);
+    res.status(500).json({
+      error: "Erro interno ao criar subtarefa",
+      details: error.message
+    });
+  }
+};
+
 // Atualização com controle de transação
 exports.atualizarTarefa = async (req, res) => {
   const transaction = await Tarefa.sequelize.transaction();
   try {
     const { id } = req.params;
-    const { idprioridade, titulo, descricao, idestado, dthrfim } = req.body;
+    const { idprioridade, titulo, descricao, idestado, dthrfim, progresso } = req.body;
+
+    // Log para debug
+    console.log('Dados recebidos para atualização:', { id, idprioridade, titulo, descricao, idestado, dthrfim });
+    console.log('Body completo:', req.body);
 
     const tarefa = await Tarefa.findByPk(id, {
       include: [
@@ -223,16 +306,38 @@ exports.atualizarTarefa = async (req, res) => {
       });
     }
 
-    // Atualização principal
-    await tarefa.update({
-      idprioridade: idprioridade || tarefa.idprioridade,
-      titulo: titulo || tarefa.titulo,
-      descricao: descricao || tarefa.descricao,
-      dthrfim: dthrfim ? new Date(dthrfim) : tarefa.dthrfim
-    }, { transaction });
+        // Validação dos dados antes da atualização
+    const dadosAtualizacao = {};
+
+    if (idprioridade !== undefined && idprioridade !== null && idprioridade !== '') {
+      dadosAtualizacao.idprioridade = idprioridade;
+    }
+
+    if (titulo !== undefined && titulo !== null && titulo !== '') {
+      dadosAtualizacao.titulo = titulo;
+    }
+
+    if (descricao !== undefined) {
+      dadosAtualizacao.descricao = descricao;
+    }
+
+    if (dthrfim !== undefined && dthrfim !== null && dthrfim !== '') {
+      dadosAtualizacao.dthrfim = new Date(dthrfim);
+    }
+
+    if (progresso !== undefined && progresso !== null) {
+      dadosAtualizacao.progresso = progresso;
+    }
+
+    console.log('Dados para atualização:', dadosAtualizacao);
+
+    // Só atualiza se houver dados para atualizar
+    if (Object.keys(dadosAtualizacao).length > 0) {
+      await tarefa.update(dadosAtualizacao, { transaction });
+    }
 
     // Controle de estado
-    if (idestado && idestado !== tarefa.HistoricoEstados[0]?.idestado) {
+    if (idestado && idestado !== tarefa.TarefasEstados[0]?.idestado) {
       await TarefasEstado.create({
         idtarefa: id,
         idusuario: tarefa.idusuario,
@@ -337,5 +442,55 @@ exports.deletarTarefa = async (req, res) => {
     await transaction.rollback();
     console.error("Erro ao excluir tarefa:", error);
     res.status(500).json({ error: "Erro ao excluir tarefa." });
+  }
+};
+
+// Exclusão de subtarefa
+exports.deletarSubTarefa = async (req, res) => {
+  const transaction = await Tarefa.sequelize.transaction();
+  try {
+    const { id } = req.params;
+
+    console.log('Excluindo subtarefa:', id);
+
+    // Verifica se a subtarefa existe
+    const subtarefa = await Tarefa.findByPk(id, {
+      include: [
+        {
+          model: TarefasEstado,
+          as: 'TarefasEstados'
+        }
+      ],
+      transaction
+    });
+
+    if (!subtarefa) {
+      await transaction.rollback();
+      return res.status(404).json({ error: "Subtarefa não encontrada" });
+    }
+
+    // Verifica se é realmente uma subtarefa (tem idmae)
+    if (!subtarefa.idmae) {
+      await transaction.rollback();
+      return res.status(400).json({ error: "Esta não é uma subtarefa válida" });
+    }
+
+    // Exclui os estados relacionados à subtarefa
+    await TarefasEstado.destroy({ where: { idtarefa: id }, transaction });
+
+    // Exclui a subtarefa
+    await Tarefa.destroy({ where: { id }, transaction });
+
+    await transaction.commit();
+
+    res.status(200).json({ message: "Subtarefa excluída com sucesso" });
+
+  } catch (error) {
+    await transaction.rollback();
+    console.error("Erro ao excluir subtarefa:", error);
+    res.status(500).json({
+      error: "Erro interno ao excluir subtarefa",
+      details: error.message
+    });
   }
 };

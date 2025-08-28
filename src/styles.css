@@ -14,7 +14,7 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   align-items: center;
   justify-content: center;
-  background-color: #fae8e8;
+  background-color: #f3f1f1;
 }
 
 @media screen and (max-width: 768px) {
@@ -25,6 +25,13 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
     align-items: center;
     justify-content: center;
-    background-color: #fae8e8;
+    background-color: #f3f1f1;
   }
+}
+
+/* Adiciona uma borda preta fina à tabela de "Minhas Tarefas" */
+.ConsultaTarefa {
+  border: 1px solid #000;
+  border-radius: 8px; /* Borda arredondada para um visual mais suave */
+  overflow: hidden; /* Garante que o conteúdo interno respeite a borda arredondada */
 }

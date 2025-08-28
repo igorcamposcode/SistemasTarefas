@@ -38,13 +38,17 @@ exports.buscarUsuarioPorId = async (req, res) => {
 
 exports.atualizarUsuario = async (req, res) => {
   try {
+    // O ID do usuário é obtido a partir do token de autenticação (pelo middleware autenticarToken)
     const { nome, telefone, email } = req.body;
-    const idusuario = req.usuario;
+    const idUsuario = req.usuario.id; // O middleware anexa o payload do usuário (que contém o 'id') a req.usuario
+
     if (!nome || !telefone || !email) {
       return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
     }
-    const usuario = await Usuario.update({ nome, telefone, email }, { where: { id: idusuario } });
-    if (!usuario) {
+    // O método update do Sequelize retorna um array com o número de linhas afetadas.
+    const [numLinhasAtualizadas] = await Usuario.update({ nome, telefone, email }, { where: { id: idUsuario } });
+
+    if (numLinhasAtualizadas === 0) {
       return res.status(404).json({ error: 'Usuário não encontrado.' });
     }
     res.status(200).json({ message: 'Usuário atualizado com sucesso.' });

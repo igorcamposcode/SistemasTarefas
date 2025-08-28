@@ -28,9 +28,14 @@ interface Tarefa {
 interface SubTarefa {
   id: number;
   titulo: string;
+  descricao?: string;
   prioridade: string;
   estado: string;
   progresso: number; // ✅ Adicionando a propriedade progresso
+  usuario?: string;
+  idusuario?: number;
+  dthrinicio?: Date | number | string | null;
+  dthrfim?: Date | number | string | null;
 }
 
 @Component({
@@ -110,18 +115,15 @@ export class MenuComponent implements OnInit {
     this.tarefaForm = this.fb.group({
       id: [null], // ID da tarefa para atualizações
       idusuario: [this.authService.obterIdUsuarioLogado(), Validators.required], // ID do usuário logado
-      idprioridade: [''], // Prioridade selecionada
+      idprioridade: [null, Validators.required], // Prioridade selecionada
       titulo: ['', Validators.required], // Título da tarefa
       descricao: [''], // Descrição opcional
-      idestado: [''], // Estado da tarefa
+      idestado: [null, Validators.required], // Estado da tarefa (obrigatório)
       idmae: [null], // Subtarefa (opcional)
       dthrinicio: [
         getHorarioBrasilia().toISOString().slice(0, 16), // Data de início ajustada para Brasília
       ],
-      dthrfim: [
-        getHorarioBrasilia().toISOString().slice(0, 16),
-        null, // Inicialmente `null`, atualizado quando o usuário preenche
-      ],
+      dthrfim: [null], // Data de fim (opcional)
     });
   }
 
@@ -159,25 +161,26 @@ export class MenuComponent implements OnInit {
   }
 
   /** Salva os dados atualizados do usuário */
+  /** Salva os dados atualizados do usuário */
   salvarDadosUsuario(): void {
     if (this.usuarioForm.invalid) {
-      alert('Preencha todos os campos corretamente.');
+      alert('Preencha todos os campos obrigatórios corretamente.');
       return;
     }
 
     const dadosAtualizados = this.usuarioForm.value;
 
-    console.log('Dados enviados ao backend:', dadosAtualizados);
+    console.log('Payload enviado ao backend:', dadosAtualizados);
 
     this.authService.atualizarUsuario(dadosAtualizados).subscribe({
       next: (res) => {
-        alert(res.message || 'Dados atualizados com sucesso!');
-        this.carregarUsuario(); // Atualiza os dados no formulário
+        alert(res?.message || 'Dados atualizados com sucesso!');
+        this.carregarUsuario();
       },
       error: (err) => {
         console.error('Erro ao atualizar usuário:', err);
-        alert('Erro ao atualizar os dados. Tente novamente.');
-      },
+        alert(`Erro no servidor (${err.status}). Tente novamente mais tarde.`);
+      }
     });
   }
 
@@ -249,9 +252,13 @@ export class MenuComponent implements OnInit {
             .map((sub: any) => ({
               id: sub.id,
               titulo: sub.titulo,
+              descricao: sub.descricao,
               prioridade: sub.Prioridade?.nome || 'Sem prioridade',
-              estado: sub.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
-              dthrfim: sub.dthrfim ? new Date(sub.dthrfim) : null
+              estado: sub.EstadoAtual?.nome || sub.TarefasEstados?.slice(-1)?.[0]?.Estado?.nome || 'Não definido',
+              dthrinicio: sub.dthrinicio ? new Date(sub.dthrinicio) : null,
+              dthrfim: sub.dthrfim ? new Date(sub.dthrfim) : null,
+              usuario: sub.Usuario?.nome || 'Desconhecido',
+              idusuario: sub.idusuario,
             }));
 
 
@@ -262,7 +269,7 @@ export class MenuComponent implements OnInit {
               usuario: tarefa.Usuario?.nome || 'Desconhecido',
               prioridade: tarefa.Prioridade?.nome || 'Sem prioridade',
               estado:
-                tarefa.TarefasEstados?.[0]?.Estado?.nome || 'Não definido',
+                tarefa.EstadoAtual?.nome || tarefa.TarefasEstados?.slice(-1)?.[0]?.Estado?.nome || 'Não definido',
               dthrinicio: tarefa.dthrinicio ? new Date(tarefa.dthrinicio) : '',
               dthrfim: tarefa.dthrfim ? new Date(tarefa.dthrfim) : '',
               documento: tarefa.Documentos?.[0]
@@ -316,62 +323,74 @@ export class MenuComponent implements OnInit {
 
     const tarefaData = {
       ...this.tarefaForm.value,
+      idusuario: this.authService.obterIdUsuarioLogado(),
       dthrinicio: new Date(this.tarefaForm.value.dthrinicio).toISOString(),
       dthrfim: this.tarefaForm.value.dthrfim
         ? new Date(this.tarefaForm.value.dthrfim).toISOString()
         : null,
     };
 
-    if (tarefaData.idmae) {
-      // Criação de uma subtarefa
-      this.taskService.criarSubTarefa(tarefaData.idmae, tarefaData).subscribe({
-        next: (res) => {
-          alert('Subtarefa criada com sucesso!');
-          const tarefaMae = this.tarefas.find(
-            (tarefa) => tarefa.id === tarefaData.idmae
-          );
-          if (tarefaMae) {
-            tarefaMae.subTarefas = tarefaMae.subTarefas || [];
-            tarefaMae.subTarefas.push(res.subtarefa); // Atualiza localmente sem duplicar
-          }
-          this.fecharModal();
-          window.location.reload();
-        },
-        error: (err) => {
-          console.error('Erro ao criar subtarefa:', err);
-          alert('Erro ao criar subtarefa.');
-        },
-      });
-    } else if (this.tarefaEditando) {
-      // Atualização de uma tarefa existente
-      this.taskService
-        .atualizarTarefa(this.tarefaEditando.id, tarefaData)
-        .subscribe({
-          next: () => {
-            alert('Tarefa atualizada com sucesso!');
-            this.carregarTarefas();
-            this.fecharModal();
-            window.location.reload();
-          },
-          error: (err) => {
-            console.error('Erro ao atualizar tarefa:', err);
-            alert('Erro ao atualizar tarefa.');
-          },
-        });
-    } else {
-      // Criação de uma nova tarefa
-      this.taskService.criarTarefa(tarefaData).subscribe({
+    Object.keys(tarefaData).forEach(key => {
+      if (tarefaData[key] === undefined || tarefaData[key] === null) {
+        delete tarefaData[key];
+      }
+      if (key === 'titulo' && tarefaData[key] === '') {
+        delete tarefaData[key];
+      }
+    });
+
+    console.log('Dados da tarefa a serem enviados:', tarefaData);
+
+    if (this.tarefaEditando) {
+      // MODO DE EDIÇÃO: Atualiza uma tarefa ou subtarefa existente.
+      const idParaAtualizar = this.tarefaEditando.id;
+      const eSubtarefa = this.isSubTarefa && this.tarefaMae;
+
+      const mensagemSucesso = eSubtarefa ? 'Subtarefa atualizada com sucesso!' : 'Tarefa atualizada com sucesso!';
+      const mensagemErro = eSubtarefa ? 'Erro ao atualizar subtarefa' : 'Erro ao atualizar tarefa';
+
+      console.log(`Atualizando ${eSubtarefa ? 'subtarefa' : 'tarefa'}:`, idParaAtualizar, tarefaData);
+
+      this.taskService.atualizarTarefa(idParaAtualizar, tarefaData).subscribe({
         next: () => {
-          alert('Nova tarefa criada com sucesso!');
+          alert(mensagemSucesso);
           this.carregarTarefas();
           this.fecharModal();
-          window.location.reload();
         },
         error: (err) => {
-          console.error('Erro ao criar nova tarefa:', err);
-          alert('Erro ao criar nova tarefa.');
+          console.error(`${mensagemErro}:`, err);
+          alert(`${mensagemErro}: ` + (err.error?.message || err.message || 'Erro desconhecido'));
         },
       });
+    } else {
+      // MODO DE CRIAÇÃO: Cria uma nova tarefa ou subtarefa.
+      if (tarefaData.idmae) {
+        // Criação de uma subtarefa
+        this.taskService.criarSubTarefa(tarefaData.idmae, tarefaData).subscribe({
+          next: () => {
+            alert('Subtarefa criada com sucesso!');
+            this.carregarTarefas();
+            this.fecharModal();
+          },
+          error: (err) => {
+            console.error('Erro ao criar subtarefa:', err);
+            alert('Erro ao criar subtarefa: ' + (err.error?.message || err.message || 'Erro desconhecido'));
+          },
+        });
+      } else {
+        // Criação de uma nova tarefa principal
+        this.taskService.criarTarefa(tarefaData).subscribe({
+          next: () => {
+            alert('Nova tarefa criada com sucesso!');
+            this.carregarTarefas();
+            this.fecharModal();
+          },
+          error: (err) => {
+            console.error('Erro ao criar nova tarefa:', err);
+            alert('Erro ao criar nova tarefa.');
+          },
+        });
+      }
     }
   }
 
@@ -405,6 +424,27 @@ export class MenuComponent implements OnInit {
         alert('Erro ao excluir tarefa.');
       },
     });
+  }
+
+  /** Excluir uma subtarefa */
+  excluirSubTarefa(subTarefa: any, tarefa: any): void {
+    if (confirm(`Tem certeza que deseja excluir a subtarefa "${subTarefa.titulo}"?`)) {
+      this.taskService.excluirSubTarefa(subTarefa.id).subscribe({
+        next: () => {
+          alert('Subtarefa excluída com sucesso.');
+          // Remove a subtarefa da lista local
+          tarefa.subTarefas = tarefa.subTarefas.filter((sub: any) => sub.id !== subTarefa.id);
+          // Atualiza o progresso da tarefa
+          this.atualizarProgresso(tarefa);
+          // Recarrega as tarefas para sincronizar com o backend
+          this.carregarTarefas();
+        },
+        error: (err) => {
+          console.error('Erro ao excluir subtarefa:', err);
+          alert('Erro ao excluir subtarefa: ' + (err.error?.message || err.message || 'Erro desconhecido'));
+        },
+      });
+    }
   }
 
   salvarLocalStorage(): void {
@@ -481,12 +521,12 @@ export class MenuComponent implements OnInit {
       descricao: '', // Campo editável para a descrição da subtarefa
     });
 
-    // Bloqueia os campos que não podem ser editados
-    this.tarefaForm.get('idprioridade')?.enable(); // Bloqueia prioridade
-    this.tarefaForm.get('idestado')?.disable(); // Bloqueia estado
-    this.tarefaForm.get('idusuario')?.enable(); // Exibe nome do usuário, mas bloqueado
-    this.tarefaForm.get('dthrinicio')?.enable(); // Bloqueia data de início
-    this.tarefaForm.get('dthrfim')?.disable(); // Bloqueia data de início
+    // Configura os campos para subtarefa
+    this.tarefaForm.get('idprioridade')?.enable(); // Prioridade pode ser editada
+    this.tarefaForm.get('idestado')?.disable(); // Estado é bloqueado para subtarefas
+    this.tarefaForm.get('idusuario')?.disable(); // Usuário é bloqueado
+    this.tarefaForm.get('dthrinicio')?.enable(); // Data de início pode ser editada
+    this.tarefaForm.get('dthrfim')?.disable(); // Data de fim é bloqueada para subtarefas
 
     this.isModalVisible = true; // Exibe o modal
   }
@@ -494,8 +534,28 @@ export class MenuComponent implements OnInit {
   editarTarefa(tarefa: any): void {
     this.tarefaEditando = tarefa;
 
+    // Mapeia corretamente os campos da tarefa para o formulário
+    const idPrioridade = this.obterIdPrioridade(tarefa.prioridade);
+    const idEstado = this.obterIdEstado(tarefa.estado);
+
+    console.log('Mapeando tarefa para formulário:', {
+      id: tarefa.id,
+      idusuario: tarefa.usuario || this.authService.obterIdUsuarioLogado(),
+      idprioridade: idPrioridade,
+      titulo: tarefa.titulo,
+      descricao: tarefa.descricao,
+      idestado: idEstado,
+      dthrinicio: tarefa.dthrinicio,
+      dthrfim: tarefa.dthrfim
+    });
+
     this.tarefaForm.patchValue({
-      ...tarefa,
+      id: tarefa.id,
+      idusuario: tarefa.usuario || this.authService.obterIdUsuarioLogado(),
+      idprioridade: idPrioridade,
+      titulo: tarefa.titulo,
+      descricao: tarefa.descricao,
+      idestado: idEstado,
       dthrinicio: tarefa.dthrinicio
         ? new Date(tarefa.dthrinicio).toISOString().slice(0, 16)
         : null,
@@ -508,18 +568,49 @@ export class MenuComponent implements OnInit {
   }
   /** Editar uma subtarefa */
   editarSubTarefa(subTarefa: any, tarefaMae: any): void {
+    if (this.isSubTarefaConcluida(subTarefa)) {
+      alert('Não é possível editar uma subtarefa que já foi concluída.');
+      return;
+    }
+
     this.tarefaEditando = subTarefa;
+    this.isSubTarefa = true; // Indica que estamos editando uma subtarefa
+    this.tarefaMae = tarefaMae; // Armazena a tarefa pai
+
+    // Obtém os IDs corretos para prioridade e estado
+    const idPrioridade = this.obterIdPrioridade(subTarefa.prioridade);
+    const idEstado = this.obterIdEstado(subTarefa.estado);
+
+    console.log('Editando subtarefa:', {
+      subTarefa,
+      idPrioridade,
+      idEstado,
+      tarefaMae
+    });
 
     // Preenche o formulário com os dados da subtarefa
     this.tarefaForm.patchValue({
-      id: subTarefa.idmae,
-      idusuario: this.usuario.id, // ID do usuário logado
-      idprioridade: subTarefa.idprioridade,
+      id: subTarefa.id, // ID da subtarefa para atualização
+      idusuario: subTarefa.idusuario,
+      idprioridade: idPrioridade,
       titulo: subTarefa.titulo,
       descricao: subTarefa.descricao,
-      idestado: subTarefa.idestado,
+      idestado: idEstado,
       idmae: tarefaMae.id, // Referência à tarefa principal
+      dthrinicio: subTarefa.dthrinicio
+        ? new Date(subTarefa.dthrinicio).toISOString().slice(0, 16)
+        : null,
+      dthrfim: subTarefa.dthrfim
+        ? new Date(subTarefa.dthrfim).toISOString().slice(0, 16)
+        : null,
     });
+
+    // Configura os campos para edição de subtarefa
+    this.tarefaForm.get('idprioridade')?.enable();
+    this.tarefaForm.get('idestado')?.enable(); // O estado não pode ser editado diretamente
+    this.tarefaForm.get('idusuario')?.disable();
+    this.tarefaForm.get('dthrinicio')?.enable();
+    this.tarefaForm.get('dthrfim')?.enable();
 
     this.isModalVisible = true; // Exibe o modal de edição
   }
@@ -529,7 +620,17 @@ export class MenuComponent implements OnInit {
     this.tarefaEditando = null;
     this.isSubTarefa = false;
     this.tarefaMae = null;
+
+    // Reseta o formulário e habilita todos os campos
     this.tarefaForm.reset();
+    this.tarefaForm.get('idprioridade')?.enable();
+    this.tarefaForm.get('idestado')?.enable();
+    this.tarefaForm.get('idusuario')?.enable();
+    this.tarefaForm.get('dthrinicio')?.enable();
+    this.tarefaForm.get('dthrfim')?.enable();
+
+    // Reinicializa o formulário com valores padrão
+    this.inicializarFormularios();
   }
   // Handle file selection
   onFileSelected(event: Event): void {
@@ -574,32 +675,46 @@ marcarSubTarefaConcluida(subTarefa: any, tarefa: any): void {
   if (subTarefa.estado === 'Concluído') {
     return;
   }
-  // 2. Prepara o corpo da requisição com os dados para o backend.
+
+  // 2. Obtém o ID do estado "Concluído" do array de estados
+  const estadoConcluido = this.estados.find((e: any) => e.nome === 'Concluído');
+  if (!estadoConcluido) {
+    alert('Estado "Concluído" não encontrado. Verifique a configuração do sistema.');
+    return;
+  }
+
+  // 3. Prepara o corpo da requisição com os dados para o backend.
   const dadosParaAtualizar = {
-    estado: 'Concluído', // Define o novo estado explicitamente.
-    dthrfim: new Date().toISOString(), // Define a data/hora de conclusão.
-    idusuario: this.authService.obterIdUsuarioLogado(), // Pega o usuário logado.
+    idestado: estadoConcluido.id, // ID do estado "Concluído"
+    dthrfim: new Date().toISOString(), // Define a data/hora de conclusão
   };
-  // 3. Atualiza a subtarefa no backend
+
+  console.log('Marcando subtarefa como concluída:', {
+    subtarefaId: subTarefa.id,
+    dadosParaAtualizar,
+    estadoConcluido
+  });
+
+  // 4. Atualiza a subtarefa no backend
   this.taskService
     .atualizarTarefa(subTarefa.id, dadosParaAtualizar)
     .subscribe({
       next: () => {
-        // 4. Em caso de sucesso, atualiza a interface do usuário.
+        // 5. Em caso de sucesso, atualiza a interface do usuário.
         subTarefa.estado = 'Concluído';
 
-        // 5. Atualiza o progresso da tarefa principal
+        // 6. Atualiza o progresso da tarefa principal
         this.atualizarProgresso(tarefa);
 
-        // 6. Salva o estado no localStorage
+        // 7. Salva o estado no localStorage
         this.salvarLocalStorage();
 
         alert('Subtarefa concluída com sucesso!');
       },
       error: (err) => {
-        // 7. Em caso de erro, informa o usuário e loga o erro.
+        // 8. Em caso de erro, informa o usuário e loga o erro.
         console.error('Erro ao concluir a subtarefa:', err);
-        alert('Não foi possível concluir a subtarefa. Verifique a API.');
+        alert('Erro ao concluir a subtarefa: ' + (err.error?.message || err.message || 'Erro desconhecido'));
       },
     });
 }
@@ -613,14 +728,29 @@ marcarSubTarefaConcluida(subTarefa: any, tarefa: any): void {
       tarefa.subTarefas.length > 0
         ? Math.round((concluidas / tarefa.subTarefas.length) * 100)
         : 0;
+
     // 2. Atualiza o progresso no objeto da tarefa no frontend.
     tarefa.progresso = progresso;
+
     // 3. Prepara o corpo da requisição com o progresso e estado
-    const dadosParaAtualizar = {
+    const dadosParaAtualizar: any = {
       progresso: progresso,
-      // Se todas as subtarefas estiverem concluídas, marca a tarefa principal como concluída
-      estado: progresso === 100 ? 'Concluído' : tarefa.estado
     };
+
+    // Se todas as subtarefas estiverem concluídas, marca a tarefa principal como concluída
+    if (progresso === 100) {
+      const estadoConcluido = this.estados.find((e: any) => e.nome === 'Concluído');
+      if (estadoConcluido) {
+        dadosParaAtualizar.idestado = estadoConcluido.id;
+      }
+    }
+
+    console.log('Atualizando progresso da tarefa:', {
+      tarefaId: tarefa.id,
+      progresso,
+      dadosParaAtualizar
+    });
+
     // 4. Atualiza a tarefa no backend
     this.taskService.atualizarTarefa(tarefa.id, dadosParaAtualizar).subscribe({
       next: () => {
@@ -636,6 +766,7 @@ marcarSubTarefaConcluida(subTarefa: any, tarefa: any): void {
       },
       error: (err) => {
         console.error('Erro ao atualizar progresso no backend:', err);
+        alert('Erro ao atualizar progresso: ' + (err.error?.message || err.message || 'Erro desconhecido'));
       },
     });
   }
@@ -657,5 +788,17 @@ marcarSubTarefaConcluida(subTarefa: any, tarefa: any): void {
     'subtarefa-concluida': this.isSubTarefaConcluida(sub),
     'subtarefa-desabilitada': this.isSubTarefaDesabilitada(sub),
   };
+  }
+
+  /** Obtém o ID da prioridade pelo nome */
+  private obterIdPrioridade(nomePrioridade: string): number | null {
+    const prioridade = this.prioridades.find(p => p.nome === nomePrioridade);
+    return prioridade ? prioridade.id : null;
+  }
+
+  /** Obtém o ID do estado pelo nome */
+  private obterIdEstado(nomeEstado: string): number | null {
+    const estado = this.estados.find(e => e.nome === nomeEstado);
+    return estado ? estado.id : null;
   }
 }

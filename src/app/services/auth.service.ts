@@ -125,9 +125,10 @@ export class AuthService {
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
     });
 
+    // Ajuste a rota conforme o backend: singular ou plural
     return this.http.put(`${API_PATH}/usuario`, dados, { headers });
   }
-
 }
