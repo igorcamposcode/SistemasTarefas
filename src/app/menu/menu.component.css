@@ -98,6 +98,146 @@
   overflow: hidden; /* Garante que a barra interna respeite o border-radius */
 }
 
+/* --- SEÇÃO DE DOCUMENTOS --- */
+.documentos-section {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.documentos-section h5 {
+  color: #495057;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.documento-item {
+  padding: 0.75rem;
+  margin: 0.75rem 0;
+  background-color: white;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.documento-item:hover {
+  background-color: #f8f9fa;
+  border-color: #adb5bd;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
+}
+
+.documento-nome {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.documento-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.documento-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.documento-icon {
+  font-size: 1.2rem;
+  min-width: 1.5rem;
+}
+
+.documento-details {
+  display: flex;
+  gap: 1rem;
+  margin-left: 2.5rem;
+}
+
+.documento-tipo {
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.documento-tamanho {
+  color: #6c757d;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.documento-acoes {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.documento-acoes .btn {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.documento-acoes .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* Cores específicas para cada tipo de documento */
+.documento-icon.bi-file-earmark-pdf {
+  color: #dc3545;
+}
+
+.documento-icon.bi-file-earmark-word {
+  color: #0d6efd;
+}
+
+.documento-icon.bi-file-earmark-excel {
+  color: #198754;
+}
+
+.documento-icon.bi-file-earmark-text {
+  color: #6c757d;
+}
+
+.documento-icon.bi-file-earmark-image {
+  color: #fd7e14;
+}
+
+.documento-icon.bi-file-earmark-zip {
+  color: #6f42c1;
+}
+
+.documento-icon.bi-file-earmark {
+  color: #6c757d;
+}
+
+/* Ícones dos documentos */
+.documento-item .bi {
+  color: #6c757d;
+}
+
+.documento-item:hover .bi {
+  color: #495057;
+}
+
 .progress-bar {
   font-weight: 600;
   transition: width 0.6s ease;
@@ -173,3 +313,5 @@
 .d-none {
   display: none !important;
 }
+
+

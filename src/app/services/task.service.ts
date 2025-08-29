@@ -124,4 +124,56 @@ export class TaskService {
 
     return this.http.get(`${API_PATH}/tarefa`, { headers });
   }
+
+  /** Upload de documento para uma tarefa */
+  uploadDocumento(idtarefa: number, idusuario: number, arquivo: File): Observable<any> {
+    console.log('TaskService - Iniciando upload...');
+    console.log('ID Tarefa:', idtarefa);
+    console.log('ID Usuário:', idusuario);
+    console.log('Arquivo:', arquivo);
+
+    const formData = new FormData();
+    formData.append('documento', arquivo);
+    formData.append('idtarefa', idtarefa.toString());
+    formData.append('idusuario', idusuario.toString());
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+    });
+
+    console.log('Headers:', headers);
+    console.log('FormData criado com documento e IDs');
+
+    return this.http.post(`${API_PATH}/documento/upload`, formData, { headers });
+  }
+
+  /** Obter documentos de uma tarefa */
+  obterDocumentosTarefa(idtarefa: number, idusuario: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+    });
+
+    return this.http.get(`${API_PATH}/documento/tarefa/${idtarefa}/${idusuario}`, { headers });
+  }
+
+  /** Download de um documento */
+  downloadDocumento(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+    });
+
+    return this.http.get(`${API_PATH}/documento/download/${id}`, {
+      headers,
+      responseType: 'blob'
+    });
+  }
+
+  /** Excluir um documento */
+  excluirDocumento(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+    });
+
+    return this.http.delete(`${API_PATH}/documento/${id}`, { headers });
+  }
 }

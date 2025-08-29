@@ -85,6 +85,7 @@ exports.criarTarefa = async (req, res) => {
 
     res.status(201).json({
       message: "Tarefa criada com sucesso!",
+      id: tarefa.id, // Retorna o ID da tarefa criada
       tarefa: {
         ...tarefaCompleta.toJSON(),
         EstadoAtual: tarefaCompleta.TarefasEstados[0]?.Estado
@@ -141,7 +142,7 @@ exports.buscarTarefas = async (req, res) => {
         {
           model: Documento,
           as: 'Documentos',
-          attributes: ['nome', 'caminho'] // Inclua os documentos
+          attributes: ['id', 'idtarefa', 'idusuario', 'nome', 'caminho', 'extensao', 'tamanho']
         },
         {
           model: Tarefa,
@@ -174,15 +175,29 @@ exports.buscarTarefas = async (req, res) => {
     });
 
     if (Array.isArray(tarefas)) {
-      const resposta = tarefas.map(tarefa => ({
-        ...tarefa.toJSON(),
-        UsuarioResponsavel: tarefa.Usuario?.nome || 'Desconhecido', // Inclui o nome do usuário responsável
-        EstadoAtual: tarefa.TarefasEstados?.[0]?.Estado,
-        SubTarefas: tarefa.SubTarefas.map(sub => ({
-          ...sub.toJSON(),
-          EstadoAtual: sub.TarefasEstados?.[0]?.Estado
-        }))
-      }));
+      const resposta = tarefas.map(tarefa => {
+        // Calcula o progresso baseado nas subtarefas
+        let progresso = 0;
+        if (tarefa.SubTarefas && tarefa.SubTarefas.length > 0) {
+          const subtarefasConcluidas = tarefa.SubTarefas.filter(sub =>
+            sub.EstadoAtual?.nome === 'Concluído'
+          ).length;
+          progresso = Math.round((subtarefasConcluidas / tarefa.SubTarefas.length) * 100);
+        } else if (tarefa.EstadoAtual?.nome === 'Concluído') {
+          progresso = 100;
+        }
+
+        return {
+          ...tarefa.toJSON(),
+          UsuarioResponsavel: tarefa.Usuario?.nome || 'Desconhecido',
+          EstadoAtual: tarefa.TarefasEstados?.[0]?.Estado,
+          progresso: progresso,
+          SubTarefas: tarefa.SubTarefas.map(sub => ({
+            ...sub.toJSON(),
+            EstadoAtual: sub.TarefasEstados?.[0]?.Estado
+          }))
+        };
+      });
 
       res.status(200).json({
         tarefas: resposta,
@@ -365,14 +380,15 @@ exports.atualizarTarefa = async (req, res) => {
 
     res.status(200).json({
       message: "Tarefa atualizada com sucesso!",
+      id: id, // Retorna o ID da tarefa atualizada
       tarefa: {
         ...tarefaAtualizada.toJSON(),
         EstadoAtual: tarefaAtualizada.TarefasEstados[0]?.Estado
       },
-      opcoes: {
-        prioridades: await Prioridade.findAll(),
-        estados: await Estado.findAll()
-      }
+              opcoes: {
+          prioridades: await Prioridade.findAll(),
+          estados: await Estado.findAll()
+        }
     });
 
   } catch (error) {

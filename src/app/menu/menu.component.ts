@@ -10,6 +10,7 @@ import {
 import { AuthService } from '../services/auth.service';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { TaskService } from '../services/task.service';
+
 interface Tarefa {
   id: number;
   titulo: string;
@@ -19,9 +20,19 @@ interface Tarefa {
   estado: string;
   dthrfim: Date | number | string | null;
   dthrinicio: Date | number | string | null;
-  documento?: { nome: string; url: string };
+  documentos?: Documento[];
   subTarefas: SubTarefa[];
   progresso: number; // Adiciona a propriedade 'progresso'
+}
+
+interface Documento {
+  id: number;
+  idtarefa: number;
+  idusuario: number;
+  nome: string;
+  caminho: string;
+  extensao: string;
+  tamanho: string;
 }
 interface SubTarefa {
   id: number;
@@ -56,12 +67,14 @@ export class MenuComponent implements OnInit {
   isSubTarefa = false; // Indica se estamos adicionando uma subtarefa
   tarefaMae: any = null; // Referência à tarefa principal
   tarefaEditando: any = null; // Tarefa sendo editada (null para criação de nova)
+  arquivoSelecionado: File | null = null; // Arquivo selecionado para upload
+
 
   constructor(
     private fb: FormBuilder,
     private taskService: TaskService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -259,12 +272,7 @@ export class MenuComponent implements OnInit {
                 'Não definido',
               dthrinicio: tarefa.dthrinicio ? new Date(tarefa.dthrinicio) : '',
               dthrfim: tarefa.dthrfim ? new Date(tarefa.dthrfim) : '',
-              documento: tarefa.Documentos?.[0]
-                ? {
-                    nome: tarefa.Documentos[0].nome,
-                    url: tarefa.Documentos[0].caminho,
-                  }
-                : undefined,
+              documentos: tarefa.Documentos || [],
               subTarefas: subTarefasAssociadas, // Usa a lista de subtarefas corrigida
               progresso: tarefa.progresso || 0,
             };
@@ -346,9 +354,14 @@ export class MenuComponent implements OnInit {
 
       this.taskService.atualizarTarefa(idParaAtualizar, tarefaData).subscribe({
         next: () => {
-          alert(mensagemSucesso);
-          this.carregarTarefas();
-          this.fecharModal();
+          // Se há um arquivo selecionado, faz o upload
+          if (this.arquivoSelecionado && !eSubtarefa) {
+            this.fazerUploadDocumento(idParaAtualizar, tarefaData.idusuario);
+          } else {
+            alert(mensagemSucesso);
+            this.carregarTarefas();
+            this.fecharModal();
+          }
         },
         error: (err) => {
           console.error(`${mensagemErro}:`, err);
@@ -381,10 +394,15 @@ export class MenuComponent implements OnInit {
       } else {
         // Criação de uma nova tarefa principal
         this.taskService.criarTarefa(tarefaData).subscribe({
-          next: () => {
-            alert('Nova tarefa criada com sucesso!');
-            this.carregarTarefas();
-            this.fecharModal();
+          next: (res) => {
+            // Se há um arquivo selecionado, faz o upload
+            if (this.arquivoSelecionado && res?.id) {
+              this.fazerUploadDocumento(res.id, tarefaData.idusuario);
+            } else {
+              alert('Nova tarefa criada com sucesso!');
+              this.carregarTarefas();
+              this.fecharModal();
+            }
           },
           error: (err) => {
             console.error('Erro ao criar nova tarefa:', err);
@@ -624,6 +642,7 @@ export class MenuComponent implements OnInit {
     this.tarefaEditando = null;
     this.isSubTarefa = false;
     this.tarefaMae = null;
+    this.arquivoSelecionado = null; // Limpa o arquivo selecionado
     // Reseta o formulário e habilita todos os campos
     this.tarefaForm.reset();
     this.tarefaForm.get('idprioridade')?.enable();
@@ -633,6 +652,7 @@ export class MenuComponent implements OnInit {
     this.tarefaForm.get('dthrfim')?.enable();
     // Reinicializa o formulário com valores padrão
     this.inicializarFormularios();
+
   }
   // Handle file selection
   onFileSelected(event: Event): void {
@@ -640,14 +660,107 @@ export class MenuComponent implements OnInit {
     const file = input.files?.[0];
 
     if (file) {
-      this.tarefaForm.patchValue({
-        documento: {
-          nome: file.name,
-          url: URL.createObjectURL(file),
+      this.arquivoSelecionado = file;
+      console.log('Arquivo selecionado:', file.name, 'Tamanho:', file.size);
+    }
+  }
+
+  // Upload de documento para uma tarefa
+  fazerUploadDocumento(idtarefa: number, idusuario: number): void {
+    if (!this.arquivoSelecionado) {
+      alert('Nenhum arquivo selecionado para upload.');
+      return;
+    }
+
+    this.taskService.uploadDocumento(idtarefa, idusuario, this.arquivoSelecionado).subscribe({
+      next: (res) => {
+        const mensagem = this.tarefaEditando
+          ? 'Tarefa atualizada e documento anexado com sucesso!'
+          : 'Tarefa criada e documento anexado com sucesso!';
+        alert(mensagem);
+        this.arquivoSelecionado = null;
+        this.carregarTarefas();
+        this.fecharModal();
+      },
+      error: (err) => {
+        console.error('Erro ao fazer upload do documento:', err);
+        const mensagem = this.tarefaEditando
+          ? 'Tarefa atualizada, mas erro ao anexar documento: '
+          : 'Tarefa criada, mas erro ao anexar documento: ';
+        alert(mensagem + (err.error?.message || err.message || 'Erro desconhecido'));
+        this.carregarTarefas();
+        this.fecharModal();
+      },
+    });
+  }
+
+  // Download de um documento
+  downloadDocumento(id: number): void {
+    this.taskService.downloadDocumento(id).subscribe({
+      next: (blob: Blob) => {
+        // Cria um link temporário para download
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'documento'; // O nome será definido pelo servidor
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      },
+      error: (err) => {
+        console.error('Erro ao fazer download do documento:', err);
+        alert('Erro ao fazer download do documento: ' + (err.error?.message || err.message || 'Erro desconhecido'));
+      },
+    });
+  }
+
+  // Excluir um documento
+  excluirDocumento(id: number, idtarefa: number): void {
+    if (confirm('Tem certeza que deseja excluir este documento?')) {
+      this.taskService.excluirDocumento(id).subscribe({
+        next: () => {
+          alert('Documento excluído com sucesso!');
+          this.carregarTarefas(); // Recarrega as tarefas para atualizar a lista de documentos
+        },
+        error: (err) => {
+          console.error('Erro ao excluir documento:', err);
+          alert('Erro ao excluir documento: ' + (err.error?.message || err.message || 'Erro desconhecido'));
         },
       });
     }
   }
+
+  // Obter ícone baseado na extensão do documento
+  getDocumentoIcon(extensao: string): string {
+    const ext = extensao.toLowerCase();
+    if (ext === '.pdf') return 'bi bi-file-earmark-pdf';
+    if (ext === '.doc' || ext === '.docx') return 'bi bi-file-earmark-word';
+    if (ext === '.xls' || ext === '.xlsx') return 'bi bi-file-earmark-excel';
+    if (ext === '.txt') return 'bi bi-file-earmark-text';
+    if (ext === '.jpg' || ext === '.jpeg' || ext === '.png' || ext === '.gif') return 'bi bi-file-earmark-image';
+    if (ext === '.zip' || ext === '.rar') return 'bi bi-file-earmark-zip';
+    return 'bi bi-file-earmark';
+  }
+
+  // Obter tipo de documento baseado na extensão
+  getDocumentoTipo(extensao: string): string {
+    const ext = extensao.toLowerCase();
+    if (ext === '.pdf') return 'PDF';
+    if (ext === '.doc' || ext === '.docx') return 'Word';
+    if (ext === '.xls' || ext === '.xlsx') return 'Excel';
+    if (ext === '.txt') return 'Texto';
+    if (ext === '.jpg' || ext === '.jpeg') return 'Imagem JPEG';
+    if (ext === '.png') return 'Imagem PNG';
+    if (ext === '.gif') return 'Imagem GIF';
+    if (ext === '.zip') return 'Arquivo ZIP';
+    if (ext === '.rar') return 'Arquivo RAR';
+    return 'Documento';
+  }
+
+
+
+
   // Navigate to "My Tasks"
   CliqueMinhaTarefa(pageName: string): void {
     this.router.navigate([pageName]);
