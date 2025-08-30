@@ -8,7 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgForOf, NgIf } from '@angular/common';
 import { TaskService } from '../services/task.service';
 
 interface Tarefa {
@@ -49,7 +49,7 @@ interface SubTarefa {
 
 @Component({
   selector: 'app-menu',
-  imports: [ReactiveFormsModule, FormsModule, NgFor, DatePipe, NgIf, NgClass],
+  imports: [ReactiveFormsModule, FormsModule, NgForOf, DatePipe, NgIf, NgClass],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
 })
@@ -58,7 +58,7 @@ export class MenuComponent implements OnInit {
   tarefas: any[] = []; // Lista de tarefas do usuário
   prioridades: any[] = []; // Prioridades disponíveis (ex.: Muito alta, Alta)
   estados: any[] = []; // Estados disponíveis (ex.: Aberto, Concluído)
-  loading: boolean = false;
+  loading = false;
   usuarioForm!: FormGroup; // Formulário para edição de dados do usuário
   tarefaForm!: FormGroup; // Formulário para criação/edição de tarefas
   isUsuarioModalVisible = false; // Controle de visibilidade do modal de usuário
@@ -149,6 +149,12 @@ export class MenuComponent implements OnInit {
   carregarUsuario(): void {
     try {
       const idUsuario = this.authService.obterIdUsuarioLogado();
+      if (idUsuario === null) {
+        alert('Usuário não autenticado. Faça login novamente.');
+        this.router.navigate(['/login']);
+        return;
+      }
+
       this.authService.obterUsuarioPorId(idUsuario).subscribe({
         next: (res) => {
           this.usuario = res;
@@ -244,7 +250,7 @@ export class MenuComponent implements OnInit {
 
           this.tarefas = tarefasPrincipais.map((tarefa: any) => {
             const subTarefasAssociadas = res.tarefas
-              .filter((sub: any) => sub.idmae === tarefa.id)
+              .filter((sub: { idmae?: number }) => sub.idmae === tarefa.id)
               .map((sub: any) => ({
                 id: sub.id,
                 titulo: sub.titulo,
@@ -258,6 +264,7 @@ export class MenuComponent implements OnInit {
                 dthrfim: sub.dthrfim ? new Date(sub.dthrfim) : null,
                 usuario: sub.Usuario?.nome || 'Desconhecido',
                 idusuario: sub.idusuario,
+                progresso: 0,
               }));
 
             const tarefaCompleta: Tarefa = {
@@ -412,18 +419,18 @@ export class MenuComponent implements OnInit {
       }
     }
   }
-  salvarNovaTarefa(tarefa: any): void {
-    if (!tarefa.idusuario || isNaN(Number(tarefa.idusuario))) {
+  salvarNovaTarefa(tarefa: Tarefa): void {
+    if (!tarefa.usuario || isNaN(Number(tarefa.usuario))) {
       alert('ID do usuário é obrigatório e deve ser um número válido.');
       return;
     }
 
     this.taskService.obterTarefas().subscribe({
-      next: (res: any) => {
+      next: () => {
         alert('Tarefa criada com sucesso!');
-        this.carregarTarefas(); // Atualiza a lista de tarefas
+        this.carregarTarefas();
       },
-      error: (err: any) => {
+      error: (err: { error?: { message?: string }; message?: string }) => {
         console.error('Erro ao criar tarefa:', err);
         alert('Erro ao criar tarefa. Verifique os dados.');
       },
@@ -900,7 +907,7 @@ export class MenuComponent implements OnInit {
   isSubTarefaDesabilitada(sub: any): boolean {
     return sub.estado === 'Concluído';
   }
-  getSubTarefaClasses(sub: any): { [key: string]: boolean } {
+  getSubTarefaClasses(sub: any): Record<string, boolean> {
     return {
       'subtarefa-concluida': this.isSubTarefaConcluida(sub),
       'subtarefa-desabilitada': this.isSubTarefaDesabilitada(sub),

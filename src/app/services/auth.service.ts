@@ -13,12 +13,12 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   // Método para criar usuário
-  criarUsuario(data: Object): Observable<Object> {
+  criarUsuario(data: object): Observable<object> {
     return this.http.post(`${API_PATH}/usuario`, data);
   }
 
   // Método para listar todos os usuários
-  listarUsuarios(): Observable<Object> {
+  listarUsuarios(): Observable<object> {
     return this.http.get(`${API_PATH}`);
   }
   login(email: string, senha: string): Observable<any> {
@@ -68,10 +68,10 @@ export class AuthService {
   }
 
   recuperarSenha(
-    email: Object,
-    senha: Object,
-    checkPassword: Object
-  ): Observable<Object> {
+    email: object,
+    senha: object,
+    checkPassword: object
+  ): Observable<object> {
     return this.http.post(`${API_PATH}/recuperar-senha`, {
       email,
       senha,

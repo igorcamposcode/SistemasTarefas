@@ -1,90 +1,83 @@
-<div class="div">
-  <div class="h3">
-    <img class="page-header-title"
-         src="/assets/system-task-logo.jpg.png"
-         alt="Sistemas de Tarefas">
+<header class="page-header">
+  <div class="container">
+    <div class="text-center">
+      <img class="page-header-title" src="/assets/system-task-logo.jpg.png" alt="Sistemas de Tarefas">
+    </div>
   </div>
+</header><br><br>
 
-  <form class="itens">
-    <form
-      nz-form
-      [formGroup]="validateForms"
-      class="login-form"
-      (ngSubmit)="submitForm();onSubmit()"
-    >
-      <nz-form-item>
-        <nz-form-control
-          nzErrorTip="Por favor, digite seu E-mail."
-          style="font-weight: bold"
-        >
-          <nz-input-group nzPrefixIcon="user">
-            <input
-              type="text"
-              nz-input
-              formControlName="email"
-              placeholder="E-mail"
-            />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-control
-          nzErrorTip="Por Favor, Digite sua senha."
-          style="font-weight: bold"
-        >
-          <nz-input-group nzPrefixIcon="lock">
-            <input
-              type="password"
-              nz-input
-              formControlName="senha"
-              placeholder="Senha"
-            />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
-
-      <div nz-row class="login-form-margin">
-        <div nz-col [nzSpan]="12">
-          <label nz-checkbox formControlName="remember" style="color: #ffffff">
-            <span style="font-size: 1rem">Lembrar-me</span>
-          </label>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow">
+        <div class="card-header">
+          <h2 class="text-center mb-0">Tela de Acesso</h2>
         </div>
+        <div class="card-body">
+          <form [formGroup]="validateForms" (ngSubmit)="onSubmit()" class="form-container">
+            <div class="mb-3">
+              <label for="email" class="form-label">E-mail *</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-envelope"></i>
+                </span>
+                <input
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  id="email"
+                  placeholder="Digite seu e-mail"
+                  [class.is-invalid]="validateForms.get('email')?.invalid && validateForms.get('email')?.touched"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="validateForms.get('email')?.invalid && validateForms.get('email')?.touched">
+                Por favor, digite seu E-mail.
+              </div>
+            </div>
 
-        <div nz-col [nzSpan]="12">
-          <a
-            class="login-form-forgot efeito2"
-            (click)="CliqueRecuperar_Senha('recuperar-senha')"
-            style="font-size: 1rem; display: block"
-          >
-            Esqueceu a Senha?
-          </a>
+            <div class="mb-4">
+              <label for="senha" class="form-label">Senha *</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-lock"></i>
+                </span>
+                <input
+                  type="password"
+                  class="form-control"
+                  formControlName="senha"
+                  id="senha"
+                  placeholder="Digite sua senha"
+                  [class.is-invalid]="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched">
+                Por favor, digite sua senha.
+              </div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button
+                type="submit"
+                class="btn btn-dark btn-lg"
+                [disabled]="!validateForms.valid"
+              >
+                <i class="bi bi-box-arrow-in-right"></i> Entrar
+              </button>
+            </div>
+
+            <div class="text-center mt-4">
+              <div class="d-flex flex-column gap-2">
+                <a (click)="cliqueRegistrar('cadastro')" class="link"  style="cursor: pointer;">
+                  <i class="bi bi-person-plus"></i> Não tem uma conta? Registre-se
+                </a>
+                <a (click)="cliqueRecuperarSenha('recuperar-senha')" class="link"  style="cursor: pointer;">
+                  <i class="bi bi-question-circle"></i> Esqueceu sua senha?
+                </a>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
-
-      <button
-        nz-button
-        class="login-form-button login-form-margin"
-        [nzType]="'primary'"
-        (click)="CliqueMenu('menu')"
-        style="font-size: 1rem"
-      >
-        Entrar
-      </button>
-
-      <a
-        style="
-          font-size: 19px;
-          margin-top: 3.5%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        "
-        class="efeito"
-        (click)="CliqueRegistrar('registro')"
-      >
-        Registre agora!
-      </a>
-    </form>
-  </form>
+    </div>
+  </div>
 </div>

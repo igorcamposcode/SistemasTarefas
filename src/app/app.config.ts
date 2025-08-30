@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import {
   provideHttpClient,
-  withInterceptorsFromDi,
   withInterceptors,
 } from '@angular/common/http';
 import { PoHttpRequestModule } from '@po-ui/ng-components';

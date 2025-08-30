@@ -10,35 +10,26 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzInputModule } from 'ng-zorro-antd/input';
 import { AuthService } from '../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
+import { NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-cadastro',
     imports: [
         FormsModule,
         ReactiveFormsModule,
-        NzFormModule,
-        NzInputModule,
-        NzIconModule,
-        NzButtonModule,
-        NzCheckboxModule,
-        HttpClientModule
+        HttpClientModule,NgIf
     ],
     templateUrl: './cadastro.component.html',
     styleUrl: './cadastro.component.css'
 })
 export class CadastroComponent {
-  nome: FormControl<String> | undefined;
-  telefone: FormControl<String> | undefined;
-  email: FormControl<String> | undefined;
-  senha: FormControl<String> | undefined;
-  checkPassword: FormControl<String> | undefined;
+  nome: FormControl<string> | undefined;
+  telefone: FormControl<string> | undefined;
+  email: FormControl<string> | undefined;
+  senha: FormControl<string> | undefined;
+  checkPassword: FormControl<string> | undefined;
   acordo: FormControl<boolean> | undefined;
   validateForms: FormGroup;
   userService: any;
@@ -72,7 +63,7 @@ export class CadastroComponent {
 
   confirmationValidator: ValidatorFn = (
     control: AbstractControl
-  ): { [s: string]: boolean } => {
+  ): Record<string, boolean> => {
     if (!control.value) {
       return { required: true };
     } else if (

@@ -1,15 +1,10 @@
 // Importando os módulos e componentes necessários para o funcionamento do formulário e da interface
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzButtonModule } from 'ng-zorro-antd/button';
 import {
   AbstractControl,
   FormControl,
   FormsModule,
-  NonNullableFormBuilder,
   ValidatorFn,
 } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -21,10 +16,6 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-recuperar-senha',
     imports: [
-        NzFormModule,
-        NzIconModule,
-        NzInputModule,
-        NzButtonModule,
         FormsModule,
         ReactiveFormsModule,
         CommonModule,
@@ -66,7 +57,7 @@ export class RecuperarSenhaComponent {
   // Função de validação customizada que verifica se a senha e a confirmação de senha são iguais
   confirmationValidator: ValidatorFn = (
     control: AbstractControl
-  ): { [s: string]: boolean } => {
+  ): Record<string, boolean> => {
     if (!control.value) {
       return { required: true }; // Retorna erro se o campo estiver vazio
     } else if (

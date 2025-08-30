@@ -1,20 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 // Importações necessárias de módulos e bibliotecas do Angular e NG-ZORRO
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NzIconModule } from 'ng-zorro-antd/icon'; // Módulo para ícones da biblioteca NG-ZORRO
-import { NzFormModule } from 'ng-zorro-antd/form'; // Módulo de formulários NG-ZORRO
-import { NzInputModule } from 'ng-zorro-antd/input'; // Módulo de input NG-ZORRO
-import { NzButtonModule } from 'ng-zorro-antd/button'; // Módulo de botões NG-ZORRO
-import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'; // Módulo de checkbox NG-ZORRO
 import { AuthService } from '../services/auth.service';
+import { NgIf } from '@angular/common';
 
 // Declaração do componente
 @Component({
     selector: 'app-login', // Define que o componente é autônomo
     // Importa os módulos necessários para o funcionamento do formulário e componentes NG-ZORRO
-    imports: [FormsModule, ReactiveFormsModule, NzFormModule, NzIconModule, NzInputModule, NzButtonModule, NzCheckboxModule],
+    imports: [FormsModule, ReactiveFormsModule,
+       NgIf],
     templateUrl: './login.component.html', // Caminho do arquivo HTML associado ao componente
     styleUrl: './login.component.css' // Caminho do arquivo CSS associado ao componente
 })
@@ -22,8 +19,8 @@ import { AuthService } from '../services/auth.service';
 // Declaração da classe LoginComponent
 export class LoginComponent {
 
-  email: string = '';
-  senha: string = '';
+  email = '';
+  senha = '';
   error: string | undefined = undefined;
 
   validateForms: FormGroup; // Define o formulário de validação como um grupo de controle
@@ -79,11 +76,11 @@ export class LoginComponent {
   }
 
   //Método para navegação ao clicar no texto "Registre Agora", redireciona para a página especificada
-  CliqueRegistrar(pageName: string) {
+  cliqueRegistrar(pageName: string) {
     this.router.navigate([`${pageName}`])
   }
   //Método para navegação ao clicar no texto "Recuperar Senha", redireciona para a página especificada
-  CliqueRecuperar_Senha(pageName: string) {
+  cliqueRecuperarSenha(pageName: string) {
     this.router.navigate([`${pageName}`])
   }
   // Método para navegação ao clicar no botão "Entrar", redireciona para a página especificada

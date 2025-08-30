@@ -1,68 +1,99 @@
 
 <header class="page-header">
-  <img class="page-header-title" src="/assets/system-task-logo.jpg.png" alt="Sistemas de Tarefas">
-</header>
+  <div class="container">
+    <div class="text-center">
+      <img class="page-header-title" src="/assets/system-task-logo.jpg.png" alt="Sistemas de Tarefas">
+    </div>
+  </div>
+</header> <br><br>
 
-<div class="div">
-  <div class="login-container">
-    <form class="itens">
-      <form class="nz-form" [formGroup]="validateForms"  (ngSubmit)="submitForm();onSubmit()">
-        <!-- Campo de e-mail cadastrado -->
-        <nz-form-item>
-          <!-- Rótulo do campo de e-mail -->
-          <nz-form-label class="label" [nzSm]="9" [nzXs]="49" nzFor="email">E-mail cadastrado: </nz-form-label>
-          <!-- Campo de entrada do e-mail -->
-          <nz-form-control [nzSm]="14" [nzXs]="27" style="font-weight: bold;">
-            <input nz-input formControlName="email" id="email" />
-          </nz-form-control>
-        </nz-form-item>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow">
+        <div class="card-header">
+          <h2 class="text-center mb-0">Recuperar Senha</h2>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="validateForms" (ngSubmit)="onSubmit()" class="form-container">
+            <div class="mb-3">
+              <label for="email" class="form-label">E-mail *</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-envelope"></i>
+                </span>
+                <input
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  id="email"
+                  placeholder="Digite seu e-mail"
+                  [class.is-invalid]="validateForms.get('email')?.invalid && validateForms.get('email')?.touched"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="validateForms.get('email')?.invalid && validateForms.get('email')?.touched">
+                Por favor, insira um e-mail válido.
+              </div>
+            </div>
 
-        <!-- Campo de nova senha -->
-        <nz-form-item>
-          <!-- Rótulo do campo de nova senha -->
-          <nz-form-label class="label" [nzSm]="9" [nzXs]="49" nzFor="newPassword" nzRequired>Nova Senha</nz-form-label>
+            <div class="mb-3">
+              <label for="senha" class="form-label">Nova Senha *</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-lock"></i>
+                </span>
+                <input
+                  type="password"
+                  class="form-control"
+                  formControlName="senha"
+                  id="senha"
+                  placeholder="Digite sua nova senha"
+                  [class.is-invalid]="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched">
+                A senha deve ter no mínimo 8 caracteres.
+              </div>
+            </div>
 
-          <!-- Campo de entrada da nova senha -->
-          <nz-form-control [nzSm]="14" [nzXs]="29" nzErrorTip="Por favor Digite uma Nova senha." style="font-weight: bold;">
-            <input
-              nz-input
-              type="password"
-              id="senha"
-              formControlName="senha"
-              (ngModelChange)="validateNewPassword()"
-            />
-          </nz-form-control>
-        </nz-form-item>
+            <div class="mb-4">
+              <label for="confirmarSenha" class="form-label">Confirmar Nova Senha *</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-lock-fill"></i>
+                </span>
+                <input
+                  type="password"
+                  class="form-control"
+                  formControlName="checkPassword"
+                  id="checkPassword"
+                  placeholder="Confirme sua nova senha"
+                  [class.is-invalid]="validateForms.get('checkPassword')?.invalid && validateForms.get('checkPassword')?.touched"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="validateForms.get('checkPassword')?.invalid && validateForms.get('checkPassword')?.touched">
+                Por favor, confirme a nova senha.
+              </div>
+            </div>
 
-        <nz-form-item>
-          <!-- Rótulo do campo de confirmação da senha -->
-          <nz-form-label class="label" [nzSm]="9" [nzXs]="49" nzFor="checkPassword" nzRequired>Conf. Nova senha</nz-form-label>
+            <div class="d-grid gap-2">
+              <button
+                type="submit"
+                class="btn btn-dark btn-lg"
+                [disabled]="validateForms.invalid"
+              >
+                <i class="bi bi-key"></i> Alterar Senha
+              </button>
+            </div>
 
-          <!-- Campo de entrada da confirmação de senha -->
-          <nz-form-control [nzSm]="14" [nzXs]="29" [nzErrorTip]="errorTpl">
-            <input nz-input type="password" formControlName="checkPassword" id="checkPassword" class="inputSenha" />
-
-            <!-- Mensagem de erro personalizada para o campo de confirmação de senha -->
-            <ng-template #errorTpl let-control>
-              <!-- Caso o campo esteja vazio -->
-              @if (control.errors?.['required']) {
-                Por favor confirme sua senha!
-              }
-              <!-- Caso as senhas não sejam iguais -->
-              @if (control.errors?.['confirm']) {
-                As Duas senhas inseridas são incompartivéis!
-              }
-            </ng-template>
-          </nz-form-control>
-      </nz-form-item>
-
-        <!-- Botão de recuperação de senha -->
-        <nz-form-item nz-row class="recover-area">
-          <nz-form-control [nzSpan]="14" [nzOffset]="6">
-            <button nz-button nzType="primary" class="Recuperar" >Confirmar Recuperação</button>
-          </nz-form-control>
-        </nz-form-item>
-      </form>
-    </form>
+            <div class="text-center mt-4">
+              <a href="/login" class="link">
+                <i class="bi bi-arrow-left"></i> Voltar para o login
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

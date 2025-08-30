@@ -15,10 +15,47 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: "Senha inválida." });
     }
     const token = jwt.sign({ id: usuario.id, email: usuario.email }, SECRET_KEY, { expiresIn: "3h" });
-    res.status(200).json({ message: "Login bem-sucedido.", token });
+    res.status(200).json({
+      message: "Login bem-sucedido.",
+      token,
+      userId: usuario.id,
+      success: true
+    });
   } catch (error) {
     console.error("Erro ao efetuar login:", error);
     res.status(500).json({ error: "Erro ao efetuar login.", details: error.message });
+  }
+};
+
+exports.cadastro = async (req, res) => {
+  try {
+    const { nome, email, senha, telefone } = req.body;
+
+    // Verifica se o usuário já existe
+    const usuarioExistente = await Usuario.findOne({ where: { email } });
+    if (usuarioExistente) {
+      return res.status(400).json({ error: "E-mail já cadastrado." });
+    }
+
+    // Criptografa a senha
+    const senhaHash = await bcrypt.hash(senha, 10);
+
+    // Cria o usuário
+    const novoUsuario = await Usuario.create({
+      nome,
+      email,
+      senha: senhaHash,
+      telefone
+    });
+
+    res.status(201).json({
+      message: "Usuário cadastrado com sucesso.",
+      userId: novoUsuario.id,
+      success: true
+    });
+  } catch (error) {
+    console.error("Erro ao cadastrar usuário:", error);
+    res.status(500).json({ error: "Erro ao cadastrar usuário.", details: error.message });
   }
 };
 
