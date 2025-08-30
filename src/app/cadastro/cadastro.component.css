@@ -1,128 +1,69 @@
 .div {
-  display: block;
-  /* Define o elemento como um bloco */
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  /* Centraliza os itens horizontalmente (não aplicável diretamente ao "block") */
   align-items: center;
-  /* Alinha os itens verticalmente (não aplicável diretamente ao "block") */
-  width: 100%;
-  height: 655px;
-  padding: -1%;
-  /* Define a altura da div */
-  box-sizing: content-box;
-  /* O tamanho da caixa não inclui as bordas e o padding */
+  min-height: 100vh;
+  padding: 2rem;
+  box-sizing: border-box;
+  background: #9c9c9c;
+}
+
+.login-container {
   background-color: #ffffff;
-  /* Define a cor de fundo branca */
-  border-radius: 1%;
-  /* Aplica bordas arredondadas de 10px */
-
-  min-width: 150px;
-  /* Define a largura mínima de 150px */
-  max-width: 675px;
-  /* Define a largura máxima de 500px */
-
-  margin: 0;
-  /* Remove as margens padrão */
-  margin-top: 5%;
-  /* Adiciona margem superior de 12% */
-  margin-left: auto;
-  /* Centraliza horizontalmente */
-  margin-right: auto;
-  /* Centraliza horizontalmente */
+  border-radius: 15px;
+  padding: 3rem;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 650px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
 }
 
-.h3 {
-  width: 85%;
-  /* Define a largura como 90% */
-  background-color: rgb(238, 175, 1);
-  /* Define a cor de fundo em amarelo */
+.page-header {
+  display: flex;
   justify-content: center;
-  /* Centraliza itens (não aplicável ao display "inline-block") */
+  background-color: rgb(255, 145, 0);
   align-items: center;
-  /* Alinha verticalmente (não aplicável ao display "inline-block") */
-
-  margin: 0;
-  /* Remove as margens padrão */
-  margin-top: 1%;
-  /* Adiciona uma margem superior de 2% */
-  margin-right: 5%;
-  /* Define margem direita de 10% */
-  margin-inline-start: 7%;
-  /* Define margem à esquerda de 4% */
-
-  border-radius: 1%;
-  /* Aplica bordas arredondadas de 4px */
-  border: 3px double #e64c07;
-  /* Aplica uma borda dupla de 3px na cor laranja */
-
-  display: inline-block;
-  /* Faz com que o elemento se comporte como um bloco em linha */
-  text-align: center;
-  /* Centraliza o texto */
-  font-size: 2rem;
-  /* Define o tamanho da fonte como 25px */
-  font-weight: bold;
-  /* Define o texto em negrito */
+  width: 100%;
+  padding: 1rem 2rem;
+  margin-bottom: 0;
+  border-radius: 2px;
 }
 
-/*
- Atualizando a área de Cadastro porem Existe um bug visual em que os botões de registrar e retornar desaparecem
-*/
+.page-header-title {
+  height: 105px;
+  width: 150px;
+  object-fit: cover;
+  border-radius: 5px;
+}
 
 .itens {
-  display: block;
-  /* Define o elemento como um bloco */
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  /* Centraliza os itens horizontalmente (não aplicável ao "block") */
   align-items: center;
-  /* Alinha os itens verticalmente (não aplicável ao "block") */
-  height: 415px;
-  padding: 7.5%;
-  /* Define a altura da div */
-
-  box-sizing: content-box;
-  /* O tamanho da caixa não inclui bordas e padding */
+  min-height: 450px;
+  padding: 3rem;
+  box-sizing: border-box;
   background-color: #54afeb;
-  /* Define a cor de fundo como azul */
-  border-radius: 10px;
-  /* Aplica bordas arredondadas de 10px */
-
-  min-width: 75%;
-  /* Define a largura mínima de 10rem */
-  max-width: 75%;
-  /* Define a largura máxima de 20rem */
-
+  border-radius: 15px;
+  width: 100%;
   margin: 0;
-  /* Remove as margens padrão */
-  margin-top: 1%;
-  /* Adiciona margem superior de 10% */
-  margin-left: auto;
-  /* Centraliza horizontalmente */
-  margin-right: auto;
-  /* Centraliza horizontalmente */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nz-form {
   display: inline-block;
-  /* Faz com que o elemento se comporte como um bloco em linha */
   width: 95%;
   min-width: 100%;
-  /* Define a largura mínima de 90% */
   max-width: 100%;
-  /* Define a largura máxima de 20% */
-
   font-weight: bold;
-  /*Torna o Texto em negrito*/
   font-size: -1rem;
-  /*Aumenta o texto pra 19 pixels*/
-
-  margin-top: 3.5%;
-  /* Adiciona uma margem superior de 4.5% */
+  margin-top: 2%;
   margin-bottom: 1%;
   margin-left: auto;
-  /*Define uma margem a esquerda automática*/
   margin-right: auto;
-  /*Define uma margem a direita automática*/
 }
 
 .label {
@@ -133,40 +74,29 @@
 
 .Registrar .register-area {
   display: inline-block;
-  /* Faz com que o elemento se comporte como um bloco em linha */
   justify-content: center;
-  /* Centraliza itens (não aplicável ao display "inline-block") */
   margin: 0 5%;
-  /* Remove as margens padrão */
   margin-top: 5.5%;
   padding: 5%;
-  /* Adiciona uma margem superior de 4.5% */
   left: auto;
   right: auto;
 }
 
 .Registrar {
   width: 95%;
-  /* Define a largura como 100% */
   border-radius: 10px;
-  /* Aplica bordas arredondadas de 10px */
   background-color: #e64c07;
-  /* Define a cor de fundo laranja */
   color: white;
-  /* Define a cor do texto como branca */
   font-size: 1rem;
   text-align: center;
 }
+
 .Registrar2 {
   width: 95%;
   margin-top: 5%;
-  /* Define a largura como 100% */
   border-radius: 10px;
-  /* Aplica bordas arredondadas de 10px */
   background-color: #e64c07;
-  /* Define a cor de fundo laranja */
   color: white;
-  /* Define a cor do texto como branca */
   font-size: 1rem;
   text-align: center;
 }

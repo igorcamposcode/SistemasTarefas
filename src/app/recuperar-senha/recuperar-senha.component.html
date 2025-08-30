@@ -1,69 +1,68 @@
+
+<header class="page-header">
+  <img class="page-header-title" src="/assets/system-task-logo.jpg.png" alt="Sistemas de Tarefas">
+</header>
+
 <div class="div">
+  <div class="login-container">
+    <form class="itens">
+      <form class="nz-form" [formGroup]="validateForms"  (ngSubmit)="submitForm();onSubmit()">
+        <!-- Campo de e-mail cadastrado -->
+        <nz-form-item>
+          <!-- Rótulo do campo de e-mail -->
+          <nz-form-label class="label" [nzSm]="9" [nzXs]="49" nzFor="email">E-mail cadastrado: </nz-form-label>
+          <!-- Campo de entrada do e-mail -->
+          <nz-form-control [nzSm]="14" [nzXs]="27" style="font-weight: bold;">
+            <input nz-input formControlName="email" id="email" />
+          </nz-form-control>
+        </nz-form-item>
 
-  <h3 class="h3" style="text-align: center;">Sistemas de Tarefas - 2024</h3>
+        <!-- Campo de nova senha -->
+        <nz-form-item>
+          <!-- Rótulo do campo de nova senha -->
+          <nz-form-label class="label" [nzSm]="9" [nzXs]="49" nzFor="newPassword" nzRequired>Nova Senha</nz-form-label>
 
-  <h1 style="text-align: center;">Recupere sua Senha</h1>
+          <!-- Campo de entrada da nova senha -->
+          <nz-form-control [nzSm]="14" [nzXs]="29" nzErrorTip="Por favor Digite uma Nova senha." style="font-weight: bold;">
+            <input
+              nz-input
+              type="password"
+              id="senha"
+              formControlName="senha"
+              (ngModelChange)="validateNewPassword()"
+            />
+          </nz-form-control>
+        </nz-form-item>
 
-  <!-- Início do formulário de recuperação -->
-  <form class="itens">
-    <!-- Formulário com validação via formGroup -->
-    <form class="nz-form" [formGroup]="validateForms"  (ngSubmit)="submitForm();onSubmit()">
-      <!-- Campo de e-mail cadastrado -->
-      <nz-form-item>
-        <!-- Rótulo do campo de e-mail -->
-        <nz-form-label class="label" [nzSm]="8" [nzXs]="39" nzFor="email">E-mail cadastrado: </nz-form-label>
-        <!-- Campo de entrada do e-mail -->
-        <nz-form-control [nzSm]="14" [nzXs]="27" style="font-weight: bold;">
-          <input nz-input formControlName="email" id="email" />
-        </nz-form-control>
+        <nz-form-item>
+          <!-- Rótulo do campo de confirmação da senha -->
+          <nz-form-label class="label" [nzSm]="9" [nzXs]="49" nzFor="checkPassword" nzRequired>Conf. Nova senha</nz-form-label>
+
+          <!-- Campo de entrada da confirmação de senha -->
+          <nz-form-control [nzSm]="14" [nzXs]="29" [nzErrorTip]="errorTpl">
+            <input nz-input type="password" formControlName="checkPassword" id="checkPassword" class="inputSenha" />
+
+            <!-- Mensagem de erro personalizada para o campo de confirmação de senha -->
+            <ng-template #errorTpl let-control>
+              <!-- Caso o campo esteja vazio -->
+              @if (control.errors?.['required']) {
+                Por favor confirme sua senha!
+              }
+              <!-- Caso as senhas não sejam iguais -->
+              @if (control.errors?.['confirm']) {
+                As Duas senhas inseridas são incompartivéis!
+              }
+            </ng-template>
+          </nz-form-control>
       </nz-form-item>
 
-      <!-- Campo de nova senha -->
-      <nz-form-item>
-        <!-- Rótulo do campo de nova senha -->
-        <nz-form-label class="label" [nzSm]="8" [nzXs]="39" nzFor="newPassword" nzRequired>Nova Senha</nz-form-label>
-
-        <!-- Campo de entrada da nova senha -->
-        <nz-form-control [nzSm]="14" [nzXs]="27" nzErrorTip="Por favor Digite uma Nova senha." style="font-weight: bold;">
-          <input
-            nz-input
-            type="password"
-            id="senha"
-            formControlName="senha"
-            (ngModelChange)="validateNewPassword()"
-          />
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <!-- Rótulo do campo de confirmação da senha -->
-        <nz-form-label class="label" [nzSm]="8" [nzXs]="39" nzFor="checkPassword" nzRequired>Confirme Nova senha</nz-form-label>
-
-        <!-- Campo de entrada da confirmação de senha -->
-        <nz-form-control [nzSm]="14" [nzXs]="27" [nzErrorTip]="errorTpl">
-          <input nz-input type="password" formControlName="checkPassword" id="checkPassword" class="inputSenha" />
-
-          <!-- Mensagem de erro personalizada para o campo de confirmação de senha -->
-          <ng-template #errorTpl let-control>
-            <!-- Caso o campo esteja vazio -->
-            @if (control.errors?.['required']) {
-              Por favor confirme sua senha!
-            }
-            <!-- Caso as senhas não sejam iguais -->
-            @if (control.errors?.['confirm']) {
-              As Duas senhas inseridas são incompartivéis!
-            }
-          </ng-template>
-        </nz-form-control>
-    </nz-form-item>
-
-      <!-- Botão de recuperação de senha -->
-      <nz-form-item nz-row class="recover-area">
-        <nz-form-control [nzSpan]="14" [nzOffset]="6">
-          <button nz-button nzType="primary" class="Recuperar" >Confirmar Recuperação</button>
-        </nz-form-control>
-      </nz-form-item>
+        <!-- Botão de recuperação de senha -->
+        <nz-form-item nz-row class="recover-area">
+          <nz-form-control [nzSpan]="14" [nzOffset]="6">
+            <button nz-button nzType="primary" class="Recuperar" >Confirmar Recuperação</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
     </form>
-  </form>
-  <!-- Fim do formulário de recuperação -->
+  </div>
 </div>

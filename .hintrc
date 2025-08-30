@@ -18,6 +18,7 @@
         "aria-progressbar-name": "off",
         "aria-valid-attr-value": "off"
       }
-    ]
+    ],
+    "axe/parsing": "off"
   }
 }

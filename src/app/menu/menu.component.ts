@@ -757,10 +757,6 @@ export class MenuComponent implements OnInit {
     if (ext === '.rar') return 'Arquivo RAR';
     return 'Documento';
   }
-
-
-
-
   // Navigate to "My Tasks"
   CliqueMinhaTarefa(pageName: string): void {
     this.router.navigate([pageName]);

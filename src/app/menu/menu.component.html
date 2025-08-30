@@ -1,87 +1,288 @@
 <!-- Cabeçalho da Página -->
 <header class="page-header">
-  <h1 class="page-header-title">
-    <span>Sistemas de Tarefas</span>
-  </h1>
-
-</header>
-
-<div class="container mt-4">
-  <!-- Botões de Ações -->
-  <div class="top-actions d-flex justify-content-center gap-3 mb-4">
-    <button class="btn btn-primary" (click)="abrirModalUsuario()" style="
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <img class="page-header-title" src="/assets/system-task-logo.jpg.png" alt="Sistemas de Tarefas">
+    <!-- Botões de Ações -->
+    <div class="top-actions d-flex justify-content-end gap-3 mb-3">
+      <button
+        class="btn btn btn-dark btn-sm"
+        (click)="abrirModalUsuario()"
+        style="
+          font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+            'Lucida Sans Unicode', Geneva, Verdana, sans-serif; padding: 20px; font-size: 1rem;
+        "
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-house-door"
+          viewBox="0 0 17 17"
+        >
+          <path
+            d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z"
+          />
+        </svg>
+        Usuário: {{ usuario.nome }}
+      </button>
+      <button
+      class="btn btn btn-dark btn-sm"
+      (click)="CliqueMinhaTarefa('minhas-tarefas')"
+      style="
         font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-          'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-      ">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door"
-        viewBox="0 0 17 17">
+          'Lucida Sans Unicode', Geneva, Verdana, sans-serif; padding: 20px; font-size: 1rem;
+      "
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-list-task"
+        viewBox="0 0 17 17"
+      >
         <path
-          d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z" />
-      </svg>
-      Usuário: {{ usuario.nome }}
-    </button>
-    <button class="btn btn-primary" (click)="isModalVisible = true" style="
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-          'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-      ">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-        class="bi bi-file-earmark-plus-fill" viewBox="0 0 17 17">
+          fill-rule="evenodd"
+          d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5zM3 3H2v1h1z"
+        />
         <path
-          d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0" />
-      </svg>
-      Nova Tarefa
-    </button>
-    <button class="btn btn-secondary" (click)="CliqueMinhaTarefa('minhas-tarefas')" style="
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-          'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-      ">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-task"
-        viewBox="0 0 17 17">
-        <path fill-rule="evenodd"
-          d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5zM3 3H2v1h1z" />
+          d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1z"
+        />
         <path
-          d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1z" />
-        <path fill-rule="evenodd"
-          d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z" />
+          fill-rule="evenodd"
+          d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z"
+        />
       </svg>
       Minhas Tarefas
     </button>
-    <button class="btn btn-danger" (click)="CliqueHome('login')" style="
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-          'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-      ">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-closed"
-        viewBox="0 0 17 17">
-        <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3zm1 13h8V2H4z" />
-        <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0" />
-      </svg>
-      Sair
-    </button>
-  </div>
+      <button
+        class="btn btn-success btn-sm"
+        (click)="isModalVisible = true"
+        style="
+          font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+            'Lucida Sans Unicode', Geneva, Verdana, sans-serif;  padding: 20px; font-size: 1rem;
+        "
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-file-earmark-plus-fill"
+          viewBox="0 0 17 17"
+        >
+          <path
+            d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"
+          />
+        </svg>
+        Nova Tarefa
+      </button>
+      <button
+        class="btn btn-danger btn-sm"
+        (click)="CliqueHome('login')"
+        style="
+          font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+            'Lucida Sans Unicode', Geneva, Verdana, sans-serif; padding: 20px; font-size: 1rem;
+        "
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-door-closed"
+          viewBox="0 0 17 17"
+        >
+          <path
+            d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3zm1 13h8V2H4z"
+          />
+          <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0" />
+        </svg>
+        Sair
+      </button>
+    </div>
 
+    <!-- Modal para Exibir Dados do Usuário -->
+    <div
+      class="modal fade"
+      id="usuarioModal"
+      tabindex="-1"
+      aria-labelledby="usuarioModalLabel"
+      aria-hidden="true"
+      [class.show]="isUsuarioModalVisible"
+      [style.display]="isUsuarioModalVisible ? 'block' : 'none'"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="usuarioModalLabel">Dados do Usuário</h5>
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Fechar"
+              (click)="fecharModalUsuario()"
+            ></button>
+          </div>
+          <div
+            class="modal-body"
+            style="
+              font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+                'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+              font-family: 1rem;
+            "
+          >
+            <p><strong>Nome :</strong> {{ usuario.nome }}</p>
+            <p><strong>Telefone :</strong> {{ usuario.telefone }}</p>
+            <p><strong>Email :</strong> {{ usuario.email }}</p>
+            <button
+              class="btn btn-primary mt-3"
+              (click)="abrirModalEditarUsuario()"
+            >
+              Alterar Dados do Usuário
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="fecharModalUsuario()"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para Editar Dados do Usuário -->
+    <div
+      class="modal fade"
+      id="editarUsuarioModal"
+      tabindex="-1"
+      aria-labelledby="editarUsuarioModalLabel"
+      aria-hidden="true"
+      [class.show]="isEditarUsuarioModalVisible"
+      [style.display]="isEditarUsuarioModalVisible ? 'block' : 'none'"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editarUsuarioModalLabel">
+              Alterar Dados do Usuário
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Fechar"
+              (click)="fecharModalEditarUsuario()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="usuarioForm">
+              <!-- Nome -->
+              <div class="mb-3">
+                <label for="nome" class="form-label">Nome</label>
+                <input
+                  id="nome"
+                  type="text"
+                  class="form-control"
+                  formControlName="nome"
+                  placeholder="Digite seu nome"
+                />
+              </div>
+              <!-- Telefone -->
+              <div class="mb-3">
+                <label for="telefone" class="form-label">Telefone</label>
+                <input
+                  id="telefone"
+                  type="text"
+                  class="form-control"
+                  formControlName="telefone"
+                  placeholder="Digite seu telefone"
+                />
+              </div>
+              <!-- Email -->
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input
+                  id="email"
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  placeholder="Digite seu email"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="fecharModalEditarUsuario()"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="salvarDadosUsuario()"
+            >
+              Salvar Alterações
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container mt-4">
   <!-- Modal para Exibir Dados do Usuário -->
-  <div class="modal fade" id="usuarioModal" tabindex="-1" aria-labelledby="usuarioModalLabel" aria-hidden="true"
-    [class.show]="isUsuarioModalVisible" [style.display]="isUsuarioModalVisible ? 'block' : 'none'">
+  <div
+    class="modal fade"
+    id="usuarioModal"
+    tabindex="-1"
+    aria-labelledby="usuarioModalLabel"
+    aria-hidden="true"
+    [class.show]="isUsuarioModalVisible"
+    [style.display]="isUsuarioModalVisible ? 'block' : 'none'"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="usuarioModalLabel">Dados do Usuário</h5>
-          <button type="button" class="btn-close" aria-label="Fechar" (click)="fecharModalUsuario()"></button>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Fechar"
+            (click)="fecharModalUsuario()"
+          ></button>
         </div>
-        <div class="modal-body" style="
+        <div
+          class="modal-body"
+          style="
             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
               'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             font-family: 1rem;
-          ">
+          "
+        >
           <p><strong>Nome :</strong> {{ usuario.nome }}</p>
           <p><strong>Telefone :</strong> {{ usuario.telefone }}</p>
           <p><strong>Email :</strong> {{ usuario.email }}</p>
-          <button class="btn btn-primary mt-3" (click)="abrirModalEditarUsuario()">
+          <button
+            class="btn btn-primary mt-3"
+            (click)="abrirModalEditarUsuario()"
+          >
             Alterar Dados do Usuário
           </button>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="fecharModalUsuario()">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="fecharModalUsuario()"
+          >
             Fechar
           </button>
         </div>
@@ -90,43 +291,78 @@
   </div>
 
   <!-- Modal para Editar Dados do Usuário -->
-  <div class="modal fade" id="editarUsuarioModal" tabindex="-1" aria-labelledby="editarUsuarioModalLabel"
-    aria-hidden="true" [class.show]="isEditarUsuarioModalVisible"
-    [style.display]="isEditarUsuarioModalVisible ? 'block' : 'none'">
+  <div
+    class="modal fade"
+    id="editarUsuarioModal"
+    tabindex="-1"
+    aria-labelledby="editarUsuarioModalLabel"
+    aria-hidden="true"
+    [class.show]="isEditarUsuarioModalVisible"
+    [style.display]="isEditarUsuarioModalVisible ? 'block' : 'none'"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="editarUsuarioModalLabel">
             Alterar Dados do Usuário
           </h5>
-          <button type="button" class="btn-close" aria-label="Fechar" (click)="fecharModalEditarUsuario()"></button>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Fechar"
+            (click)="fecharModalEditarUsuario()"
+          ></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="usuarioForm">
             <!-- Nome -->
             <div class="mb-3">
               <label for="nome" class="form-label">Nome</label>
-              <input id="nome" type="text" class="form-control" formControlName="nome" placeholder="Digite seu nome" />
+              <input
+                id="nome"
+                type="text"
+                class="form-control"
+                formControlName="nome"
+                placeholder="Digite seu nome"
+              />
             </div>
             <!-- Telefone -->
             <div class="mb-3">
               <label for="telefone" class="form-label">Telefone</label>
-              <input id="telefone" type="text" class="form-control" formControlName="telefone"
-                placeholder="Digite seu telefone" />
+              <input
+                id="telefone"
+                type="text"
+                class="form-control"
+                formControlName="telefone"
+                placeholder="Digite seu telefone"
+              />
             </div>
             <!-- Email -->
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input id="email" type="email" class="form-control" formControlName="email"
-                placeholder="Digite seu email" />
+              <input
+                id="email"
+                type="email"
+                class="form-control"
+                formControlName="email"
+                placeholder="Digite seu email"
+              />
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="fecharModalEditarUsuario()">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="fecharModalEditarUsuario()"
+          >
             Cancelar
           </button>
-          <button type="button" class="btn btn-primary" (click)="salvarDadosUsuario()">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="salvarDadosUsuario()"
+          >
             Salvar Alterações
           </button>
         </div>
@@ -135,40 +371,76 @@
   </div>
 
   <!-- Modal para Cadastro de Tarefas -->
-  <div class="modal fade" id="tarefaModal" tabindex="-1" aria-labelledby="tarefaModalLabel" aria-hidden="true"
-    [class.show]="isModalVisible" [style.display]="isModalVisible ? 'block' : 'none'" (keydown.esc)="fecharModal()">
+  <div
+    class="modal fade"
+    id="tarefaModal"
+    tabindex="-1"
+    aria-labelledby="tarefaModalLabel"
+    aria-hidden="true"
+    [class.show]="isModalVisible"
+    [style.display]="isModalVisible ? 'block' : 'none'"
+    (keydown.esc)="fecharModal()"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="tarefaModalLabel">
             {{ tarefaEditando ? "Editar Tarefa" : "Nova Tarefa" }}
           </h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="fecharModal()"></button>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="fecharModal()"
+          ></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="tarefaForm" (ngSubmit)="salvarNovaTarefa(tarefaForm.value)">
+          <form
+            [formGroup]="tarefaForm"
+            (ngSubmit)="salvarNovaTarefa(tarefaForm.value)"
+          >
             <!-- Nome da Tarefa -->
             <div class="mb-3">
               <label for="titulo" class="form-label">Título</label>
-              <input id="titulo" type="text" class="form-control" formControlName="titulo"
-                placeholder="Digite o título da tarefa" required />
+              <input
+                id="titulo"
+                type="text"
+                class="form-control"
+                formControlName="titulo"
+                placeholder="Digite o título da tarefa"
+                required
+              />
             </div>
 
             <!-- Descrição -->
             <div class="mb-3">
               <label for="descricao" class="form-label">Descrição</label>
-              <textarea id="descricao" class="form-control" formControlName="descricao" rows="3"
-                placeholder="Digite uma descrição para a tarefa" required></textarea>
+              <textarea
+                id="descricao"
+                class="form-control"
+                formControlName="descricao"
+                rows="3"
+                placeholder="Digite uma descrição para a tarefa"
+                required
+              ></textarea>
             </div>
 
             <!-- Prioridade -->
             <div class="mb-3">
               <label for="prioridade" class="form-label">Prioridade</label>
-              <select id="prioridade" class="form-select" formControlName="idprioridade" required>
+              <select
+                id="prioridade"
+                class="form-select"
+                formControlName="idprioridade"
+                required
+              >
                 <option value="" disabled selected>
                   Selecione uma prioridade
                 </option>
-                <option *ngFor="let prioridade of prioridades" [value]="prioridade.id">
+                <option
+                  *ngFor="let prioridade of prioridades"
+                  [value]="prioridade.id"
+                >
                   {{ prioridade.nome }}
                 </option>
               </select>
@@ -177,7 +449,12 @@
             <!-- Estado da Tarefa -->
             <div class="mb-3">
               <label for="estado" class="form-label">Estado</label>
-              <select id="estado" class="form-select" formControlName="idestado" required>
+              <select
+                id="estado"
+                class="form-select"
+                formControlName="idestado"
+                required
+              >
                 <option value="" disabled selected>Selecione um estado</option>
                 <option *ngFor="let estado of estados" [value]="estado.id">
                   {{ estado.nome }}
@@ -187,30 +464,58 @@
 
             <!-- Usuário Responsável -->
             <div class="mb-3">
-              <label for="usuario" class="form-label">Usuário Responsável</label>
-              <input id="usuario" type="text" class="form-control" readonly
-                [value]="tarefaEditando?.usuario || usuario.nome" placeholder="Usuário responsável" />
+              <label for="usuario" class="form-label"
+                >Usuário Responsável</label
+              >
+              <input
+                id="usuario"
+                type="text"
+                class="form-control"
+                readonly
+                [value]="tarefaEditando?.usuario || usuario.nome"
+                placeholder="Usuário responsável"
+              />
             </div>
 
             <!-- Datas -->
             <div class="mb-3">
-              <label for="dataInicio" class="form-label">Data e Hora de Início</label>
-              <input id="dataInicio" type="datetime-local" class="form-control" formControlName="dthrinicio" readonly />
+              <label for="dataInicio" class="form-label"
+                >Data e Hora de Início</label
+              >
+              <input
+                id="dataInicio"
+                type="datetime-local"
+                class="form-control"
+                formControlName="dthrinicio"
+                readonly
+              />
             </div>
             <div class="mb-3">
               <label for="dataFim" class="form-label">Data e Hora de Fim</label>
-              <input id="dataFim" type="datetime-local" class="form-control" formControlName="dthrfim" />
+              <input
+                id="dataFim"
+                type="datetime-local"
+                class="form-control"
+                formControlName="dthrfim"
+              />
             </div>
 
             <!-- Documento -->
             <div class="mb-3">
               <label for="documento" class="form-label">Anexar Documento</label>
-              <input id="documento" type="file" class="form-control" (change)="onFileSelected($event)"
-                accept=".pdf,.doc,.docx,.txt,.xls,.xlsx,.jpg,.jpeg,.png,.gif" />
+              <input
+                id="documento"
+                type="file"
+                class="form-control"
+                (change)="onFileSelected($event)"
+                accept=".pdf,.doc,.docx,.txt,.xls,.xlsx,.jpg,.jpeg,.png,.gif"
+              />
               <div *ngIf="arquivoSelecionado" class="mt-2">
                 <small class="text-success">
                   <i class="bi bi-check-circle me-1"></i>
-                  Arquivo selecionado: {{ arquivoSelecionado.name }} ({{ (arquivoSelecionado.size / 1024).toFixed(2) }}
+                  Arquivo selecionado: {{ arquivoSelecionado.name }} ({{
+                    (arquivoSelecionado.size / 1024).toFixed(2)
+                  }}
                   KB)
                 </small>
               </div>
@@ -218,38 +523,73 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="fecharModal()">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="fecharModal()"
+          >
             Cancelar
           </button>
-          <button type="submit" class="btn btn-primary" [disabled]="tarefaForm.invalid" (click)="salvarTarefa()">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="tarefaForm.invalid"
+            (click)="salvarTarefa()"
+          >
             Salvar
           </button>
         </div>
       </div>
     </div>
-  </div>
+  </div> <br>
 
   <!-- Cards das Tarefas -->
   <div class="row">
     <div *ngFor="let tarefa of tarefas" class="col-md-4 mb-4">
       <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
           <span>{{ tarefa.titulo }}</span>
           <div>
-            <button class="btn btn-sm btn-outline-secondary me-2" (click)="editarTarefa(tarefa)" title="Editar Tarefa">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                class="bi bi-pencil-square" viewBox="0 0 16 16">
+            <button
+              class="btn btn-sm btn-outline-secondary me-2"
+              (click)="editarTarefa(tarefa)"
+              title="Editar Tarefa"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-pencil-square"
+                viewBox="0 0 16 16"
+              >
                 <path
-                  d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                <path fill-rule="evenodd"
-                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                  d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                />
               </svg>
             </button>
-            <button class="btn btn-sm btn-outline-danger" (click)="excluirTarefa(tarefa.id)" title="Excluir Tarefa">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3"
-                viewBox="0 0 16 16">
+            <button
+              class="btn btn-sm btn-outline-danger"
+              (click)="excluirTarefa(tarefa.id)"
+              title="Excluir Tarefa"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-trash3"
+                viewBox="0 0 16 16"
+              >
                 <path
-                  d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
+                  d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"
+                />
               </svg>
             </button>
           </div>
@@ -263,137 +603,259 @@
           <p>
             <strong>Início: </strong>
             {{
-            tarefa.dthrinicio
-            ? (tarefa.dthrinicio | date : "dd/MM/yyyy HH:mm")
-            : "Não definido"
+              tarefa.dthrinicio
+                ? (tarefa.dthrinicio | date : "dd/MM/yyyy HH:mm")
+                : "Não definido"
             }}
           </p>
           <p>
             <strong>Fim: </strong>
             {{
-            tarefa.dthrfim
-            ? (tarefa.dthrfim | date : "dd/MM/yyyy HH:mm")
-            : "Não definido"
+              tarefa.dthrfim
+                ? (tarefa.dthrfim | date : "dd/MM/yyyy HH:mm")
+                : "Não definido"
             }}
           </p>
           <p><strong>Prioridade: </strong> {{ tarefa.prioridade }}</p>
           <p><strong>Status: </strong> {{ tarefa.estado }}</p>
-           <!-- Seção de Documentos -->
-           <div *ngIf="tarefa.documentos && tarefa.documentos.length > 0" class="documentos-section">
-             <h4><strong><svg style="color: black;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-post" viewBox="0 0 16 16">
-              <path d="M4 3.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5z"/>
-              <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"/>
-            </svg>
-             Documentos Anexados:</strong></h4>
-             <div *ngFor="let doc of tarefa.documentos" class="documento-item">
-               <div class="d-flex justify-content-between align-items-center">
-                 <div class="documento-info">
-                   <div class="documento-header">
-                     <i [class]="getDocumentoIcon(doc.extensao || '')" class="documento-icon me-2"></i>
-                     <span class="documento-nome">{{ doc.nome || 'Documento sem nome' }}</span>
-                   </div>
-                   <div class="documento-details">
-                     <span class="documento-tipo">{{ getDocumentoTipo(doc.extensao || '') }}</span>
-                     <span class="documento-tamanho">{{ doc.tamanho || 'Tamanho desconhecido' }}</span>
-                   </div>
-                 </div>
-                 <div class="documento-acoes">
-
-                   <button class="btn btn-sm btn-outline-primary me-1" (click)="downloadDocumento(doc.id || 0)"
-                     title="Download do documento">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                      <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
-                      <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+          <!-- Seção de Documentos -->
+          <div
+            *ngIf="tarefa.documentos && tarefa.documentos.length > 0"
+            class="documentos-section"
+          >
+            <h4>
+              <strong
+                ><svg
+                  style="color: black"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-file-post"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5z"
+                  />
+                  <path
+                    d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"
+                  />
+                </svg>
+                Documentos Anexados:</strong
+              >
+            </h4>
+            <div *ngFor="let doc of tarefa.documentos" class="documento-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="documento-info">
+                  <div class="documento-header">
+                    <i
+                      [class]="getDocumentoIcon(doc.extensao || '')"
+                      class="documento-icon me-2"
+                    ></i>
+                    <span class="documento-nome">{{
+                      doc.nome || "Documento sem nome"
+                    }}</span>
+                  </div>
+                  <div class="documento-details">
+                    <span class="documento-tipo">{{
+                      getDocumentoTipo(doc.extensao || "")
+                    }}</span>
+                    <span class="documento-tamanho">{{
+                      doc.tamanho || "Tamanho desconhecido"
+                    }}</span>
+                  </div>
+                </div>
+                <div class="documento-acoes">
+                  <button
+                    class="btn btn-sm btn-outline-primary me-1"
+                    (click)="downloadDocumento(doc.id || 0)"
+                    title="Download do documento"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-download"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"
+                      />
+                      <path
+                        d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"
+                      />
                     </svg>
-                     <i class="bi bi-download"></i>
-                   </button>
-                   <button class="btn btn-sm btn-outline-danger" (click)="excluirDocumento(doc.id || 0, tarefa.id || 0)"
-                     title="Excluir documento">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                      <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                    <i class="bi bi-download"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="excluirDocumento(doc.id || 0, tarefa.id || 0)"
+                    title="Excluir documento"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-trash"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
+                      />
+                      <path
+                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
+                      />
                     </svg>
-                     <i class="bi bi-trash"></i>
-                   </button>
-                 </div>
-               </div>
-             </div>
-           </div>
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <!-- Contêiner para centralizar a seção de subtarefas -->
           <div class="subtask-section">
             <h4 class="subtarefas-titulo"><strong> - Sub Tarefas -</strong></h4>
             <ul>
-              <li *ngFor="let sub of tarefa.subTarefas" [ngClass]="getSubTarefaClasses(sub)" class="subtarefa-item">
+              <li
+                *ngFor="let sub of tarefa.subTarefas"
+                [ngClass]="getSubTarefaClasses(sub)"
+                class="subtarefa-item"
+              >
                 <!-- Div para o conteúdo principal (checkbox e título) -->
                 <div class="subtarefa-conteudo">
-                  <input type="checkbox" [checked]="sub.estado === 'Concluído'" [disabled]="isSubTarefaConcluida(sub)"
-                    (change)="marcarSubTarefaConcluida(sub, tarefa)" />
-                  <span [class.text-decoration-line-through]="
-                    sub.estado === 'Concluído'
-                  " class="ms-2">
+                  <input
+                    type="checkbox"
+                    [checked]="sub.estado === 'Concluído'"
+                    [disabled]="isSubTarefaConcluida(sub)"
+                    (change)="marcarSubTarefaConcluida(sub, tarefa)"
+                  />
+                  <span
+                    [class.text-decoration-line-through]="
+                      sub.estado === 'Concluído'
+                    "
+                    class="ms-2"
+                  >
                     {{ sub.titulo }}
                   </span>
                 </div>
 
                 <!-- Div para os botões de ação -->
                 <div class="subtarefa-acoes">
-                  <button class="btn btn-sm btn-outline-secondary me-2" [disabled]="isSubTarefaConcluida(sub)"
-                    (click)="editarSubTarefa(sub, tarefa)" title="Editar subtarefa">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                      class="bi bi-pencil-square" viewBox="0 0 17 17">
+                  <button
+                    class="btn btn-sm btn-outline-secondary me-2"
+                    [disabled]="isSubTarefaConcluida(sub)"
+                    (click)="editarSubTarefa(sub, tarefa)"
+                    title="Editar subtarefa"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-pencil-square"
+                      viewBox="0 0 17 17"
+                    >
                       <path
-                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                      <path fill-rule="evenodd"
-                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                    </svg> Editar
+                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                      />
+                    </svg>
+                    Editar
                   </button>
 
-                  <button class="btn btn-sm btn-outline-danger me-2" (click)="excluirSubTarefa(sub, tarefa)"
-                    [disabled]="isSubTarefaConcluida(sub)" title="Excluir subtarefa">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                      class="bi bi-trash" viewBox="0 0 17 17">
+                  <button
+                    class="btn btn-sm btn-outline-danger me-2"
+                    (click)="excluirSubTarefa(sub, tarefa)"
+                    [disabled]="isSubTarefaConcluida(sub)"
+                    title="Excluir subtarefa"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-trash"
+                      viewBox="0 0 17 17"
+                    >
                       <path
-                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 1 0" />
+                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 1 0"
+                      />
                       <path
-                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                    </svg> Excluir
+                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
+                      />
+                    </svg>
+                    Excluir
                   </button>
 
-                  <button class="btn btn-sm btn-outline-success" (click)="marcarSubTarefaConcluida(sub, tarefa)"
-                    [disabled]="isSubTarefaDesabilitada(sub)" [ngClass]="getSubTarefaClasses(sub)"
-                    title="Concluir subtarefa">
+                  <button
+                    class="btn btn-sm btn-outline-success"
+                    (click)="marcarSubTarefaConcluida(sub, tarefa)"
+                    [disabled]="isSubTarefaDesabilitada(sub)"
+                    [ngClass]="getSubTarefaClasses(sub)"
+                    title="Concluir subtarefa"
+                  >
                     {{ isSubTarefaDesabilitada(sub) ? "" : "" }}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                      class="bi bi-shield-check" viewBox="0 0 16 16">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-shield-check"
+                      viewBox="0 0 16 16"
+                    >
                       <path
-                        d="M5.338 1.59a61 61 0 0 0-2.837.856.48.48 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.7 10.7 0 0 0 2.287 2.233c.346.244.652.42.893.533q.18.085.293.118a1 1 0 0 0 .101.025 1 1 0 0 0 .1-.025q.114-.034.294-.118c.24-.113.547-.29.893-.533a10.7 10.7 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.8 11.8 0 0 1-2.517 2.453 7 7 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7 7 0 0 1-1.048-.625 11.8 11.8 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 63 63 0 0 1 5.072.56" />
+                        d="M5.338 1.59a61 61 0 0 0-2.837.856.48.48 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.7 10.7 0 0 0 2.287 2.233c.346.244.652.42.893.533q.18.085.293.118a1 1 0 0 0 .101.025 1 1 0 0 0 .1-.025q.114-.034.294-.118c.24-.113.547-.29.893-.533a10.7 10.7 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.8 11.8 0 0 1-2.517 2.453 7 7 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7 7 0 0 1-1.048-.625 11.8 11.8 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 63 63 0 0 1 5.072.56"
+                      />
                       <path
-                        d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0" />
-                    </svg> Concluir
+                        d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"
+                      />
+                    </svg>
+                    Concluir
                   </button>
                 </div>
               </li>
             </ul>
             <div class="progress mb-3">
-              <div class="progress-bar" role="progressbar" [style.width.%]="calcularProgresso(tarefa)"
-                [class.bg-success]="tarefa.estado === 'Concluído'" aria-valuenow="calcularProgresso(tarefa)"
-                aria-valuemin="0" aria-valuemax="100">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                [style.width.%]="calcularProgresso(tarefa)"
+                [class.bg-success]="tarefa.estado === 'Concluído'"
+                aria-valuenow="calcularProgresso(tarefa)"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
                 {{ calcularProgresso(tarefa) }}%
               </div>
             </div>
 
-            <button class="btn btn-sm btn-outline-primary me-2" (click)="incluirSubTarefa(tarefa)">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                class="bi bi-file-earmark-plus-fill" viewBox="0 0 17 17">
+            <button
+              class="btn btn-sm btn-outline-primary me-2"
+              (click)="incluirSubTarefa(tarefa)"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-file-earmark-plus-fill"
+                viewBox="0 0 17 17"
+              >
                 <path
-                  d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0" />
+                  d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"
+                />
               </svg>
               Adicionar Sub-Tarefa
             </button>
-                     </div>
-         </div>
-       </div>
-     </div>
-   </div>
- </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
