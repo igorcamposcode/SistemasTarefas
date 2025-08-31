@@ -11,36 +11,9 @@ import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { CommonModule } from '@angular/common';
 import { TaskService } from '../services/task.service';
 import { AuthService } from '../services/auth.service';
+import { Usuario, TarefasResponse, Tarefa } from '../types/interfaces';
 
-interface Subtarefa {
-  id: number;
-  titulo: string;
-  dthrinicio: string;
-  dthrfim: string | null;
-  EstadoAtual?: {
-    nome: string;
-  };
-  Prioridade?: {
-    nome: string;
-  };
-}
 
-interface Tarefa {
-  id: number;
-  titulo: string;
-  descricao: string | null;
-  dthrinicio: string;
-  dthrfim: string | null;
-  idmae: number | null;
-  UsuarioResponsavel: string;
-  EstadoAtual?: {
-    nome: string;
-  };
-  Prioridade?: {
-    nome: string;
-  };
-  SubTarefas: Subtarefa[];
-}
 
 @Component({
     selector: 'app-minhas-tarefas',
@@ -66,7 +39,7 @@ export class MinhasTarefasComponent implements OnInit {
   listOfData: Tarefa[] = [];
   listOfDisplayData: Tarefa[] = [];
   loading = false;
-  usuario: any = {};
+  usuario: Usuario = {} as Usuario;
   isUsuarioModalVisible = false;
   isEditarUsuarioModalVisible = false;
 
@@ -168,7 +141,7 @@ export class MinhasTarefasComponent implements OnInit {
   carregarTarefas(): void {
     this.loading = true;
     this.taskService.obterTarefas().subscribe({
-      next: (response: any) => {
+      next: (response: TarefasResponse) => {
         if (response && response.tarefas) {
           this.listOfData = response.tarefas;
           this.listOfDisplayData = [...this.listOfData];

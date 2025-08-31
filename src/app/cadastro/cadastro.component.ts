@@ -32,16 +32,10 @@ export class CadastroComponent {
   checkPassword: FormControl<string> | undefined;
   acordo: FormControl<boolean> | undefined;
   validateForms: FormGroup;
-  userService: any;
+  // userService removido pois não é utilizado
 
   submitForm(): void {
-    const usuario = {
-      nome: this.validateForms.get('nome')?.value,
-      telefone: this.validateForms.get('telefone')?.value,
-      email: this.validateForms.get('email')?.value,
-      senha: this.validateForms.get('senha')?.value,
-      checkPassword: this.validateForms.get('checkPassword')?.value,
-    };
+    // Dados do usuário são processados no onSubmit()
 
     if (this.validateForms.valid) {
       console.log('submit', this.validateForms.value);
@@ -91,7 +85,7 @@ export class CadastroComponent {
       const formData = this.validateForms.value;
 
       this.authService.criarUsuario(formData).subscribe({
-        next: (res) => {
+        next: () => {
           alert('Usuário cadastrado com sucesso!');
           this.validateForms.reset();
         },

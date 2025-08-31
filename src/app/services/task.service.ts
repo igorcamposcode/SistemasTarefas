@@ -1,6 +1,17 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { 
+  MetadadosResponse, 
+  TarefasResponse, 
+  CriarTarefaRequest, 
+  AtualizarTarefaRequest, 
+  UploadDocumentoResponse, 
+  Documento,
+  Estado,
+  Prioridade,
+  SubTarefa 
+} from '../types/interfaces';
 
 export const API_PATH = 'http://localhost:3000/api';
 
@@ -11,42 +22,42 @@ export class TaskService {
   constructor(private http: HttpClient) {}
 
   /** Obter prioridades e estados disponíveis */
-  obterMetadados(): Observable<any> {
-    return this.http.get(`${API_PATH}/tarefa/meta`);
+  obterMetadados(): Observable<MetadadosResponse> {
+    return this.http.get<MetadadosResponse>(`${API_PATH}/tarefa/meta`);
   }
 
   /** Obter estados relacionados às tarefas */
-  obterEstadosTarefa(): Observable<any> {
-    return this.http.get(`${API_PATH}/tarefa-estados`);
+  obterEstadosTarefa(): Observable<Estado[]> {
+    return this.http.get<Estado[]>(`${API_PATH}/tarefa-estados`);
   }
 
-  obterPrioridades(): Observable<any> {
-    return this.http.get(`${API_PATH}/prioridades`);
+  obterPrioridades(): Observable<Prioridade[]> {
+    return this.http.get<Prioridade[]>(`${API_PATH}/prioridades`);
   }
 
   // Criar nova tarefa
-  criarTarefa(tarefa: string): Observable<any> {
+  criarTarefa(tarefa: CriarTarefaRequest): Observable<{ id: number; message: string }> {
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${localStorage.getItem('authToken')}`
     );
-    return this.http.post(`${API_PATH}/tarefa`, tarefa, { headers });
+    return this.http.post<{ id: number; message: string }>(`${API_PATH}/tarefa`, tarefa, { headers });
   }
 
   // Incluir subtarefa vinculada à tarefa pai
-  criarSubTarefa(idmae: number, subtarefaData: any): Observable<any> {
+  criarSubTarefa(idmae: number, subtarefaData: CriarTarefaRequest): Observable<{ id: number; message: string }> {
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${localStorage.getItem('authToken')}`
     );
-    return this.http.post(
+    return this.http.post<{ id: number; message: string }>(
       `${API_PATH}/tarefa/${idmae}/subtarefa`,
       subtarefaData,
       { headers }
     );
   }
 
-  atualizarSubTarefa(id: number,idmae: number ,subTarefaData: any): Observable<any> {
+  atualizarSubTarefa(id: number, idmae: number, subTarefaData: AtualizarTarefaRequest): Observable<{ message: string }> {
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${localStorage.getItem('authToken')}`
@@ -61,18 +72,18 @@ export class TaskService {
     };
 
     // Constrói a URL correta para a API
-    return this.http.put(`${API_PATH}/tarefa/${id}/subtarefa/${idmae}`, body, { headers });
+    return this.http.put<{ message: string }>(`${API_PATH}/tarefa/${id}/subtarefa/${idmae}`, body, { headers });
   }
 
-  excluirSubTarefa(id: number): Observable<any> {
+  excluirSubTarefa(id: number): Observable<{ message: string }> {
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${localStorage.getItem('authToken')}`
     );
-    return this.http.delete(`${API_PATH}/tarefa/subtarefa/${id}`, { headers });
+    return this.http.delete<{ message: string }>(`${API_PATH}/tarefa/subtarefa/${id}`, { headers });
   }
 
-  atualizarTarefa(id: number, tarefaData: any): Observable<any> {
+  atualizarTarefa(id: number, tarefaData: AtualizarTarefaRequest): Observable<{ message: string }> {
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${localStorage.getItem('authToken')}` // Certifique-se de que o token está armazenado corretamente
@@ -86,47 +97,47 @@ export class TaskService {
         : null, // Formata `dthrfim` corretamente
     };
 
-    return this.http.put(`${API_PATH}/tarefa/${id}`, body, { headers });
+    return this.http.put<{ message: string }>(`${API_PATH}/tarefa/${id}`, body, { headers });
   }
 
   // Excluir tarefa
-  excluirTarefa(id: number): Observable<any> {
+  excluirTarefa(id: number): Observable<{ message: string }> {
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${localStorage.getItem('authToken')}`
     );
-    return this.http.delete(`${API_PATH}/tarefa/${id}`, { headers });
+    return this.http.delete<{ message: string }>(`${API_PATH}/tarefa/${id}`, { headers });
   }
 
   /** Obter subtarefas pelo ID do usuário */
-  obterSubtarefas(idusuario: number): Observable<any> {
-    return this.http.get(`${API_PATH}/tarefa/${idusuario}`);
+  obterSubtarefas(idusuario: number): Observable<SubTarefa[]> {
+    return this.http.get<SubTarefa[]>(`${API_PATH}/tarefa/${idusuario}`);
   }
 
-  concluirTarefa(id: number): Observable<any> {
-    return this.http.put(`${API_PATH}/tarefa/${id}/concluir`, {});
+  concluirTarefa(id: number): Observable<{ message: string }> {
+    return this.http.put<{ message: string }>(`${API_PATH}/tarefa/${id}/concluir`, {});
   }
 
   // Obter progresso de uma tarefa
-  getProgresso(id: number): Observable<any> {
-    return this.http.get(`${API_PATH}/tarefa/${id}/progresso`);
+  getProgresso(id: number): Observable<{ progresso: number }> {
+    return this.http.get<{ progresso: number }>(`${API_PATH}/tarefa/${id}/progresso`);
   }
 
-  atualizarProgresso(id: number, progresso: number): Observable<any> {
-    return this.http.put(`${API_PATH}/tarefa/${id}/progresso`, { progresso });
+  atualizarProgresso(id: number, progresso: number): Observable<{ message: string }> {
+    return this.http.put<{ message: string }>(`${API_PATH}/tarefa/${id}/progresso`, { progresso });
   }
 
   /** Obter todas as tarefas de um usuário */
-  obterTarefas(): Observable<any> {
+  obterTarefas(): Observable<TarefasResponse> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('authToken')}`, // Inclui o token JWT
     });
 
-    return this.http.get(`${API_PATH}/tarefa`, { headers });
+    return this.http.get<TarefasResponse>(`${API_PATH}/tarefa`, { headers });
   }
 
   /** Upload de documento para uma tarefa */
-  uploadDocumento(idtarefa: number, idusuario: number, arquivo: File): Observable<any> {
+  uploadDocumento(idtarefa: number, idusuario: number, arquivo: File): Observable<UploadDocumentoResponse> {
     console.log('TaskService - Iniciando upload...');
     console.log('ID Tarefa:', idtarefa);
     console.log('ID Usuário:', idusuario);
@@ -144,20 +155,20 @@ export class TaskService {
     console.log('Headers:', headers);
     console.log('FormData criado com documento e IDs');
 
-    return this.http.post(`${API_PATH}/documento/upload`, formData, { headers });
+    return this.http.post<UploadDocumentoResponse>(`${API_PATH}/documento/upload`, formData, { headers });
   }
 
   /** Obter documentos de uma tarefa */
-  obterDocumentosTarefa(idtarefa: number, idusuario: number): Observable<any> {
+  obterDocumentosTarefa(idtarefa: number, idusuario: number): Observable<Documento[]> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('authToken')}`,
     });
 
-    return this.http.get(`${API_PATH}/documento/tarefa/${idtarefa}/${idusuario}`, { headers });
+    return this.http.get<Documento[]>(`${API_PATH}/documento/tarefa/${idtarefa}/${idusuario}`, { headers });
   }
 
   /** Download de um documento */
-  downloadDocumento(id: number): Observable<any> {
+  downloadDocumento(id: number): Observable<Blob> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('authToken')}`,
     });
@@ -169,11 +180,11 @@ export class TaskService {
   }
 
   /** Excluir um documento */
-  excluirDocumento(id: number): Observable<any> {
+  excluirDocumento(id: number): Observable<{ message: string }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('authToken')}`,
     });
 
-    return this.http.delete(`${API_PATH}/documento/${id}`, { headers });
+    return this.http.delete<{ message: string }>(`${API_PATH}/documento/${id}`, { headers });
   }
 }

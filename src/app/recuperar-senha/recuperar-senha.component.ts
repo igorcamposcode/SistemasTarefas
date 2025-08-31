@@ -85,7 +85,7 @@ export class RecuperarSenhaComponent {
       const { email, senha, checkPassword } = this.validateForms.value;
 
       this.authService.recuperarSenha(email, senha, checkPassword).subscribe({
-        next: (res) => {
+        next: () => {
           alert('Senha atualizada com sucesso! Redirecionando para o login...');
           this.router.navigate(['login']); // Redireciona para a página de login
         },
