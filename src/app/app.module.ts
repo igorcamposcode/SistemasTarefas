@@ -4,7 +4,11 @@ import { NgModule } from '@angular/core';
 
 @NgModule({
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor as any, // Corrigido para garantir compatibilidade de tipo
+      multi: true
+    },
   ],
 })
 export class AppModule {}

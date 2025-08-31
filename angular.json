@@ -39,7 +39,6 @@
             ],
             "styles": [
               "src/theme.less",
-              "./node_modules/@po-ui/style/css/po-theme-default.min.css",
               "./node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
               "src/styles.css"
             ],

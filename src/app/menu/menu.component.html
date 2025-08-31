@@ -182,7 +182,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="usuarioForm">
+          <form [formGroup]="usuarioForm" (ngSubmit)="salvarDadosUsuario()">
             <!-- Nome -->
             <div class="mb-3">
               <label for="nome" class="form-label">Nome</label>
@@ -636,7 +636,6 @@
                     [ngClass]="getSubTarefaClasses(sub)"
                     title="Concluir subtarefa"
                   >
-                    {{ isSubTarefaDesabilitada(sub) ? "" : "" }}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"

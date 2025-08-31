@@ -9,7 +9,6 @@ import {
   provideHttpClient,
   withInterceptors,
 } from '@angular/common/http';
-import { PoHttpRequestModule } from '@po-ui/ng-components';
 import { pt_PT, provideNzI18n } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import pt from '@angular/common/locales/pt';
@@ -27,7 +26,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([AuthInterceptor])
     ),
-    importProvidersFrom([PoHttpRequestModule]),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideNzI18n(pt_PT),
     importProvidersFrom(FormsModule),

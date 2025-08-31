@@ -49,9 +49,17 @@ export interface SubTarefa {
 
 @Component({
   selector: 'app-menu',
-  imports: [ReactiveFormsModule, FormsModule, NgForOf, DatePipe, NgIf, NgClass],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    NgForOf,
+    DatePipe,
+    NgIf,
+    NgClass
+  ],
   templateUrl: './menu.component.html',
-  styleUrl: './menu.component.css',
+  styleUrls: ['./menu.component.css'],
 })
 export class MenuComponent implements OnInit {
   usuario: Usuario[] = []; // Dados do usuário logado
