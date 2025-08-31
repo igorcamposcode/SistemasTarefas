@@ -453,7 +453,7 @@ export class MenuComponent implements OnInit {
     });
   }
   /** Excluir uma subtarefa */
- public  excluirSubTarefa(subTarefa: any, tarefa: any): void {
+ public  excluirSubTarefa(subTarefa: SubTarefa, tarefa: any): void {
     if (
       confirm(
         `Tem certeza que deseja excluir a subtarefa "${subTarefa.titulo}"?`
@@ -464,7 +464,7 @@ export class MenuComponent implements OnInit {
           alert('Subtarefa excluída com sucesso.');
           // Remove a subtarefa da lista local
           tarefa.subTarefas = tarefa.subTarefas.filter(
-            (sub: any) => sub.id !== subTarefa.id
+            (sub: Tarefa) => sub.id !== subTarefa.id
           );
           // Atualiza o progresso da tarefa
           this.atualizarProgresso(tarefa);
@@ -487,7 +487,7 @@ export class MenuComponent implements OnInit {
         id: tarefa.id,
         progresso: tarefa.progresso,
         estado: tarefa.estado,
-        subTarefas: tarefa.subTarefas.map((sub: { id: any; estado: any }) => ({
+        subTarefas: tarefa.subTarefas.map((sub: { id: Tarefa['id']; estado: Estado['nome'] }) => ({
           id: sub.id,
           estado: sub.estado,
         })),
@@ -529,9 +529,9 @@ export class MenuComponent implements OnInit {
         tarefa.estado = progressoTarefa.estado || tarefa.estado;
 
         // Aplica o estado das subtarefas
-        progressoTarefa.subTarefas.forEach((progressoSub: any) => {
+        progressoTarefa.subTarefas.forEach((progressoSub: SubTarefa) => {
           const subTarefa = tarefa.subTarefas.find(
-            (s: { id: any }) => s.id === progressoSub.id
+            (s: { id: Tarefa['id'] }) => s.id === progressoSub.id
           );
           if (subTarefa) {
             subTarefa.estado = progressoSub.estado || subTarefa.estado;
@@ -541,7 +541,7 @@ export class MenuComponent implements OnInit {
     });
   }
   /** Abrir o modal para criar uma subtarefa */
-  public incluirSubTarefa(tarefa: any): void {
+  public incluirSubTarefa(tarefa: Tarefa): void {
     this.isSubTarefa = true; // Define que estamos criando uma subtarefa
     this.tarefaMae = tarefa; // Armazena a tarefa pai
     // Atualiza o formulário com os valores da tarefa pai e bloqueia os campos necessários
@@ -595,7 +595,7 @@ export class MenuComponent implements OnInit {
     this.isModalVisible = true;
   }
   /** Editar uma subtarefa */
-  public editarSubTarefa(subTarefa: any, tarefaMae: any): void {
+  public editarSubTarefa(subTarefa: SubTarefa, tarefaMae: Tarefa): void {
     if (this.isSubTarefaConcluida(subTarefa)) {
       alert('Não é possível editar uma subtarefa que já foi concluída.');
       return;
@@ -786,7 +786,7 @@ export class MenuComponent implements OnInit {
     // Retorna o progresso calculado
     return Math.round((concluidas / totalSubTarefas) * 100);
   }
-  public marcarSubTarefaConcluida(subTarefa: any, tarefa: any): void {
+  public marcarSubTarefaConcluida(subTarefa: SubTarefa, tarefa: Tarefa): void {
     // 1. Bloqueia a ação se a subtarefa já estiver concluída.
     if (subTarefa.estado === 'Concluído') {
       return;
@@ -794,7 +794,7 @@ export class MenuComponent implements OnInit {
 
     // 2. Obtém o ID do estado "Concluído" do array de estados
     const estadoConcluido = this.estados.find(
-      (e: any) => e.nome === 'Concluído'
+      (e: Estado) => e.nome === 'Concluído'
     );
     if (!estadoConcluido) {
       alert(
@@ -841,10 +841,10 @@ export class MenuComponent implements OnInit {
       });
   }
   // Atualiza o progresso de uma tarefa no frontend e backend
-  public atualizarProgresso(tarefa: any): void {
+  public atualizarProgresso(tarefa: Tarefa): void {
     // 1. Calcula o novo progresso
     const concluidas = tarefa.subTarefas.filter(
-      (sub: any) => sub.estado === 'Concluído'
+      (sub: SubTarefa) => sub.estado === 'Concluído'
     ).length;
     const progresso =
       tarefa.subTarefas.length > 0
@@ -862,7 +862,7 @@ export class MenuComponent implements OnInit {
     // Se todas as subtarefas estiverem concluídas, marca a tarefa principal como concluída
     if (progresso === 100) {
       const estadoConcluido = this.estados.find(
-        (e: any) => e.nome === 'Concluído'
+        (e: Estado) => e.nome === 'Concluído'
       );
       if (estadoConcluido) {
         dadosParaAtualizar.idestado = estadoConcluido.id;
@@ -902,10 +902,10 @@ export class MenuComponent implements OnInit {
     return sub.estado === 'Concluído';
   }
 
-  public isSubTarefaDesabilitada(sub: any): boolean {
+  public isSubTarefaDesabilitada(sub: SubTarefa): boolean {
     return sub.estado === 'Concluído';
   }
- public  getSubTarefaClasses(sub: any): Record<string, boolean> {
+ public  getSubTarefaClasses(sub: SubTarefa): Record<string, boolean> {
     return {
       'subtarefa-concluida': this.isSubTarefaConcluida(sub),
       'subtarefa-desabilitada': this.isSubTarefaDesabilitada(sub),
