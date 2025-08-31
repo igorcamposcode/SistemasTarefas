@@ -67,12 +67,12 @@
 
             <div class="text-center mt-4">
               <div class="d-flex flex-column gap-2">
-                <a (click)="cliqueRegistrar('cadastro')" class="link"  style="cursor: pointer;">
+                <button type="button" (click)="cliqueRegistrar('cadastro')" class="btn btn-link">
                   <i class="bi bi-person-plus"></i> Não tem uma conta? Registre-se
-                </a>
-                <a (click)="cliqueRecuperarSenha('recuperar-senha')" class="link"  style="cursor: pointer;">
+                </button>
+                <button type="button" (click)="cliqueRecuperarSenha('recuperar-senha')" class="btn btn-link">
                   <i class="bi bi-question-circle"></i> Esqueceu sua senha?
-                </a>
+                </button>
               </div>
             </div>
           </form>

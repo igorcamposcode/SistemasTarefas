@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   FormBuilder,
@@ -9,9 +9,9 @@ import {
 } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { DatePipe, NgClass, NgForOf, NgIf } from '@angular/common';
-import { TaskService } from '../services/task.service';
+import { Estado, Prioridade, TaskService } from '../services/task.service';
 
-interface Tarefa {
+export interface Tarefa {
   id: number;
   titulo: string;
   descricao?: string;
@@ -25,7 +25,7 @@ interface Tarefa {
   progresso: number; // Adiciona a propriedade 'progresso'
 }
 
-interface Documento {
+export interface Documento {
   id: number;
   idtarefa: number;
   idusuario: number;
@@ -34,7 +34,7 @@ interface Documento {
   extensao: string;
   tamanho: string;
 }
-interface SubTarefa {
+export interface SubTarefa {
   id: number;
   titulo: string;
   descricao?: string;
@@ -55,9 +55,9 @@ interface SubTarefa {
 })
 export class MenuComponent implements OnInit {
   usuario: any = {}; // Dados do usuário logado
-  tarefas: any[] = []; // Lista de tarefas do usuário
-  prioridades: any[] = []; // Prioridades disponíveis (ex.: Muito alta, Alta)
-  estados: any[] = []; // Estados disponíveis (ex.: Aberto, Concluído)
+  tarefas: Tarefa[] = []; // Lista de tarefas do usuário
+  prioridades: Prioridade[] = []; // Prioridades disponíveis (ex.: Muito alta, Alta)
+  estados: Estado[] = []; // Estados disponíveis (ex.: Aberto, Concluído)
   loading = false;
   usuarioForm!: FormGroup; // Formulário para edição de dados do usuário
   tarefaForm!: FormGroup; // Formulário para criação/edição de tarefas
@@ -70,12 +70,11 @@ export class MenuComponent implements OnInit {
   arquivoSelecionado: File | null = null; // Arquivo selecionado para upload
 
 
-  constructor(
-    private fb: FormBuilder,
-    private taskService: TaskService,
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  private router = inject(Router);
+  private taskService = inject(TaskService);
+  private authService = inject(AuthService);
+  private fb = inject(FormBuilder);
+
 
   ngOnInit(): void {
     this.carregarUsuario(); // Obter dados do usuário logado
@@ -85,7 +84,7 @@ export class MenuComponent implements OnInit {
   }
 
   /** Inicializa os formulários reativos */
-  inicializarFormularios(): void {
+ private inicializarFormularios(): void {
     // Verifica se `usuario` está carregado antes de inicializar
     if (!this.usuario) {
       console.warn(
@@ -134,7 +133,7 @@ export class MenuComponent implements OnInit {
     });
   }
   /** Carregar o usuário logado */
-  carregarUsuarioLogado(): void {
+  public carregarUsuarioLogado(): void {
     this.authService.obterUsuarioLogado().subscribe({
       next: (usuario) => {
         this.usuario = usuario;
@@ -146,7 +145,7 @@ export class MenuComponent implements OnInit {
     });
   }
   /** Carrega os dados do usuário logado */
-  carregarUsuario(): void {
+  private carregarUsuario(): void {
     try {
       const idUsuario = this.authService.obterIdUsuarioLogado();
       if (idUsuario === null) {
@@ -171,7 +170,7 @@ export class MenuComponent implements OnInit {
     }
   }
   /** Salva os dados atualizados do usuário */
-  salvarDadosUsuario(): void {
+ public salvarDadosUsuario(): void {
     if (this.usuarioForm.invalid) {
       alert('Preencha todos os campos obrigatórios corretamente.');
       return;
@@ -193,25 +192,25 @@ export class MenuComponent implements OnInit {
     });
   }
   /** Abre o modal para exibir os dados do usuário */
-  abrirModalUsuario(): void {
+  public abrirModalUsuario(): void {
     this.isUsuarioModalVisible = true;
   }
   /** Fecha o modal de exibição do usuário */
-  fecharModalUsuario(): void {
+  public fecharModalUsuario(): void {
     this.isUsuarioModalVisible = false;
   }
   /** Abre o modal de edição do usuário */
-  abrirModalEditarUsuario(): void {
+  public abrirModalEditarUsuario(): void {
     this.usuarioForm.patchValue(this.usuario);
     this.isUsuarioModalVisible = false;
     this.isEditarUsuarioModalVisible = true;
   }
   /** Fecha o modal de edição do usuário */
-  fecharModalEditarUsuario(): void {
+  public fecharModalEditarUsuario(): void {
     this.isEditarUsuarioModalVisible = false;
   }
   /** Carregar prioridades e estados */
-  carregarPrioridadesEstados(): void {
+  private carregarPrioridadesEstados(): void {
     this.taskService.obterMetadados().subscribe({
       next: (res) => {
         this.prioridades = res.prioridades;
@@ -221,7 +220,7 @@ export class MenuComponent implements OnInit {
     });
   }
   /** Carrega as prioridades diretamente da tabela prioridade */
-  carregarPrioridades(): void {
+  public carregarPrioridades(): void {
     this.taskService.obterPrioridades().subscribe({
       next: (res) => {
         this.prioridades = res;
@@ -236,7 +235,7 @@ export class MenuComponent implements OnInit {
     });
   }
   /** Carregar todas as tarefas do usuário */
-  carregarTarefas(): void {
+  private carregarTarefas(): void {
     this.loading = true; // Inicia o carregamento
 
     this.taskService.obterTarefas().subscribe({
@@ -310,12 +309,12 @@ export class MenuComponent implements OnInit {
       },
     });
   }
-  atualizarTarefa(): void {
+  public atualizarTarefa(): void {
     this.carregarTarefas();
     window.location.reload();
   }
   /** Salvar uma nova tarefa ou editar uma existente */
-  salvarTarefa(): void {
+  public salvarTarefa(): void {
     if (this.tarefaForm.invalid) {
       alert('Preencha todos os campos obrigatórios.');
       return;
@@ -419,7 +418,7 @@ export class MenuComponent implements OnInit {
       }
     }
   }
-  salvarNovaTarefa(tarefa: Tarefa): void {
+  public salvarNovaTarefa(tarefa: Tarefa): void {
     if (!tarefa.usuario || isNaN(Number(tarefa.usuario))) {
       alert('ID do usuário é obrigatório e deve ser um número válido.');
       return;
@@ -437,7 +436,7 @@ export class MenuComponent implements OnInit {
     });
   }
   /** Excluir uma tarefa */
-  excluirTarefa(id: number): void {
+  public excluirTarefa(id: number): void {
     this.taskService.excluirTarefa(id).subscribe({
       next: () => {
         alert('Tarefa excluída com sucesso.');
@@ -450,7 +449,7 @@ export class MenuComponent implements OnInit {
     });
   }
   /** Excluir uma subtarefa */
-  excluirSubTarefa(subTarefa: any, tarefa: any): void {
+ public  excluirSubTarefa(subTarefa: any, tarefa: any): void {
     if (
       confirm(
         `Tem certeza que deseja excluir a subtarefa "${subTarefa.titulo}"?`
@@ -478,7 +477,7 @@ export class MenuComponent implements OnInit {
       });
     }
   }
-  salvarLocalStorage(): void {
+  private salvarLocalStorage(): void {
     const progressoTarefas = {
       tarefas: this.tarefas.map((tarefa) => ({
         id: tarefa.id,
@@ -494,7 +493,7 @@ export class MenuComponent implements OnInit {
 
     localStorage.setItem('progressoTarefas', JSON.stringify(progressoTarefas));
   }
-  carregarLocalStorage(): void {
+ private carregarLocalStorage(): void {
     const progressoSalvo = localStorage.getItem('progressoTarefas');
 
     if (progressoSalvo) {
@@ -516,7 +515,7 @@ export class MenuComponent implements OnInit {
       }
     }
   }
-  aplicarProgressoSalvo(progressoSalvo: any[]): void {
+ private  aplicarProgressoSalvo(progressoSalvo: any[]): void {
     progressoSalvo.forEach((progressoTarefa) => {
       const tarefa = this.tarefas.find((t) => t.id === progressoTarefa.id);
 
@@ -538,14 +537,9 @@ export class MenuComponent implements OnInit {
     });
   }
   /** Abrir o modal para criar uma subtarefa */
-  incluirSubTarefa(tarefa: any): void {
+  public incluirSubTarefa(tarefa: any): void {
     this.isSubTarefa = true; // Define que estamos criando uma subtarefa
     this.tarefaMae = tarefa; // Armazena a tarefa pai
-
-    // Obtém o nome do usuário logado
-    const nomeUsuario =
-      this.authService.obterIdUsuarioLogado() || 'Usuário desconhecido';
-
     // Atualiza o formulário com os valores da tarefa pai e bloqueia os campos necessários
     this.tarefaForm.patchValue({
       idmae: tarefa.id, // ID da tarefa pai
@@ -562,7 +556,7 @@ export class MenuComponent implements OnInit {
     this.isModalVisible = true; // Exibe o modal
   }
   /** Abrir o modal para criar ou editar uma tarefa */
-  editarTarefa(tarefa: any): void {
+  public editarTarefa(tarefa: any): void {
     this.tarefaEditando = tarefa;
 
     // Mapeia corretamente os campos da tarefa para o formulário
@@ -597,7 +591,7 @@ export class MenuComponent implements OnInit {
     this.isModalVisible = true;
   }
   /** Editar uma subtarefa */
-  editarSubTarefa(subTarefa: any, tarefaMae: any): void {
+  public editarSubTarefa(subTarefa: any, tarefaMae: any): void {
     if (this.isSubTarefaConcluida(subTarefa)) {
       alert('Não é possível editar uma subtarefa que já foi concluída.');
       return;
@@ -644,7 +638,7 @@ export class MenuComponent implements OnInit {
     this.isModalVisible = true; // Exibe o modal de edição
   }
   /** Fecha o modal de criação/edição de tarefa */
-  fecharModal(): void {
+ public fecharModal(): void {
     this.isModalVisible = false;
     this.tarefaEditando = null;
     this.isSubTarefa = false;
@@ -662,7 +656,7 @@ export class MenuComponent implements OnInit {
 
   }
   // Handle file selection
-  onFileSelected(event: Event): void {
+  public onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
 
@@ -673,14 +667,14 @@ export class MenuComponent implements OnInit {
   }
 
   // Upload de documento para uma tarefa
-  fazerUploadDocumento(idtarefa: number, idusuario: number): void {
+  private fazerUploadDocumento(idtarefa: number, idusuario: number): void {
     if (!this.arquivoSelecionado) {
       alert('Nenhum arquivo selecionado para upload.');
       return;
     }
 
     this.taskService.uploadDocumento(idtarefa, idusuario, this.arquivoSelecionado).subscribe({
-      next: (res) => {
+      next: (_res) => {
         const mensagem = this.tarefaEditando
           ? 'Tarefa atualizada e documento anexado com sucesso!'
           : 'Tarefa criada e documento anexado com sucesso!';
@@ -702,7 +696,7 @@ export class MenuComponent implements OnInit {
   }
 
   // Download de um documento
-  downloadDocumento(id: number): void {
+  public downloadDocumento(id: number): void {
     this.taskService.downloadDocumento(id).subscribe({
       next: (blob: Blob) => {
         // Cria um link temporário para download
@@ -723,7 +717,7 @@ export class MenuComponent implements OnInit {
   }
 
   // Excluir um documento
-  excluirDocumento(id: number, idtarefa: number): void {
+  public excluirDocumento(id: number, _idtarefa: number): void {
     if (confirm('Tem certeza que deseja excluir este documento?')) {
       this.taskService.excluirDocumento(id).subscribe({
         next: () => {
@@ -739,7 +733,7 @@ export class MenuComponent implements OnInit {
   }
 
   // Obter ícone baseado na extensão do documento
-  getDocumentoIcon(extensao: string): string {
+ public getDocumentoIcon(extensao: string): string {
     const ext = extensao.toLowerCase();
     if (ext === '.pdf') return 'bi bi-file-earmark-pdf';
     if (ext === '.doc' || ext === '.docx') return 'bi bi-file-earmark-word';
@@ -751,7 +745,7 @@ export class MenuComponent implements OnInit {
   }
 
   // Obter tipo de documento baseado na extensão
-  getDocumentoTipo(extensao: string): string {
+  public getDocumentoTipo(extensao: string): string {
     const ext = extensao.toLowerCase();
     if (ext === '.pdf') return 'PDF';
     if (ext === '.doc' || ext === '.docx') return 'Word';
@@ -765,17 +759,17 @@ export class MenuComponent implements OnInit {
     return 'Documento';
   }
   // Navigate to "My Tasks"
-  CliqueMinhaTarefa(pageName: string): void {
+ public CliqueMinhaTarefa(pageName: string): void {
     this.router.navigate([pageName]);
   }
   // Logout and navigate to login
-  CliqueHome(pageName: string): void {
+ public CliqueHome(pageName: string): void {
     this.authService.removerToken();
     alert('Você saiu do sistema!');
     this.router.navigate([pageName]);
   }
   // Calculate task progress
-  calcularProgresso(tarefa: Tarefa): number {
+  public calcularProgresso(tarefa: Tarefa): number {
     if (!tarefa.subTarefas || tarefa.subTarefas.length === 0) {
       return tarefa.estado === 'Concluído' ? 100 : 0;
     }
@@ -788,7 +782,7 @@ export class MenuComponent implements OnInit {
     // Retorna o progresso calculado
     return Math.round((concluidas / totalSubTarefas) * 100);
   }
-  marcarSubTarefaConcluida(subTarefa: any, tarefa: any): void {
+  public marcarSubTarefaConcluida(subTarefa: any, tarefa: any): void {
     // 1. Bloqueia a ação se a subtarefa já estiver concluída.
     if (subTarefa.estado === 'Concluído') {
       return;
@@ -843,7 +837,7 @@ export class MenuComponent implements OnInit {
       });
   }
   // Atualiza o progresso de uma tarefa no frontend e backend
-  atualizarProgresso(tarefa: any): void {
+  public atualizarProgresso(tarefa: any): void {
     // 1. Calcula o novo progresso
     const concluidas = tarefa.subTarefas.filter(
       (sub: any) => sub.estado === 'Concluído'
@@ -900,14 +894,14 @@ export class MenuComponent implements OnInit {
   /**
    * Verifica se uma subtarefa está concluída.
    */
-  isSubTarefaConcluida(sub: any): boolean {
+ public  isSubTarefaConcluida(sub: any): boolean {
     return sub.estado === 'Concluído';
   }
 
-  isSubTarefaDesabilitada(sub: any): boolean {
+  public isSubTarefaDesabilitada(sub: any): boolean {
     return sub.estado === 'Concluído';
   }
-  getSubTarefaClasses(sub: any): Record<string, boolean> {
+ public  getSubTarefaClasses(sub: any): Record<string, boolean> {
     return {
       'subtarefa-concluida': this.isSubTarefaConcluida(sub),
       'subtarefa-desabilitada': this.isSubTarefaDesabilitada(sub),

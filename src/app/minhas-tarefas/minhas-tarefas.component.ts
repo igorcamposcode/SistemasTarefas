@@ -1,5 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -43,22 +49,22 @@ interface Tarefa {
 }
 
 @Component({
-    selector: 'app-minhas-tarefas',
-    standalone: true,
-    imports: [
-        NzTableModule,
-        NzIconModule,
-        NzInputModule,
-        ReactiveFormsModule,
-        FormsModule,
-        NzDropdownMenuComponent,
-        NzTagModule,
-        NzButtonModule,
-        NzCollapseModule,
-        CommonModule,
-    ],
-    templateUrl: './minhas-tarefas.component.html',
-    styleUrl: './minhas-tarefas.component.css'
+  selector: 'app-minhas-tarefas',
+  standalone: true,
+  imports: [
+    NzTableModule,
+    NzIconModule,
+    NzInputModule,
+    ReactiveFormsModule,
+    FormsModule,
+    NzDropdownMenuComponent,
+    NzTagModule,
+    NzButtonModule,
+    NzCollapseModule,
+    CommonModule,
+  ],
+  templateUrl: './minhas-tarefas.component.html',
+  styleUrl: './minhas-tarefas.component.css',
 })
 export class MinhasTarefasComponent implements OnInit {
   searchValue = '';
@@ -72,12 +78,10 @@ export class MinhasTarefasComponent implements OnInit {
 
   usuarioForm!: FormGroup; // Formulário para edição de dados do usuário
 
-  constructor(
-    private router: Router,
-    private taskService: TaskService,
-    private authService: AuthService,
-    private fb: FormBuilder
-  ) {}
+  private router = inject(Router);
+  private taskService = inject(TaskService);
+  private authService = inject(AuthService);
+  private fb = inject(FormBuilder);
 
   ngOnInit(): void {
     this.carregarTarefas();
@@ -86,7 +90,7 @@ export class MinhasTarefasComponent implements OnInit {
   }
 
   /** Inicializa os formulários reativos */
-  inicializarFormularios(): void {
+  public inicializarFormularios(): void {
     this.usuarioForm = this.fb.group({
       nome: [this.usuario.nome || '', Validators.required],
       telefone: [
@@ -101,7 +105,7 @@ export class MinhasTarefasComponent implements OnInit {
   }
 
   /** Carrega os dados do usuário logado */
-  carregarUsuario(): void {
+  private carregarUsuario(): void {
     try {
       const idUsuario = this.authService.obterIdUsuarioLogado();
       if (!idUsuario) {
@@ -125,7 +129,7 @@ export class MinhasTarefasComponent implements OnInit {
   }
 
   /** Salva os dados atualizados do usuário */
-  salvarDadosUsuario(): void {
+  public salvarDadosUsuario(): void {
     if (this.usuarioForm.invalid) {
       alert('Preencha todos os campos obrigatórios corretamente.');
       return;
@@ -147,25 +151,25 @@ export class MinhasTarefasComponent implements OnInit {
   }
 
   /** Abre o modal para exibir os dados do usuário */
-  abrirModalUsuario(): void {
+ public abrirModalUsuario(): void {
     this.isUsuarioModalVisible = true;
   }
   /** Fecha o modal de exibição do usuário */
-  fecharModalUsuario(): void {
+ public fecharModalUsuario(): void {
     this.isUsuarioModalVisible = false;
   }
   /** Abre o modal de edição do usuário */
-  abrirModalEditarUsuario(): void {
+ public abrirModalEditarUsuario(): void {
     this.usuarioForm.patchValue(this.usuario);
     this.isUsuarioModalVisible = false;
     this.isEditarUsuarioModalVisible = true;
   }
   /** Fecha o modal de edição do usuário */
-  fecharModalEditarUsuario(): void {
+ public fecharModalEditarUsuario(): void {
     this.isEditarUsuarioModalVisible = false;
   }
 
-  carregarTarefas(): void {
+ private carregarTarefas(): void {
     this.loading = true;
     this.taskService.obterTarefas().subscribe({
       next: (response: any) => {
@@ -178,46 +182,49 @@ export class MinhasTarefasComponent implements OnInit {
       error: (error) => {
         console.error('Erro ao carregar tarefas:', error);
         this.loading = false;
-      }
+      },
     });
   }
 
-  Clique_Retornar(pageName: string) {
+ public Clique_Retornar(pageName: string) {
     this.router.navigate([`${pageName}`]);
   }
 
-  CliqueHome(pageName: string): void {
+ public CliqueHome(pageName: string): void {
     this.authService.removerToken();
     alert('Você saiu do sistema!');
     this.router.navigate([pageName]);
   }
 
-  reset(): void {
+  public reset(): void {
     this.searchValue = '';
     this.search();
   }
 
-  search(): void {
+ public search(): void {
     this.visible = false;
     this.listOfDisplayData = this.listOfData.filter(
       (item: Tarefa) =>
-        item.titulo.toLowerCase().indexOf(this.searchValue.toLowerCase()) !== -1 ||
-        item.UsuarioResponsavel.toLowerCase().indexOf(this.searchValue.toLowerCase()) !== -1
+        item.titulo.toLowerCase().indexOf(this.searchValue.toLowerCase()) !==
+          -1 ||
+        item.UsuarioResponsavel.toLowerCase().indexOf(
+          this.searchValue.toLowerCase()
+        ) !== -1
     );
   }
 
-  formatarData(data: string | null): string {
+  public formatarData(data: string | null): string {
     if (!data) return 'Não definida';
     return new Date(data).toLocaleString('pt-BR');
   }
 
-  obterTarefaMae(idmae: number | null): string {
+  public obtobterTarefaMae(idmae: number | null): string {
     if (!idmae) return 'Tarefa Principal';
-    const tarefaMae = this.listOfData.find(t => t.id === idmae);
+    const tarefaMae = this.listOfData.find((t) => t.id === idmae);
     return tarefaMae ? `Sub Tarefa de: ${tarefaMae.titulo}` : `ID: ${idmae}`;
   }
 
-  obterCorEstado(estado: string): string {
+ public obterCorEstado(estado: string): string {
     switch (estado?.toLowerCase()) {
       case 'concluída':
       case 'finalizada':

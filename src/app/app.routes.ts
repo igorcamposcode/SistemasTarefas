@@ -1,4 +1,4 @@
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { MinhasTarefasComponent } from './minhas-tarefas/minhas-tarefas.component';
 import { MenuComponent } from './menu/menu.component';
 import { LoginComponent } from './login/login.component';

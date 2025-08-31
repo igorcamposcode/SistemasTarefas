@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   FormControl,
-  FormGroup,
   FormsModule,
   ReactiveFormsModule,
   ValidatorFn,
@@ -31,18 +30,8 @@ export class CadastroComponent {
   senha: FormControl<string> | undefined;
   checkPassword: FormControl<string> | undefined;
   acordo: FormControl<boolean> | undefined;
-  validateForms: FormGroup;
-  userService: any;
 
   submitForm(): void {
-    const usuario = {
-      nome: this.validateForms.get('nome')?.value,
-      telefone: this.validateForms.get('telefone')?.value,
-      email: this.validateForms.get('email')?.value,
-      senha: this.validateForms.get('senha')?.value,
-      checkPassword: this.validateForms.get('checkPassword')?.value,
-    };
-
     if (this.validateForms.valid) {
       console.log('submit', this.validateForms.value);
     } else {
@@ -74,35 +63,47 @@ export class CadastroComponent {
     return {};
   };
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router, private authService: AuthService  ) {
-      this.validateForms = this.fb.group({
-        nome: ['', Validators.required],
-        telefone: [''],
-        email: ['', [Validators.required, Validators.email]], // Validação do email
-        senha: ['', [Validators.required, Validators.minLength(8)]],
-        checkPassword: ['', Validators.required],
-      });
-  }
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private authService = inject(AuthService);
 
-  onSubmit() {
-    if (this.validateForms.valid) {
-      const formData = this.validateForms.value;
+  // ✅ Formulário reativo com validações
+  validateForms = this.fb.group({
+    nome: ['', Validators.required],
+    telefone: [''],
+    email: ['', [Validators.required, Validators.email]],
+    senha: ['', [Validators.required, Validators.minLength(8)]],
+    checkPassword: ['', Validators.required],
+  });
 
-      this.authService.criarUsuario(formData).subscribe({
-        next: (res) => {
-          alert('Usuário cadastrado com sucesso!');
-          this.validateForms.reset();
-        },
-        error: (err) => {
-          console.error('Erro ao cadastrar usuário:', err.error || err.message);
-          alert('Erro ao cadastrar usuário. Verifique os dados e tente novamente.');
-        },
-      });
-    } else {
+  // ✅ Envio do formulário
+  onSubmit(): void {
+    if (this.validateForms.invalid) {
+      // Marca todos os campos para exibir erros no template
+      this.validateForms.markAllAsTouched();
       alert('Por favor, preencha todos os campos obrigatórios corretamente.');
+      return;
     }
+
+    const { nome, telefone, email, senha, checkPassword } = this.validateForms.value;
+
+    // Segurança extra contra undefined
+    if (!nome || !email || !senha || !checkPassword) {
+      alert('Dados incompletos. Verifique o formulário.');
+      return;
+    }
+
+    this.authService.criarUsuario({ nome, telefone, email, senha, checkPassword }).subscribe({
+      next: () => {
+        alert('Usuário cadastrado com sucesso!');
+        this.validateForms.reset();
+        this.router.navigate(['/login']); // já direciona para login se fizer sentido
+      },
+      error: (err) => {
+        console.error('Erro ao cadastrar usuário:', err.error || err.message);
+        alert(err.error?.message || 'Erro ao cadastrar usuário. Verifique os dados e tente novamente.');
+      }
+    });
   }
 
   CliqueRetornar(pageName: string) {

@@ -1,16 +1,21 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { catchError, Observable, tap, throwError } from 'rxjs';
-import { Usuario } from '../menu/menu.model';
+import { inject, Injectable } from '@angular/core';
+import { catchError, Observable, tap} from 'rxjs';
 
 export const API_PATH = 'http://localhost:3000/api';
+
+export interface Usuario {
+  id: number;
+  nome: string;
+  email: string;
+  telefone?: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
 
   // Método para criar usuário
   criarUsuario(data: object): Observable<object> {
@@ -21,9 +26,9 @@ export class AuthService {
   listarUsuarios(): Observable<object> {
     return this.http.get(`${API_PATH}`);
   }
-  login(email: string, senha: string): Observable<any> {
-    return this.http.post(`${API_PATH}/login`, { email, senha }).pipe(
-      tap((response: any) => {
+  login(email: string, senha: string): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(`${API_PATH}/login`, { email, senha }).pipe(
+      tap((response) => {
         if (response.token) {
           localStorage.setItem('authToken', response.token); // Salva o token JWT
           console.log('Token salvo:', response.token);
@@ -42,8 +47,8 @@ export class AuthService {
 
   // Obtém o ID do usuário logado armazenado no Local Storage
   // Busca os dados do usuário pelo ID
-  getUsuarioId(): Observable<any> {
-    return this.http.get(`${API_PATH}/${1}`);
+  getUsuarioId(id: number): Observable<Usuario> {
+    return this.http.get<Usuario>(`${API_PATH}/usuario/${id}`);
   }
 
   // Limpa as credenciais do usuário
@@ -68,9 +73,9 @@ export class AuthService {
   }
 
   recuperarSenha(
-    email: object,
-    senha: object,
-    checkPassword: object
+    email: string,
+    senha: string,
+    checkPassword: string
   ): Observable<object> {
     return this.http.post(`${API_PATH}/recuperar-senha`, {
       email,
@@ -79,15 +84,15 @@ export class AuthService {
     });
   }
 
-   /** Obtém os dados do usuário logado */
-   obterUsuarioLogado(): Observable<any> {
-    return this.http.get(`${API_PATH}/usuario/logado`, {
+  /** Obtém os dados do usuário logado */
+  obterUsuarioLogado(): Observable<Usuario> {
+    return this.http.get<Usuario>(`${API_PATH}/usuario/logado`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
     });
   }
 
-   /** Obtém o ID do usuário logado */
-   obterIdUsuarioLogado(): number {
+  /** Obtém o ID do usuário logado */
+  obterIdUsuarioLogado(): number {
     const token = localStorage.getItem('authToken');
     if (!token) {
       throw new Error('Usuário não autenticado. Token não encontrado.');
@@ -98,12 +103,12 @@ export class AuthService {
   }
 
   /** Obtém os dados do usuário pelo ID */
-  obterUsuarioPorId(id: number): Observable<any> {
+  obterUsuarioPorId(id: number): Observable<Usuario> {
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${localStorage.getItem('authToken')}`
     );
-    return this.http.get(`${API_PATH}/usuario/${id}`, { headers }).pipe(
+    return this.http.get<Usuario>(`${API_PATH}/usuario/${id}`, { headers }).pipe(
       catchError((err) => {
         console.error('Erro ao obter usuário:', err);
         throw err;
@@ -111,24 +116,26 @@ export class AuthService {
     );
   }
 
-   /**
+  /**
    * Atualiza os dados do usuário no backend
    * @param dadosAtualizados
    * @returns
    */
 
-   atualizarUsuario(dados: any): Observable<any> {
+  atualizarUsuario(dados: Partial<Usuario>): Observable<{ message: string }> {
     const token = localStorage.getItem('authToken');
     if (!token) {
-      throw new Error('Token não encontrado. O usuário precisa estar autenticado.');
+      throw new Error(
+        'Token não encontrado. O usuário precisa estar autenticado.'
+      );
     }
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     });
 
     // Ajuste a rota conforme o backend: singular ou plural
-    return this.http.put(`${API_PATH}/usuario`, dados, { headers });
+    return this.http.put<{ message: string }>(`${API_PATH}/usuario`, dados, { headers });
   }
 }

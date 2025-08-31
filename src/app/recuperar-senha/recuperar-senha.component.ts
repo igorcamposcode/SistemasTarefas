@@ -1,10 +1,11 @@
 // Importando os módulos e componentes necessários para o funcionamento do formulário e da interface
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import {
   AbstractControl,
   FormControl,
   FormsModule,
+  ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -28,9 +29,6 @@ export class RecuperarSenhaComponent {
   email: FormControl<string> | undefined;
   password: FormControl<string> | undefined;
   checkPassword: FormControl<string> | undefined;
-
-  // Grupo de formulário que gerencia os controles do formulário
-  validateForms: FormGroup;
 
   // Método para enviar o formulário, verifica se o formulário é válido
   submitForm(): void {
@@ -57,45 +55,52 @@ export class RecuperarSenhaComponent {
   // Função de validação customizada que verifica se a senha e a confirmação de senha são iguais
   confirmationValidator: ValidatorFn = (
     control: AbstractControl
-  ): Record<string, boolean> => {
-    if (!control.value) {
-      return { required: true }; // Retorna erro se o campo estiver vazio
-    } else if (
-      control.value !== this.validateForms.controls['password'].value
-    ) {
+  ): ValidationErrors | null => {
+    const senha = control.get('senha')?.value;
+    const checkPassword = control.get('checkPassword')?.value;
+
+    if (senha !== checkPassword) {
       return { confirm: true, error: true }; // Retorna erro se as senhas não coincidirem
     }
-    return {}; // Sem erros
+    return null; // Sem erros
   };
 
   // Construtor que inicializa o grupo de formulário com os controles e suas validações
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {
-    this.validateForms = this.fb.group({
-      email: ['', [Validators.email, Validators.required]], // Validações para o campo email
-      senha: ['', [Validators.required, Validators.minLength(8)]], // Validação para o campo senha
-      checkPassword: ['', [Validators.required, Validators.minLength(8)]], // Validação para a confirmação de senha
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  // ✅ Formulário reativo com validações
+  validateForms = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    senha: ['', [Validators.required, Validators.minLength(8)]],
+    checkPassword: ['', [Validators.required, Validators.minLength(8)]],
+  }, {
+    // 🔑 Validador customizado para garantir que "senha" = "checkPassword"
+    validators: this.confirmationValidator
+  });
+
+  onSubmit(): void {
+    if (this.validateForms.invalid) {
+      // Marca todos os campos como "tocados" para exibir mensagens de erro
+      this.validateForms.markAllAsTouched();
+      return;
+    }
+
+    const { email, senha, checkPassword } = this.validateForms.value;
+
+    // Segurança extra contra valores nulos/undefined
+    if (!email || !senha || !checkPassword) {
+      return;
+    }
+
+    // Corrigindo o tipo dos parâmetros para passar os argumentos separadamente, conforme esperado pelo serviço
+    this.authService.recuperarSenha(email, senha, checkPassword).subscribe({
+      next: () => {
+        console.log('Senha atualizada com sucesso!');
+        this.router.navigate(['/login']);
+      },
     });
   }
-  onSubmit(): void {
-    if (this.validateForms.valid) {
-      const { email, senha, checkPassword } = this.validateForms.value;
 
-      this.authService.recuperarSenha(email, senha, checkPassword).subscribe({
-        next: (res) => {
-          alert('Senha atualizada com sucesso! Redirecionando para o login...');
-          this.router.navigate(['login']); // Redireciona para a página de login
-        },
-        error: (err) => {
-          console.error('Erro ao atualizar senha:', err);
-          alert(err.error || 'Erro ao atualizar senha.');
-        },
-      });
-    } else {
-      alert('Por favor, preencha todos os campos corretamente.');
-    }
-  }
 }

@@ -1,7 +1,7 @@
- 
+
 // Importações necessárias de módulos e bibliotecas do Angular e NG-ZORRO
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { NgIf } from '@angular/common';
@@ -23,8 +23,6 @@ export class LoginComponent {
   senha = '';
   error: string | undefined = undefined;
 
-  validateForms: FormGroup; // Define o formulário de validação como um grupo de controle
-
   // Método para submeter o formulário
   submitForm(): void {
     // Verifica se o formulário é válido
@@ -44,36 +42,40 @@ export class LoginComponent {
 
   // Construtor da classe, onde o FormBuilder e o Router são injetados
   // FormBuilder é usado para criar o formulário reativo, e Router para navegação entre páginas
-  constructor(private router: Router, private fb: FormBuilder, private authService: AuthService) {
+  private router = inject(Router);
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
     // Criação do formulário com três campos: userName, password e remember
     // 'Validators.required' garante que o campo é obrigatório
-    this.validateForms = this.fb.group({
+    validateForms = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       senha: ['', Validators.required],
-      remember: [false] // Checkbox para "Lembrar-me", com valor inicial false
+      remember: [false]
     });
 
-  }
-
-  onSubmit(): void {
-    if (this.validateForms.valid) {
+    onSubmit(): void {
+      if (this.validateForms.invalid) {
+        // Marca todos os campos como tocados, forçando exibição de mensagens de erro no template
+        this.validateForms.markAllAsTouched();
+        return;
+      }
       const { email, senha } = this.validateForms.value;
-
+      if (!email || !senha) {
+        return; // segurança extra contra valores null/undefined
+      }
       this.authService.login(email, senha).subscribe({
         next: (res) => {
           this.authService.armazenarToken(res.token);
-          alert('Login bem-sucedido!');
-          this.router.navigate(['/menu']); // Redireciona para o menu
+          // Aqui você pode exibir um toast, snackbar ou mensagem de sucesso no template
+          console.log('Login bem-sucedido!');
+          this.router.navigate(['/menu']);
         },
         error: (err) => {
           console.error('Erro no login:', err);
-          alert('Falha no login. Verifique suas credenciais.');
+          // Ideal: exibir mensagem de erro amigável no template
         },
       });
-    } else {
-      alert('Por favor, preencha todos os campos.');
     }
-  }
 
   //Método para navegação ao clicar no texto "Registre Agora", redireciona para a página especificada
   cliqueRegistrar(pageName: string) {
