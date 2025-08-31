@@ -16,7 +16,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { CommonModule } from '@angular/common';
 import { TaskService } from '../services/task.service';
-import { AuthService } from '../services/auth.service';
+import { AuthService, Usuario } from '../services/auth.service';
 
 interface Subtarefa {
   id: number;
@@ -72,7 +72,7 @@ export class MinhasTarefasComponent implements OnInit {
   listOfData: Tarefa[] = [];
   listOfDisplayData: Tarefa[] = [];
   loading = false;
-  usuario: any = {};
+  usuario: Usuario[] = [];
   isUsuarioModalVisible = false;
   isEditarUsuarioModalVisible = false;
 
@@ -92,13 +92,13 @@ export class MinhasTarefasComponent implements OnInit {
   /** Inicializa os formulários reativos */
   public inicializarFormularios(): void {
     this.usuarioForm = this.fb.group({
-      nome: [this.usuario.nome || '', Validators.required],
+      nome: [this.usuario.length > 0 && this.usuario[0].nome ? this.usuario[0].nome : '', Validators.required],
       telefone: [
-        this.usuario.telefone || '',
+        this.usuario.length > 0 && this.usuario[0].telefone ? this.usuario[0].telefone : '',
         [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)],
       ],
       email: [
-        this.usuario.email || '',
+        this.usuario.length > 0 && this.usuario[0].email ? this.usuario[0].email : '',
         [Validators.required, Validators.email],
       ],
     });
@@ -113,8 +113,8 @@ export class MinhasTarefasComponent implements OnInit {
       }
       this.authService.obterUsuarioPorId(idUsuario).subscribe({
         next: (res) => {
-          this.usuario = res;
-          this.usuarioForm.patchValue(this.usuario); // Preenche o formulário
+          this.usuario = [res]; // Garante que usuario é um array de Usuario
+          this.usuarioForm.patchValue(res); // Preenche o formulário com o objeto Usuario
         },
         error: (err) => {
           console.error('Erro ao carregar usuário:', err);

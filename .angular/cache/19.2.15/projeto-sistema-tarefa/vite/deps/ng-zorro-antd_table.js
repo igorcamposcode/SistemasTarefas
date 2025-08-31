@@ -1,37 +1,6 @@
 import {
-  NzCheckboxComponent,
-  NzCheckboxModule
-} from "./chunk-63LFRD4L.js";
-import {
-  FocusMonitor
-} from "./chunk-PZXRVRTS.js";
-import {
-  NzDropDownDirective,
-  NzDropDownModule,
-  NzDropdownMenuComponent,
-  NzMenuDirective,
-  NzMenuItemComponent
-} from "./chunk-OUKUZQYZ.js";
-import {
-  NzButtonComponent,
-  NzButtonModule
-} from "./chunk-MPLKNQMN.js";
-import {
-  NzWaveDirective
-} from "./chunk-4WKTBX2D.js";
-import {
-  NZ_SPACE_COMPACT_ITEM_TYPE,
-  NZ_SPACE_COMPACT_SIZE,
-  NzSpaceCompactItemDirective
-} from "./chunk-23VRDCUQ.js";
-import {
-  takeUntilDestroyed
-} from "./chunk-W5LHYKI3.js";
-import {
-  NzFormItemFeedbackIconComponent,
-  NzFormNoStatusService,
-  NzFormStatusService
-} from "./chunk-XB3YUV3N.js";
+  NzI18nService
+} from "./chunk-HVQ7HM46.js";
 import {
   CdkConnectedOverlay,
   CdkFixedSizeVirtualScroll,
@@ -41,6 +10,11 @@ import {
   CdkVirtualScrollViewport,
   ComponentPortal,
   NzConnectedOverlayDirective,
+  NzDropDownDirective,
+  NzDropDownModule,
+  NzDropdownMenuComponent,
+  NzMenuDirective,
+  NzMenuItemComponent,
   NzOverlayModule,
   OverlayModule,
   POSITION_MAP,
@@ -48,28 +22,18 @@ import {
   ScrollingModule,
   TemplatePortal,
   getPlacementName
-} from "./chunk-PO2MDN6G.js";
+} from "./chunk-PU4PLZ3L.js";
 import {
   NzNoAnimationDirective,
   slideMotion
-} from "./chunk-76IJPV7M.js";
-import "./chunk-KIOTSZR7.js";
-import "./chunk-RNLMENBC.js";
-import "./chunk-FAMWF4BF.js";
-import "./chunk-VIZW6SZL.js";
+} from "./chunk-ZD2ZSSPV.js";
+import "./chunk-NQ6SMJWQ.js";
 import {
-  NzOutletModule,
-  NzStringTemplateOutletDirective
-} from "./chunk-SVXBXQEY.js";
-import {
-  NzBreakpointEnum,
-  NzBreakpointService,
-  NzDestroyService,
-  NzResizeService,
-  cancelRequestAnimationFrame,
-  gridResponsiveMap,
-  reqAnimFrame
-} from "./chunk-NBOGJL7X.js";
+  FocusMonitor,
+  NzFormItemFeedbackIconComponent,
+  NzFormNoStatusService,
+  NzFormStatusService
+} from "./chunk-MJVMVT7S.js";
 import {
   BACKSPACE,
   DOWN_ARROW,
@@ -78,25 +42,57 @@ import {
   SPACE,
   TAB,
   UP_ARROW
-} from "./chunk-3OAUZCYZ.js";
-import "./chunk-TAV3MW66.js";
+} from "./chunk-LU2KKSJS.js";
+import "./chunk-TCX65JD6.js";
+import {
+  COMPOSITION_BUFFER_MODE,
+  CheckboxControlValueAccessor,
+  DefaultValueAccessor,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+  NgControlStatus,
+  NgModel
+} from "./chunk-QXD5L5VW.js";
+import {
+  NzButtonComponent,
+  NzButtonModule
+} from "./chunk-RD2QDNLK.js";
+import {
+  NzTransitionPatchDirective
+} from "./chunk-UKVJOYOS.js";
+import {
+  NzWaveDirective
+} from "./chunk-YUR6S6WB.js";
+import "./chunk-FLDIWRTN.js";
+import "./chunk-PHHZE57A.js";
+import "./chunk-VIZW6SZL.js";
+import {
+  NZ_SPACE_COMPACT_ITEM_TYPE,
+  NZ_SPACE_COMPACT_SIZE,
+  NzSpaceCompactItemDirective,
+  takeUntilDestroyed,
+  toSignal
+} from "./chunk-A7Q2GSNM.js";
+import {
+  NzBreakpointEnum,
+  NzBreakpointService,
+  NzDestroyService,
+  NzOutletModule,
+  NzResizeService,
+  NzStringTemplateOutletDirective,
+  cancelRequestAnimationFrame,
+  gridResponsiveMap,
+  reqAnimFrame
+} from "./chunk-L2ZHCRIB.js";
 import {
   Directionality
-} from "./chunk-RJMZUMDP.js";
-import {
-  NzI18nService
-} from "./chunk-MUPEN4Q3.js";
+} from "./chunk-OMTIXFOE.js";
 import {
   NzConfigService,
   NzIconDirective,
   NzIconModule,
   WithConfig
-} from "./chunk-245CVNQ5.js";
-import {
-  Platform,
-  _getEventTarget
-} from "./chunk-5F7GBZID.js";
-import "./chunk-BQ76GOFF.js";
+} from "./chunk-BPXNVQYJ.js";
 import {
   arraysEqual,
   coerceElement,
@@ -107,30 +103,22 @@ import {
   measureScrollbar,
   numberAttributeWithInfinityFallback,
   toNumber
-} from "./chunk-C5KQPPRD.js";
+} from "./chunk-R7E45WJY.js";
 import {
-  NzTransitionPatchDirective
-} from "./chunk-WEFXTARI.js";
-import "./chunk-5MWBGMN7.js";
-import {
-  COMPOSITION_BUFFER_MODE,
-  DefaultValueAccessor,
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-  NgControlStatus,
-  NgModel
-} from "./chunk-4F4UWMJF.js";
-import "./chunk-R42JJF2Y.js";
-import "./chunk-KHI74QT5.js";
-import "./chunk-F6CR3HSF.js";
-import "./chunk-VDOZVDDB.js";
+  Platform,
+  _getEventTarget
+} from "./chunk-7EZ5CYWN.js";
+import "./chunk-PD4FPJ6G.js";
+import "./chunk-NC5JODL6.js";
+import "./chunk-N2DQ4UBE.js";
+import "./chunk-6FDT7XU7.js";
 import {
   AsyncPipe,
   NgTemplateOutlet
-} from "./chunk-Z7UE7OYH.js";
+} from "./chunk-A5QAH54P.js";
 import {
   isPlatformBrowser
-} from "./chunk-VHDNOSDQ.js";
+} from "./chunk-UMNSRAPH.js";
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -156,13 +144,18 @@ import {
   ViewChildren,
   ViewContainerRef,
   ViewEncapsulation,
+  afterNextRender,
   booleanAttribute,
   computed,
+  effect,
   forwardRef,
   inject,
+  input,
+  linkedSignal,
   numberAttribute,
   setClassMetadata,
   signal,
+  untracked,
   ɵɵHostDirectivesFeature,
   ɵɵNgOnChangesFeature,
   ɵɵProvidersFeature,
@@ -215,11 +208,7 @@ import {
   ɵɵtextInterpolate1,
   ɵɵtextInterpolate2,
   ɵɵviewQuery
-} from "./chunk-64RXEOKF.js";
-import {
-  merge
-} from "./chunk-FXOAEMAS.js";
-import "./chunk-Z73CICE5.js";
+} from "./chunk-YICQVKWL.js";
 import {
   BehaviorSubject,
   EMPTY,
@@ -235,6 +224,7 @@ import {
   distinctUntilChanged,
   filter,
   map,
+  merge,
   mergeMap,
   of,
   skip,
@@ -243,16 +233,568 @@ import {
   takeUntil,
   timer,
   withLatestFrom
-} from "./chunk-MG3524NU.js";
+} from "./chunk-GG4OJJKW.js";
 import {
   __spreadProps,
   __spreadValues
 } from "./chunk-XWLXMCJQ.js";
 
-// node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-radio.mjs
+// node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-checkbox.mjs
 var _c0 = ["*"];
 var _c1 = ["inputElement"];
-var _c2 = ["nz-radio", ""];
+var _c2 = ["nz-checkbox", ""];
+var _forTrack0 = ($index, $item) => $item.value;
+function NzCheckboxGroupComponent_ProjectionFallback_0_For_1_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵelementStart(0, "label", 0);
+    ɵɵtext(1);
+    ɵɵelementEnd();
+  }
+  if (rf & 2) {
+    const option_r1 = ctx.$implicit;
+    const ctx_r1 = ɵɵnextContext(2);
+    ɵɵproperty("nzValue", option_r1.value)("nzName", ctx_r1.nzName())("nzDisabled", option_r1.disabled || ctx_r1.finalDisabled());
+    ɵɵadvance();
+    ɵɵtextInterpolate1(" ", option_r1.label, " ");
+  }
+}
+function NzCheckboxGroupComponent_ProjectionFallback_0_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵrepeaterCreate(0, NzCheckboxGroupComponent_ProjectionFallback_0_For_1_Template, 2, 4, "label", 0, _forTrack0);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext();
+    ɵɵrepeater(ctx_r1.normalizedOptions());
+  }
+}
+var NzCheckboxWrapperComponent = class _NzCheckboxWrapperComponent {
+  nzOnChange = new EventEmitter();
+  checkboxList = [];
+  addCheckbox(value) {
+    this.checkboxList.push(value);
+  }
+  removeCheckbox(value) {
+    this.checkboxList.splice(this.checkboxList.indexOf(value), 1);
+  }
+  onChange() {
+    const listOfCheckedValue = this.checkboxList.filter((item) => item.nzChecked).map((item) => item.nzValue);
+    this.nzOnChange.emit(listOfCheckedValue);
+  }
+  static ɵfac = function NzCheckboxWrapperComponent_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _NzCheckboxWrapperComponent)();
+  };
+  static ɵcmp = ɵɵdefineComponent({
+    type: _NzCheckboxWrapperComponent,
+    selectors: [["nz-checkbox-wrapper"]],
+    hostAttrs: [1, "ant-checkbox-group"],
+    outputs: {
+      nzOnChange: "nzOnChange"
+    },
+    exportAs: ["nzCheckboxWrapper"],
+    ngContentSelectors: _c0,
+    decls: 1,
+    vars: 0,
+    template: function NzCheckboxWrapperComponent_Template(rf, ctx) {
+      if (rf & 1) {
+        ɵɵprojectionDef();
+        ɵɵprojection(0);
+      }
+    },
+    encapsulation: 2,
+    changeDetection: 0
+  });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(NzCheckboxWrapperComponent, [{
+    type: Component,
+    args: [{
+      selector: "nz-checkbox-wrapper",
+      exportAs: "nzCheckboxWrapper",
+      template: `<ng-content></ng-content>`,
+      preserveWhitespaces: false,
+      changeDetection: ChangeDetectionStrategy.OnPush,
+      encapsulation: ViewEncapsulation.None,
+      host: {
+        class: "ant-checkbox-group"
+      }
+    }]
+  }], null, {
+    nzOnChange: [{
+      type: Output
+    }]
+  });
+})();
+var NZ_CHECKBOX_GROUP = new InjectionToken("NZ_CHECKBOX_GROUP");
+var NzCheckboxComponent = class _NzCheckboxComponent {
+  ngZone;
+  elementRef;
+  cdr;
+  focusMonitor;
+  directionality;
+  dir = "ltr";
+  destroy$ = new Subject();
+  isNzDisableFirstChange = true;
+  onChange = () => {
+  };
+  onTouched = () => {
+  };
+  inputElement;
+  nzCheckedChange = new EventEmitter();
+  nzValue = null;
+  nzAutoFocus = false;
+  nzDisabled = false;
+  nzIndeterminate = false;
+  nzChecked = false;
+  nzId = null;
+  nzName = null;
+  innerCheckedChange(checked) {
+    if (!this.nzDisabled && !this.checkboxGroupComponent?.finalDisabled()) {
+      this.setValue(checked);
+      this.nzCheckboxWrapperComponent?.onChange();
+      this.checkboxGroupComponent?.onCheckedChange(this.nzValue, checked);
+    }
+  }
+  writeValue(value) {
+    this.nzChecked = value;
+    this.cdr.markForCheck();
+  }
+  registerOnChange(fn) {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn) {
+    this.onTouched = fn;
+  }
+  setDisabledState(disabled) {
+    this.nzDisabled = this.isNzDisableFirstChange && this.nzDisabled || disabled;
+    this.isNzDisableFirstChange = false;
+    this.cdr.markForCheck();
+  }
+  focus() {
+    this.focusMonitor.focusVia(this.inputElement, "keyboard");
+  }
+  blur() {
+    this.inputElement.nativeElement.blur();
+  }
+  /** @deprecated */
+  nzCheckboxWrapperComponent = inject(NzCheckboxWrapperComponent, {
+    optional: true
+  });
+  checkboxGroupComponent = inject(NZ_CHECKBOX_GROUP, {
+    optional: true
+  });
+  nzFormStatusService = inject(NzFormStatusService, {
+    optional: true
+  });
+  constructor(ngZone, elementRef, cdr, focusMonitor, directionality) {
+    this.ngZone = ngZone;
+    this.elementRef = elementRef;
+    this.cdr = cdr;
+    this.focusMonitor = focusMonitor;
+    this.directionality = directionality;
+    if (this.checkboxGroupComponent) {
+      effect(() => {
+        const values = this.checkboxGroupComponent.value() || [];
+        this.setValue(values.includes(this.nzValue));
+        this.cdr.markForCheck();
+      });
+    }
+  }
+  ngOnInit() {
+    this.focusMonitor.monitor(this.elementRef, true).pipe(takeUntil(this.destroy$)).subscribe((focusOrigin) => {
+      if (!focusOrigin) {
+        Promise.resolve().then(() => this.onTouched());
+      }
+    });
+    this.nzCheckboxWrapperComponent?.addCheckbox(this);
+    this.directionality.change.pipe(takeUntil(this.destroy$)).subscribe((direction) => {
+      this.dir = direction;
+      this.cdr.detectChanges();
+    });
+    this.dir = this.directionality.value;
+    fromEventOutsideAngular(this.elementRef.nativeElement, "click").pipe(takeUntil(this.destroy$)).subscribe((event) => {
+      event.preventDefault();
+      this.focus();
+      if (this.nzDisabled) {
+        return;
+      }
+      this.ngZone.run(() => {
+        this.innerCheckedChange(!this.nzChecked);
+        this.cdr.markForCheck();
+      });
+    });
+    fromEventOutsideAngular(this.inputElement.nativeElement, "click").pipe(takeUntil(this.destroy$)).subscribe((event) => event.stopPropagation());
+  }
+  ngAfterViewInit() {
+    if (this.nzAutoFocus) {
+      this.focus();
+    }
+  }
+  ngOnDestroy() {
+    this.focusMonitor.stopMonitoring(this.elementRef);
+    this.nzCheckboxWrapperComponent?.removeCheckbox(this);
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  setValue(value) {
+    this.nzChecked = value;
+    this.onChange(value);
+    this.nzCheckedChange.emit(value);
+  }
+  static ɵfac = function NzCheckboxComponent_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _NzCheckboxComponent)(ɵɵdirectiveInject(NgZone), ɵɵdirectiveInject(ElementRef), ɵɵdirectiveInject(ChangeDetectorRef), ɵɵdirectiveInject(FocusMonitor), ɵɵdirectiveInject(Directionality));
+  };
+  static ɵcmp = ɵɵdefineComponent({
+    type: _NzCheckboxComponent,
+    selectors: [["", "nz-checkbox", ""]],
+    viewQuery: function NzCheckboxComponent_Query(rf, ctx) {
+      if (rf & 1) {
+        ɵɵviewQuery(_c1, 7);
+      }
+      if (rf & 2) {
+        let _t;
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.inputElement = _t.first);
+      }
+    },
+    hostAttrs: [1, "ant-checkbox-wrapper"],
+    hostVars: 10,
+    hostBindings: function NzCheckboxComponent_HostBindings(rf, ctx) {
+      if (rf & 2) {
+        ɵɵclassProp("ant-checkbox-group-item", !!ctx.checkboxGroupComponent)("ant-checkbox-wrapper-in-form-item", !!ctx.nzFormStatusService)("ant-checkbox-wrapper-checked", ctx.nzChecked)("ant-checkbox-wrapper-disabled", ctx.nzDisabled || (ctx.checkboxGroupComponent == null ? null : ctx.checkboxGroupComponent.finalDisabled()))("ant-checkbox-rtl", ctx.dir === "rtl");
+      }
+    },
+    inputs: {
+      nzValue: "nzValue",
+      nzAutoFocus: [2, "nzAutoFocus", "nzAutoFocus", booleanAttribute],
+      nzDisabled: [2, "nzDisabled", "nzDisabled", booleanAttribute],
+      nzIndeterminate: [2, "nzIndeterminate", "nzIndeterminate", booleanAttribute],
+      nzChecked: [2, "nzChecked", "nzChecked", booleanAttribute],
+      nzId: "nzId",
+      nzName: "nzName"
+    },
+    outputs: {
+      nzCheckedChange: "nzCheckedChange"
+    },
+    exportAs: ["nzCheckbox"],
+    features: [ɵɵProvidersFeature([{
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => _NzCheckboxComponent),
+      multi: true
+    }])],
+    attrs: _c2,
+    ngContentSelectors: _c0,
+    decls: 6,
+    vars: 12,
+    consts: [["inputElement", ""], [1, "ant-checkbox"], ["type", "checkbox", 1, "ant-checkbox-input", 3, "ngModelChange", "checked", "ngModel", "disabled"], [1, "ant-checkbox-inner"]],
+    template: function NzCheckboxComponent_Template(rf, ctx) {
+      if (rf & 1) {
+        const _r1 = ɵɵgetCurrentView();
+        ɵɵprojectionDef();
+        ɵɵelementStart(0, "span", 1)(1, "input", 2, 0);
+        ɵɵlistener("ngModelChange", function NzCheckboxComponent_Template_input_ngModelChange_1_listener($event) {
+          ɵɵrestoreView(_r1);
+          return ɵɵresetView(ctx.innerCheckedChange($event));
+        });
+        ɵɵelementEnd();
+        ɵɵelement(3, "span", 3);
+        ɵɵelementEnd();
+        ɵɵelementStart(4, "span");
+        ɵɵprojection(5);
+        ɵɵelementEnd();
+      }
+      if (rf & 2) {
+        let tmp_6_0;
+        ɵɵclassProp("ant-checkbox-checked", ctx.nzChecked && !ctx.nzIndeterminate)("ant-checkbox-disabled", ctx.nzDisabled || (ctx.checkboxGroupComponent == null ? null : ctx.checkboxGroupComponent.finalDisabled()))("ant-checkbox-indeterminate", ctx.nzIndeterminate);
+        ɵɵadvance();
+        ɵɵproperty("checked", ctx.nzChecked)("ngModel", ctx.nzChecked)("disabled", ctx.nzDisabled || ((tmp_6_0 = ctx.checkboxGroupComponent == null ? null : ctx.checkboxGroupComponent.finalDisabled()) !== null && tmp_6_0 !== void 0 ? tmp_6_0 : false));
+        ɵɵattribute("autofocus", ctx.nzAutoFocus ? "autofocus" : null)("id", ctx.nzId)("name", ctx.nzName || (ctx.checkboxGroupComponent == null ? null : ctx.checkboxGroupComponent.nzName()));
+      }
+    },
+    dependencies: [FormsModule, CheckboxControlValueAccessor, NgControlStatus, NgModel],
+    encapsulation: 2,
+    changeDetection: 0
+  });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(NzCheckboxComponent, [{
+    type: Component,
+    args: [{
+      selector: "[nz-checkbox]",
+      exportAs: "nzCheckbox",
+      preserveWhitespaces: false,
+      changeDetection: ChangeDetectionStrategy.OnPush,
+      encapsulation: ViewEncapsulation.None,
+      template: `
+    <span
+      class="ant-checkbox"
+      [class.ant-checkbox-checked]="nzChecked && !nzIndeterminate"
+      [class.ant-checkbox-disabled]="nzDisabled || checkboxGroupComponent?.finalDisabled()"
+      [class.ant-checkbox-indeterminate]="nzIndeterminate"
+    >
+      <input
+        #inputElement
+        type="checkbox"
+        class="ant-checkbox-input"
+        [attr.autofocus]="nzAutoFocus ? 'autofocus' : null"
+        [attr.id]="nzId"
+        [attr.name]="nzName || checkboxGroupComponent?.nzName()"
+        [checked]="nzChecked"
+        [ngModel]="nzChecked"
+        [disabled]="nzDisabled || (checkboxGroupComponent?.finalDisabled() ?? false)"
+        (ngModelChange)="innerCheckedChange($event)"
+      />
+      <span class="ant-checkbox-inner"></span>
+    </span>
+    <span><ng-content></ng-content></span>
+  `,
+      providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => NzCheckboxComponent),
+        multi: true
+      }],
+      host: {
+        class: "ant-checkbox-wrapper",
+        "[class.ant-checkbox-group-item]": "!!checkboxGroupComponent",
+        "[class.ant-checkbox-wrapper-in-form-item]": "!!nzFormStatusService",
+        "[class.ant-checkbox-wrapper-checked]": "nzChecked",
+        "[class.ant-checkbox-wrapper-disabled]": "nzDisabled || checkboxGroupComponent?.finalDisabled()",
+        "[class.ant-checkbox-rtl]": `dir === 'rtl'`
+      },
+      imports: [FormsModule]
+    }]
+  }], () => [{
+    type: NgZone
+  }, {
+    type: ElementRef
+  }, {
+    type: ChangeDetectorRef
+  }, {
+    type: FocusMonitor
+  }, {
+    type: Directionality
+  }], {
+    inputElement: [{
+      type: ViewChild,
+      args: ["inputElement", {
+        static: true
+      }]
+    }],
+    nzCheckedChange: [{
+      type: Output
+    }],
+    nzValue: [{
+      type: Input
+    }],
+    nzAutoFocus: [{
+      type: Input,
+      args: [{
+        transform: booleanAttribute
+      }]
+    }],
+    nzDisabled: [{
+      type: Input,
+      args: [{
+        transform: booleanAttribute
+      }]
+    }],
+    nzIndeterminate: [{
+      type: Input,
+      args: [{
+        transform: booleanAttribute
+      }]
+    }],
+    nzChecked: [{
+      type: Input,
+      args: [{
+        transform: booleanAttribute
+      }]
+    }],
+    nzId: [{
+      type: Input
+    }],
+    nzName: [{
+      type: Input
+    }]
+  });
+})();
+var NzCheckboxGroupComponent = class _NzCheckboxGroupComponent {
+  onChange = () => {
+  };
+  onTouched = () => {
+  };
+  isDisabledFirstChange = true;
+  directionality = inject(Directionality);
+  nzName = input(null);
+  nzDisabled = input(false, {
+    transform: booleanAttribute
+  });
+  nzOptions = input([]);
+  value = signal(null);
+  finalDisabled = linkedSignal(() => this.nzDisabled());
+  dir = toSignal(this.directionality.change, {
+    initialValue: this.directionality.value
+  });
+  normalizedOptions = computed(() => normalizeOptions(this.nzOptions()));
+  constructor() {
+    const elementRef = inject(ElementRef);
+    const focusMonitor = inject(FocusMonitor);
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => {
+      focusMonitor.monitor(elementRef, true).pipe(takeUntilDestroyed(destroyRef)).subscribe((focusOrigin) => {
+        if (!focusOrigin) {
+          this.onTouched();
+        }
+      });
+      destroyRef.onDestroy(() => {
+        focusMonitor.stopMonitoring(elementRef);
+      });
+    });
+  }
+  writeValue(value) {
+    untracked(() => {
+      this.value.set(value);
+    });
+  }
+  registerOnChange(fn) {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn) {
+    this.onTouched = fn;
+  }
+  setDisabledState(disabled) {
+    untracked(() => {
+      this.finalDisabled.set(this.isDisabledFirstChange && this.nzDisabled() || disabled);
+    });
+    this.isDisabledFirstChange = false;
+  }
+  onCheckedChange(optionValue, checked) {
+    if (this.finalDisabled()) return;
+    this.value.update((value) => {
+      if (checked) {
+        return value?.concat(optionValue) || [optionValue];
+      } else {
+        return value?.filter((val) => val !== optionValue) || [];
+      }
+    });
+    this.onChange(this.value());
+  }
+  static ɵfac = function NzCheckboxGroupComponent_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _NzCheckboxGroupComponent)();
+  };
+  static ɵcmp = ɵɵdefineComponent({
+    type: _NzCheckboxGroupComponent,
+    selectors: [["nz-checkbox-group"]],
+    hostAttrs: [1, "ant-checkbox-group"],
+    hostVars: 2,
+    hostBindings: function NzCheckboxGroupComponent_HostBindings(rf, ctx) {
+      if (rf & 2) {
+        ɵɵclassProp("ant-checkbox-group-rtl", ctx.dir() === "rtl");
+      }
+    },
+    inputs: {
+      nzName: [1, "nzName"],
+      nzDisabled: [1, "nzDisabled"],
+      nzOptions: [1, "nzOptions"]
+    },
+    exportAs: ["nzCheckboxGroup"],
+    features: [ɵɵProvidersFeature([{
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => _NzCheckboxGroupComponent),
+      multi: true
+    }, {
+      provide: NZ_CHECKBOX_GROUP,
+      useExisting: forwardRef(() => _NzCheckboxGroupComponent)
+    }])],
+    ngContentSelectors: _c0,
+    decls: 2,
+    vars: 0,
+    consts: [["nz-checkbox", "", 3, "nzValue", "nzName", "nzDisabled"]],
+    template: function NzCheckboxGroupComponent_Template(rf, ctx) {
+      if (rf & 1) {
+        ɵɵprojectionDef();
+        ɵɵprojection(0, 0, null, NzCheckboxGroupComponent_ProjectionFallback_0_Template, 2, 0);
+      }
+    },
+    dependencies: [NzCheckboxComponent],
+    encapsulation: 2,
+    changeDetection: 0
+  });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(NzCheckboxGroupComponent, [{
+    type: Component,
+    args: [{
+      selector: "nz-checkbox-group",
+      exportAs: "nzCheckboxGroup",
+      imports: [NzCheckboxComponent],
+      template: `
+    <ng-content>
+      @for (option of normalizedOptions(); track option.value) {
+        <label
+          nz-checkbox
+          [nzValue]="option.value"
+          [nzName]="nzName()"
+          [nzDisabled]="option.disabled || finalDisabled()"
+        >
+          {{ option.label }}
+        </label>
+      }
+    </ng-content>
+  `,
+      providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => NzCheckboxGroupComponent),
+        multi: true
+      }, {
+        provide: NZ_CHECKBOX_GROUP,
+        useExisting: forwardRef(() => NzCheckboxGroupComponent)
+      }],
+      host: {
+        class: "ant-checkbox-group",
+        "[class.ant-checkbox-group-rtl]": `dir() === 'rtl'`
+      },
+      encapsulation: ViewEncapsulation.None,
+      changeDetection: ChangeDetectionStrategy.OnPush
+    }]
+  }], () => [], null);
+})();
+function normalizeOptions(value) {
+  return value.map((item) => {
+    if (typeof item === "string" || typeof item === "number") {
+      return {
+        label: `${item}`,
+        value: item
+      };
+    }
+    return item;
+  });
+}
+var NzCheckboxModule = class _NzCheckboxModule {
+  static ɵfac = function NzCheckboxModule_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _NzCheckboxModule)();
+  };
+  static ɵmod = ɵɵdefineNgModule({
+    type: _NzCheckboxModule,
+    imports: [NzCheckboxComponent, NzCheckboxGroupComponent, NzCheckboxWrapperComponent],
+    exports: [NzCheckboxComponent, NzCheckboxGroupComponent, NzCheckboxWrapperComponent]
+  });
+  static ɵinj = ɵɵdefineInjector({
+    imports: [NzCheckboxComponent, NzCheckboxGroupComponent]
+  });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(NzCheckboxModule, [{
+    type: NgModule,
+    args: [{
+      imports: [NzCheckboxComponent, NzCheckboxGroupComponent, NzCheckboxWrapperComponent],
+      exports: [NzCheckboxComponent, NzCheckboxGroupComponent, NzCheckboxWrapperComponent]
+    }]
+  }], null, null);
+})();
+
+// node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-radio.mjs
+var _c02 = ["*"];
+var _c12 = ["inputElement"];
+var _c22 = ["nz-radio", ""];
 var NzRadioService = class _NzRadioService {
   selected$ = new ReplaySubject(1);
   touched$ = new Subject();
@@ -378,7 +920,7 @@ var NzRadioGroupComponent = class _NzRadioGroupComponent {
       useExisting: forwardRef(() => _NzRadioGroupComponent),
       multi: true
     }]), ɵɵNgOnChangesFeature],
-    ngContentSelectors: _c0,
+    ngContentSelectors: _c02,
     decls: 1,
     vars: 0,
     template: function NzRadioGroupComponent_Template(rf, ctx) {
@@ -566,7 +1108,7 @@ var NzRadioComponent = class _NzRadioComponent {
     selectors: [["", "nz-radio", ""], ["", "nz-radio-button", ""]],
     viewQuery: function NzRadioComponent_Query(rf, ctx) {
       if (rf & 1) {
-        ɵɵviewQuery(_c1, 7);
+        ɵɵviewQuery(_c12, 7);
       }
       if (rf & 2) {
         let _t;
@@ -591,8 +1133,8 @@ var NzRadioComponent = class _NzRadioComponent {
       useExisting: forwardRef(() => _NzRadioComponent),
       multi: true
     }])],
-    attrs: _c2,
-    ngContentSelectors: _c0,
+    attrs: _c22,
+    ngContentSelectors: _c02,
     decls: 6,
     vars: 24,
     consts: [["inputElement", ""], ["type", "radio", 3, "disabled", "checked"]],
@@ -1538,7 +2080,7 @@ var NzResizeObserverModule = class _NzResizeObserverModule {
 })();
 
 // node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-select.mjs
-var _c02 = ["*"];
+var _c03 = ["*"];
 function NzOptionItemGroupComponent_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
@@ -1842,14 +2384,14 @@ function NzSelectPlaceholderComponent_ng_container_0_Template(rf, ctx) {
     ɵɵtextInterpolate1(" ", ctx_r0.placeholder, " ");
   }
 }
-var _c12 = ["inputElement"];
-var _c22 = ["mirrorElement"];
+var _c13 = ["inputElement"];
+var _c23 = ["mirrorElement"];
 function NzSelectSearchComponent_Conditional_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelement(0, "span", 3, 1);
   }
 }
-var _forTrack0 = ($index, $item) => $item.nzValue;
+var _forTrack02 = ($index, $item) => $item.nzValue;
 function NzSelectTopControlComponent_Case_0_Conditional_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelement(0, "nz-select-item", 2);
@@ -1902,7 +2444,7 @@ function NzSelectTopControlComponent_Case_1_For_1_Template(rf, ctx) {
 function NzSelectTopControlComponent_Case_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = ɵɵgetCurrentView();
-    ɵɵrepeaterCreate(0, NzSelectTopControlComponent_Case_1_For_1_Template, 1, 6, "nz-select-item", 3, _forTrack0);
+    ɵɵrepeaterCreate(0, NzSelectTopControlComponent_Case_1_For_1_Template, 1, 6, "nz-select-item", 3, _forTrack02);
     ɵɵelementStart(2, "nz-select-search", 4);
     ɵɵlistener("isComposingChange", function NzSelectTopControlComponent_Case_1_Template_nz_select_search_isComposingChange_2_listener($event) {
       ɵɵrestoreView(_r3);
@@ -2020,7 +2562,7 @@ var NzOptionGroupComponent = class _NzOptionGroupComponent {
     },
     exportAs: ["nzOptionGroup"],
     features: [ɵɵNgOnChangesFeature],
-    ngContentSelectors: _c02,
+    ngContentSelectors: _c03,
     decls: 1,
     vars: 0,
     template: function NzOptionGroupComponent_Template(rf, ctx) {
@@ -2587,7 +3129,7 @@ var NzOptionComponent = class _NzOptionComponent {
     },
     exportAs: ["nzOption"],
     features: [ɵɵProvidersFeature([NzDestroyService]), ɵɵNgOnChangesFeature],
-    ngContentSelectors: _c02,
+    ngContentSelectors: _c03,
     decls: 1,
     vars: 0,
     template: function NzOptionComponent_Template(rf, ctx) {
@@ -3101,8 +3643,8 @@ var NzSelectSearchComponent = class _NzSelectSearchComponent {
     selectors: [["nz-select-search"]],
     viewQuery: function NzSelectSearchComponent_Query(rf, ctx) {
       if (rf & 1) {
-        ɵɵviewQuery(_c12, 7);
-        ɵɵviewQuery(_c22, 5);
+        ɵɵviewQuery(_c13, 7);
+        ɵɵviewQuery(_c23, 5);
       }
       if (rf & 2) {
         let _t;
@@ -4741,8 +5283,8 @@ var NzSelectModule = class _NzSelectModule {
 })();
 
 // node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-pagination.mjs
-var _c03 = ["nz-pagination-item", ""];
-var _c13 = (a0, a1) => ({
+var _c04 = ["nz-pagination-item", ""];
+var _c14 = (a0, a1) => ({
   $implicit: a0,
   page: a1
 });
@@ -4871,8 +5413,8 @@ function NzPaginationItemComponent_ng_template_0_Template(rf, ctx) {
 }
 function NzPaginationItemComponent_ng_template_2_Template(rf, ctx) {
 }
-var _c23 = ["nz-pagination-options", ""];
-var _forTrack02 = ($index, $item) => $item.value;
+var _c24 = ["nz-pagination-options", ""];
+var _forTrack03 = ($index, $item) => $item.value;
 function NzPaginationOptionsComponent_Conditional_0_For_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelement(0, "nz-option", 3);
@@ -4891,7 +5433,7 @@ function NzPaginationOptionsComponent_Conditional_0_Template(rf, ctx) {
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onPageSizeChange($event));
     });
-    ɵɵrepeaterCreate(1, NzPaginationOptionsComponent_Conditional_0_For_2_Template, 1, 2, "nz-option", 3, _forTrack02);
+    ɵɵrepeaterCreate(1, NzPaginationOptionsComponent_Conditional_0_For_2_Template, 1, 2, "nz-option", 3, _forTrack03);
     ɵɵelementEnd();
   }
   if (rf & 2) {
@@ -5156,7 +5698,7 @@ var NzPaginationItemComponent = class _NzPaginationItemComponent {
       gotoIndex: "gotoIndex"
     },
     features: [ɵɵNgOnChangesFeature],
-    attrs: _c03,
+    attrs: _c04,
     decls: 3,
     vars: 5,
     consts: [["renderItemTemplate", ""], [3, "ngTemplateOutlet", "ngTemplateOutletContext"], ["type", "button", 1, "ant-pagination-item-link", 3, "disabled"], [1, "ant-pagination-item-link"], ["nzType", "right"], ["nzType", "left"], [1, "ant-pagination-item-container"], [1, "ant-pagination-item-ellipsis"], ["nzType", "double-right", 1, "ant-pagination-item-link-icon"], ["nzType", "double-left", 1, "ant-pagination-item-link-icon"]],
@@ -5167,7 +5709,7 @@ var NzPaginationItemComponent = class _NzPaginationItemComponent {
       if (rf & 2) {
         const renderItemTemplate_r4 = ɵɵreference(1);
         ɵɵadvance(2);
-        ɵɵproperty("ngTemplateOutlet", ctx.itemRender || renderItemTemplate_r4)("ngTemplateOutletContext", ɵɵpureFunction2(2, _c13, ctx.type, ctx.index));
+        ɵɵproperty("ngTemplateOutlet", ctx.itemRender || renderItemTemplate_r4)("ngTemplateOutletContext", ɵɵpureFunction2(2, _c14, ctx.type, ctx.index));
       }
     },
     dependencies: [NzIconModule, NzIconDirective, NgTemplateOutlet],
@@ -5342,7 +5884,7 @@ var NzPaginationOptionsComponent = class _NzPaginationOptionsComponent {
       pageSizeChange: "pageSizeChange"
     },
     features: [ɵɵNgOnChangesFeature],
-    attrs: _c23,
+    attrs: _c24,
     decls: 2,
     vars: 2,
     consts: [[1, "ant-pagination-options-size-changer", 3, "nzDisabled", "nzSize", "ngModel"], [1, "ant-pagination-options-quick-jumper"], [1, "ant-pagination-options-size-changer", 3, "ngModelChange", "nzDisabled", "nzSize", "ngModel"], [3, "nzLabel", "nzValue"], [3, "keydown.enter", "disabled"]],
@@ -6365,7 +6907,7 @@ var NzPaginationModule = class _NzPaginationModule {
 })();
 
 // node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-spin.mjs
-var _c04 = ["*"];
+var _c05 = ["*"];
 function NzSpinComponent_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementStart(0, "span", 2);
@@ -6521,7 +7063,7 @@ var NzSpinComponent = (() => {
       },
       exportAs: ["nzSpin"],
       features: [ɵɵNgOnChangesFeature],
-      ngContentSelectors: _c04,
+      ngContentSelectors: _c05,
       decls: 4,
       vars: 2,
       consts: [["defaultTemplate", ""], [1, "ant-spin-container", 3, "ant-spin-blur"], [1, "ant-spin-dot", "ant-spin-dot-spin"], [1, "ant-spin-dot-item"], [1, "ant-spin"], [3, "ngTemplateOutlet"], [1, "ant-spin-text"], [1, "ant-spin-container"]],
@@ -6645,8 +7187,8 @@ var NzSpinModule = class _NzSpinModule {
 })();
 
 // node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-table.mjs
-var _c05 = ["*"];
-var _forTrack03 = ($index, $item) => $item.value;
+var _c06 = ["*"];
+var _forTrack04 = ($index, $item) => $item.value;
 function NzTableFilterComponent_ng_template_1_Template(rf, ctx) {
 }
 function NzTableFilterComponent_Conditional_2_For_7_Conditional_1_Template(rf, ctx) {
@@ -6719,7 +7261,7 @@ function NzTableFilterComponent_Conditional_2_Template(rf, ctx) {
     ɵɵelement(1, "nz-icon", 4);
     ɵɵelementEnd();
     ɵɵelementStart(2, "nz-dropdown-menu", null, 0)(4, "div", 5)(5, "ul", 6);
-    ɵɵrepeaterCreate(6, NzTableFilterComponent_Conditional_2_For_7_Template, 5, 3, "li", 7, _forTrack03);
+    ɵɵrepeaterCreate(6, NzTableFilterComponent_Conditional_2_For_7_Template, 5, 3, "li", 7, _forTrack04);
     ɵɵelementEnd();
     ɵɵelementStart(8, "div", 8)(9, "button", 9);
     ɵɵlistener("click", function NzTableFilterComponent_Conditional_2_Template_button_click_9_listener() {
@@ -6834,7 +7376,7 @@ function NzTableSortersComponent_Conditional_5_Template(rf, ctx) {
     ɵɵclassProp("active", ctx_r0.sortOrder === "descend");
   }
 }
-var _c14 = ["nzChecked", ""];
+var _c15 = ["nzChecked", ""];
 function NzTdAddOnComponent_Conditional_0_Conditional_1_ng_template_0_Template(rf, ctx) {
 }
 function NzTdAddOnComponent_Conditional_0_Conditional_1_Template(rf, ctx) {
@@ -6891,7 +7433,7 @@ function NzTdAddOnComponent_Conditional_1_Template(rf, ctx) {
     ɵɵattribute("aria-label", ctx_r0.nzLabel);
   }
 }
-var _c24 = ["nzColumnKey", ""];
+var _c25 = ["nzColumnKey", ""];
 var _c32 = [[["", "nz-th-extra", ""]], [["nz-filter-trigger"]], "*"];
 var _c42 = ["[nz-th-extra]", "nz-filter-trigger", "*"];
 function NzThAddOnComponent_Conditional_0_Template(rf, ctx) {
@@ -7307,7 +7849,7 @@ function NzTableComponent_ng_template_11_Template(rf, ctx) {
   }
 }
 var _c142 = ["contentTemplate"];
-var _c15 = ["nzSummary", ""];
+var _c152 = ["nzSummary", ""];
 function NzTfootSummaryComponent_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵprojection(0);
@@ -7430,7 +7972,7 @@ var NzFilterTriggerComponent = (() => {
       },
       exportAs: ["nzFilterTrigger"],
       features: [ɵɵProvidersFeature([NzDestroyService])],
-      ngContentSelectors: _c05,
+      ngContentSelectors: _c06,
       decls: 2,
       vars: 8,
       consts: [["nz-dropdown", "", "nzTrigger", "click", "nzPlacement", "bottomRight", 1, "ant-table-filter-trigger", 3, "nzVisibleChange", "nzBackdrop", "nzClickHide", "nzDropdownMenu", "nzVisible"]],
@@ -8515,8 +9057,8 @@ var NzTdAddOnComponent = class _NzTdAddOnComponent {
       nzExpandChange: "nzExpandChange"
     },
     features: [ɵɵNgOnChangesFeature],
-    attrs: _c14,
-    ngContentSelectors: _c05,
+    attrs: _c15,
+    ngContentSelectors: _c06,
     decls: 3,
     vars: 2,
     consts: [["nz-checkbox", "", 3, "nzDisabled", "ngModel", "nzIndeterminate"], [3, "indentSize"], [3, "ngTemplateOutlet"], ["nz-row-expand-button", "", 3, "expand", "spaceMode"], ["nz-row-expand-button", "", 3, "expandChange", "expand", "spaceMode"], ["nz-checkbox", "", 3, "ngModelChange", "nzDisabled", "ngModel", "nzIndeterminate"]],
@@ -8801,7 +9343,7 @@ var NzThAddOnComponent = (() => {
         nzFilterChange: "nzFilterChange"
       },
       features: [ɵɵProvidersFeature([NzDestroyService]), ɵɵNgOnChangesFeature],
-      attrs: _c24,
+      attrs: _c25,
       ngContentSelectors: _c42,
       decls: 10,
       vars: 1,
@@ -9073,7 +9615,7 @@ var NzThSelectionComponent = class _NzThSelectionComponent {
     },
     features: [ɵɵNgOnChangesFeature],
     attrs: _c5,
-    ngContentSelectors: _c05,
+    ngContentSelectors: _c06,
     decls: 2,
     vars: 7,
     consts: [[3, "checkedChange", "checked", "disabled", "indeterminate", "label", "listOfSelections", "showCheckbox", "showRowSelection"]],
@@ -9298,7 +9840,7 @@ var NzTableContentComponent = class _NzTableContentComponent {
       scrollX: "scrollX"
     },
     attrs: _c6,
-    ngContentSelectors: _c05,
+    ngContentSelectors: _c06,
     decls: 5,
     vars: 4,
     consts: [[1, "ant-table-thead"], [3, "ngTemplateOutlet"], [1, "ant-table-summary"], [3, "width", "minWidth"]],
@@ -9427,7 +9969,7 @@ var NzTableFixedRowComponent = class _NzTableFixedRowComponent {
       }
     },
     attrs: _c8,
-    ngContentSelectors: _c05,
+    ngContentSelectors: _c06,
     decls: 7,
     vars: 3,
     consts: [["tdElement", ""], ["contentTemplate", ""], [1, "nz-disable-td", "ant-table-cell"], [1, "ant-table-expanded-row-fixed", 2, "position", "sticky", "left", "0", "overflow", "hidden", 3, "width"], [3, "ngTemplateOutlet"], [1, "ant-table-expanded-row-fixed", 2, "position", "sticky", "left", "0", "overflow", "hidden"]],
@@ -9714,7 +10256,7 @@ var NzTbodyComponent = class _NzTbodyComponent {
         ɵɵclassProp("ant-table-tbody", ctx.isInsideTable);
       }
     },
-    ngContentSelectors: _c05,
+    ngContentSelectors: _c06,
     decls: 5,
     vars: 6,
     consts: [["nz-table-fixed-row", "", 1, "ant-table-placeholder"], ["nz-table-measure-row", "", 3, "listOfMeasureColumn"], ["nz-table-measure-row", "", 3, "listOfAutoWidth", "listOfMeasureColumn"], ["nzComponentName", "table", 3, "specificContent"]],
@@ -10637,7 +11179,7 @@ var NzTableComponent = (() => {
       },
       exportAs: ["nzTable"],
       features: [ɵɵProvidersFeature([NzTableStyleService, NzTableDataService]), ɵɵNgOnChangesFeature],
-      ngContentSelectors: _c05,
+      ngContentSelectors: _c06,
       decls: 13,
       vars: 26,
       consts: [["tableMainElement", ""], ["paginationTemplate", ""], ["contentTemplate", ""], [3, "nzDelay", "nzSpinning", "nzIndicator"], [3, "ngTemplateOutlet"], [1, "ant-table"], [3, "title"], [3, "data", "scrollX", "scrollY", "contentTemplate", "listOfColWidth", "theadTemplate", "tfootTemplate", "tfootFixed", "verticalScrollBarWidth", "virtualTemplate", "virtualItemSize", "virtualMaxBufferPx", "virtualMinBufferPx", "tableMainElement", "virtualForTrackBy", "noDataVirtualHeight"], [3, "tableLayout", "listOfColWidth", "theadTemplate", "contentTemplate", "tfootTemplate"], [3, "footer"], [1, "ant-table-pagination", "ant-table-pagination-right", 3, "hidden", "nzShowSizeChanger", "nzPageSizeOptions", "nzItemRender", "nzShowQuickJumper", "nzHideOnSinglePage", "nzShowTotal", "nzSize", "nzPageSize", "nzTotal", "nzSimple", "nzPageIndex"], [1, "ant-table-pagination", "ant-table-pagination-right", 3, "nzPageSizeChange", "nzPageIndexChange", "hidden", "nzShowSizeChanger", "nzPageSizeOptions", "nzItemRender", "nzShowQuickJumper", "nzHideOnSinglePage", "nzShowTotal", "nzSize", "nzPageSize", "nzTotal", "nzSimple", "nzPageIndex"]],
@@ -10992,8 +11534,8 @@ var NzTfootSummaryComponent = class _NzTfootSummaryComponent {
       nzFixed: [2, "nzFixed", "nzFixed", fixedAttribute]
     },
     features: [ɵɵNgOnChangesFeature],
-    attrs: _c15,
-    ngContentSelectors: _c05,
+    attrs: _c152,
+    ngContentSelectors: _c06,
     decls: 3,
     vars: 1,
     consts: [["contentTemplate", ""], [3, "ngTemplateOutlet"]],
@@ -11263,7 +11805,7 @@ var NzTheadComponent = class _NzTheadComponent {
     outputs: {
       nzSortOrderChange: "nzSortOrderChange"
     },
-    ngContentSelectors: _c05,
+    ngContentSelectors: _c06,
     decls: 3,
     vars: 1,
     consts: [["contentTemplate", ""], [3, "ngTemplateOutlet"]],

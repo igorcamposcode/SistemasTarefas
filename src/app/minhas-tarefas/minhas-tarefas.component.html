@@ -31,7 +31,7 @@
             d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z"
           />
         </svg>
-        Usuário: {{ usuario.nome }}
+        Usuário: {{ usuario.length > 0 ? usuario[0].nome : 'Carregando...' }}
       </button>
       <button
         class="btn btn-dark btn-sm"
@@ -107,9 +107,9 @@
             ></button>
           </div>
           <div class="modal-body user-data-modal-body">
-            <p><strong>Nome :</strong> {{ usuario.nome }}</p>
-            <p><strong>Telefone :</strong> {{ usuario.telefone }}</p>
-            <p><strong>Email :</strong> {{ usuario.email }}</p>
+            <p><strong>Nome:</strong> {{ usuario.length > 0 ? usuario[0].nome : 'N/A' }}</p>
+            <p><strong>Telefone:</strong> {{ usuario.length > 0 ? usuario[0].telefone : 'N/A' }}</p>
+            <p><strong>Email:</strong> {{ usuario.length > 0 ? usuario[0].email : 'N/A' }}</p>
             <button
               class="btn btn-primary mt-3"
               (click)="abrirModalEditarUsuario()"
@@ -153,23 +153,23 @@
         ></button>
       </div>
       <div
-        class="modal-body"
-        style="
-          font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-            'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-          font-family: 1rem;
-        "
-      >
-        <p><strong>Nome :</strong> {{ usuario.nome }}</p>
-        <p><strong>Telefone :</strong> {{ usuario.telefone }}</p>
-        <p><strong>Email :</strong> {{ usuario.email }}</p>
-        <button
-          class="btn btn-primary mt-3"
-          (click)="abrirModalEditarUsuario()"
+          class="modal-body"
+          style="
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+              'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size: 1rem;
+          "
         >
-          Alterar Dados do Usuário
-        </button>
-      </div>
+          <p><strong>Nome:</strong> {{ usuario.length > 0 ? usuario[0].nome : 'N/A' }}</p>
+          <p><strong>Telefone:</strong> {{ usuario.length > 0 ? usuario[0].telefone : 'N/A' }}</p>
+          <p><strong>Email:</strong> {{ usuario.length > 0 ? usuario[0].email : 'N/A' }}</p>
+          <button
+            class="btn btn-primary mt-3"
+            (click)="abrirModalEditarUsuario()"
+          >
+            Alterar Dados do Usuário
+          </button>
+        </div>
       <div class="modal-footer">
         <button
           type="button"

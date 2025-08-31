@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
+import { AuthService, Usuario } from '../services/auth.service';
 import { DatePipe, NgClass, NgForOf, NgIf } from '@angular/common';
 import { Estado, Prioridade, TaskService } from '../services/task.service';
 
@@ -54,7 +54,7 @@ export interface SubTarefa {
   styleUrl: './menu.component.css',
 })
 export class MenuComponent implements OnInit {
-  usuario: any = {}; // Dados do usuário logado
+  usuario: Usuario[] = []; // Dados do usuário logado
   tarefas: Tarefa[] = []; // Lista de tarefas do usuário
   prioridades: Prioridade[] = []; // Prioridades disponíveis (ex.: Muito alta, Alta)
   estados: Estado[] = []; // Estados disponíveis (ex.: Aberto, Concluído)
@@ -65,8 +65,8 @@ export class MenuComponent implements OnInit {
   isEditarUsuarioModalVisible = false; // Controle de visibilidade do modal de edição de usuário
   isModalVisible = false; // Controle de visibilidade do modal de tarefa
   isSubTarefa = false; // Indica se estamos adicionando uma subtarefa
-  tarefaMae: any = null; // Referência à tarefa principal
-  tarefaEditando: any = null; // Tarefa sendo editada (null para criação de nova)
+  tarefaMae: Tarefa | null = null;
+  tarefaEditando: Tarefa | SubTarefa | null = null;
   arquivoSelecionado: File | null = null; // Arquivo selecionado para upload
 
 
@@ -95,13 +95,16 @@ export class MenuComponent implements OnInit {
 
     // Formulário para dados do usuário
     this.usuarioForm = this.fb.group({
-      nome: [this.usuario.nome || '', Validators.required],
+      nome: [
+        this.usuario.length > 0 && this.usuario[0].nome ? this.usuario[0].nome : '',
+        Validators.required
+      ],
       telefone: [
-        this.usuario.telefone || '',
+        this.usuario.length > 0 && this.usuario[0].telefone ? this.usuario[0].telefone : '',
         [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)],
       ],
       email: [
-        this.usuario.email || '',
+        this.usuario.length > 0 && this.usuario[0].email ? this.usuario[0].email : '',
         [Validators.required, Validators.email],
       ],
     });
@@ -136,10 +139,10 @@ export class MenuComponent implements OnInit {
   public carregarUsuarioLogado(): void {
     this.authService.obterUsuarioLogado().subscribe({
       next: (usuario) => {
-        this.usuario = usuario;
+        this.usuario = [usuario]; // Corrigido para ser um array, conforme esperado pelo restante do código
 
         // Atualiza o formulário com o ID do usuário logado
-        this.tarefaForm.patchValue({ idUsuario: usuario.id });
+        this.tarefaForm.patchValue({ idusuario: usuario.id }); // Corrigido para 'idusuario' conforme o form
       },
       error: () => alert('Erro ao carregar usuário logado.'),
     });
@@ -155,9 +158,9 @@ export class MenuComponent implements OnInit {
       }
 
       this.authService.obterUsuarioPorId(idUsuario).subscribe({
-        next: (res) => {
-          this.usuario = res;
-          this.usuarioForm.patchValue(this.usuario); // Preenche o formulário
+        next: (usuario) => {
+          this.usuario = [usuario]; // Corrigido para ser um array, conforme esperado pelo restante do código
+          this.usuarioForm.patchValue(usuario); // Preenche o formulário com o objeto do usuário
         },
         error: (err) => {
           console.error('Erro ao carregar usuário:', err);
@@ -309,6 +312,7 @@ export class MenuComponent implements OnInit {
       },
     });
   }
+
   public atualizarTarefa(): void {
     this.carregarTarefas();
     window.location.reload();
@@ -556,7 +560,7 @@ export class MenuComponent implements OnInit {
     this.isModalVisible = true; // Exibe o modal
   }
   /** Abrir o modal para criar ou editar uma tarefa */
-  public editarTarefa(tarefa: any): void {
+  public editarTarefa(tarefa: Tarefa): void {
     this.tarefaEditando = tarefa;
 
     // Mapeia corretamente os campos da tarefa para o formulário
@@ -674,7 +678,7 @@ export class MenuComponent implements OnInit {
     }
 
     this.taskService.uploadDocumento(idtarefa, idusuario, this.arquivoSelecionado).subscribe({
-      next: (_res) => {
+      next: () => {
         const mensagem = this.tarefaEditando
           ? 'Tarefa atualizada e documento anexado com sucesso!'
           : 'Tarefa criada e documento anexado com sucesso!';
@@ -717,7 +721,7 @@ export class MenuComponent implements OnInit {
   }
 
   // Excluir um documento
-  public excluirDocumento(id: number, _idtarefa: number): void {
+  public excluirDocumento(id: number): void {
     if (confirm('Tem certeza que deseja excluir este documento?')) {
       this.taskService.excluirDocumento(id).subscribe({
         next: () => {
