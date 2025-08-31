@@ -906,7 +906,7 @@ export class MenuComponent implements OnInit {
   /**
    * Verifica se uma subtarefa está concluída.
    */
- public  isSubTarefaConcluida(sub: any): boolean {
+ public  isSubTarefaConcluida(sub: SubTarefa): boolean {
     return sub.estado === 'Concluído';
   }
 
