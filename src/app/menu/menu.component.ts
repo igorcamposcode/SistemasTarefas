@@ -293,17 +293,13 @@ export class MenuComponent implements OnInit {
               subTarefas: subTarefasAssociadas, // Usa a lista de subtarefas corrigida
               progresso: tarefa.progresso || 0,
             };
-
             // Calcula o progresso baseado no estado das subtarefas
             tarefaCompleta.progresso = this.calcularProgresso(tarefaCompleta);
-
             return tarefaCompleta;
           });
-
           // Atualiza as prioridades e estados
           this.prioridades = res.opcoes.prioridades;
           this.estados = res.opcoes.estados;
-
           // Carrega o estado salvo do localStorage
           this.carregarLocalStorage();
         } else {
@@ -460,6 +456,7 @@ export class MenuComponent implements OnInit {
       },
     });
   }
+
   /** Excluir uma subtarefa */
  public  excluirSubTarefa(subTarefa: SubTarefa, tarefa: any): void {
     if (
