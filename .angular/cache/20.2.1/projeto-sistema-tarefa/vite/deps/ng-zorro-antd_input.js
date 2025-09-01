@@ -4,7 +4,7 @@ import {
   NzFormNoStatusService,
   NzFormStatusService,
   NzResizeService
-} from "./chunk-TJ2JXQP2.js";
+} from "./chunk-DIBXZRBI.js";
 import {
   DefaultValueAccessor,
   FormBuilder,
@@ -17,15 +17,15 @@ import {
   Validators
 } from "./chunk-FIJ4UD4Q.js";
 import {
+  NZ_SPACE_COMPACT_ITEM_TYPE,
+  NZ_SPACE_COMPACT_SIZE,
+  NzSpaceCompactItemDirective
+} from "./chunk-77VGMVO7.js";
+import {
   BACKSPACE,
   LEFT_ARROW,
   RIGHT_ARROW
 } from "./chunk-YLY2H6T4.js";
-import {
-  NZ_SPACE_COMPACT_ITEM_TYPE,
-  NZ_SPACE_COMPACT_SIZE,
-  NzSpaceCompactItemDirective
-} from "./chunk-NBF2OEWQ.js";
 import {
   NzOutletModule,
   NzStringTemplateOutletDirective
@@ -37,15 +37,15 @@ import {
   NzIconDirective,
   NzIconModule,
   takeUntilDestroyed
-} from "./chunk-MRI3R6B5.js";
-import "./chunk-OAOHUKFD.js";
-import {
-  Platform
-} from "./chunk-BYFTVMX6.js";
+} from "./chunk-UVXFUNWW.js";
 import {
   getStatusClassNames,
   isNotNil
 } from "./chunk-YZKM6VNZ.js";
+import "./chunk-OAOHUKFD.js";
+import {
+  Platform
+} from "./chunk-BYFTVMX6.js";
 import "./chunk-BOGY7ZBX.js";
 import "./chunk-WTH5GWJC.js";
 import "./chunk-BIESDLBS.js";

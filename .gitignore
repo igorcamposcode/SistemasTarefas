@@ -14,5 +14,3 @@ yarn-error.log
 # Pasta de uploads que deve ser ignorada
 uploads/
 
-#Pasta services a ser ignorada
-/src/app/services/

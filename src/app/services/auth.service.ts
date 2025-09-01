@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, Observable, tap} from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 
 export const API_PATH = 'http://localhost:3000/api';
 
@@ -15,6 +15,7 @@ export interface Usuario {
   providedIn: 'root',
 })
 export class AuthService {
+  private readonly TOKEN_KEY = 'authToken';
   private http = inject(HttpClient);
 
   // Método para criar usuário
@@ -30,7 +31,7 @@ export class AuthService {
     return this.http.post<{ token: string }>(`${API_PATH}/login`, { email, senha }).pipe(
       tap((response) => {
         if (response.token) {
-          localStorage.setItem('authToken', response.token); // Salva o token JWT
+          this.armazenarToken(response.token);
           console.log('Token salvo:', response.token);
         } else {
           throw new Error('Token não recebido do servidor.');
@@ -39,10 +40,10 @@ export class AuthService {
     );
   }
 
-  // Armazena o token e o ID do usuário no Local Storage
+  // Este método é redundante. O login já armazena o token, e o ID do usuário pode ser obtido do próprio token.
   armazenarCredenciais(token: string, userId: number) {
-    localStorage.setItem('authToken', token);
-    localStorage.setItem('userId', userId.toString());
+    this.armazenarToken(token);
+    // localStorage.setItem('userId', userId.toString()); // Desnecessário
   }
 
   // Obtém o ID do usuário logado armazenado no Local Storage
@@ -53,19 +54,20 @@ export class AuthService {
 
   // Limpa as credenciais do usuário
   logout() {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userId');
+    localStorage.removeItem(this.TOKEN_KEY);
+    // localStorage.removeItem('userId'); // Remover se não estiver mais usando
   }
+
   armazenarToken(token: string): void {
-    localStorage.setItem('token', token);
+    localStorage.setItem(this.TOKEN_KEY, token);
   }
 
   obterToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
   removerToken(): void {
-    localStorage.removeItem('token');
+    this.logout();
   }
 
   estaAutenticado(): boolean {
@@ -87,26 +89,32 @@ export class AuthService {
   /** Obtém os dados do usuário logado */
   obterUsuarioLogado(): Observable<Usuario> {
     return this.http.get<Usuario>(`${API_PATH}/usuario/logado`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+      // A adição do header de autorização é idealmente feita por um HttpInterceptor.
+      headers: { Authorization: `Bearer ${this.obterToken()}` },
     });
   }
 
   /** Obtém o ID do usuário logado */
-  obterIdUsuarioLogado(): number {
-    const token = localStorage.getItem('authToken');
+  obterIdUsuarioLogado(): number | null {
+    const token = this.obterToken();
     if (!token) {
-      throw new Error('Usuário não autenticado. Token não encontrado.');
+      return null;
     }
 
-    const payload = JSON.parse(atob(token.split('.')[1])); // Decodifica o token JWT
-    return payload.id; // Retorna o ID do usuário do payload
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1])); // Decodifica o payload do token JWT
+      return payload.id; // Retorna o ID do usuário do payload
+    } catch (error) {
+      console.error('Erro ao decodificar o token:', error);
+      return null;
+    }
   }
 
   /** Obtém os dados do usuário pelo ID */
   obterUsuarioPorId(id: number): Observable<Usuario> {
     const headers = new HttpHeaders().set(
       'Authorization',
-      `Bearer ${localStorage.getItem('authToken')}`
+      `Bearer ${this.obterToken() ?? ''}`
     );
     return this.http.get<Usuario>(`${API_PATH}/usuario/${id}`, { headers }).pipe(
       catchError((err) => {
@@ -123,7 +131,7 @@ export class AuthService {
    */
 
   atualizarUsuario(dados: Partial<Usuario>): Observable<{ message: string }> {
-    const token = localStorage.getItem('authToken');
+    const token = this.obterToken();
     if (!token) {
       throw new Error(
         'Token não encontrado. O usuário precisa estar autenticado.'

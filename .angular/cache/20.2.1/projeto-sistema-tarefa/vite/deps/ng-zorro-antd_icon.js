@@ -10,10 +10,10 @@ import {
   NzIconService,
   provideNzIcons,
   provideNzIconsPatch
-} from "./chunk-MRI3R6B5.js";
+} from "./chunk-UVXFUNWW.js";
+import "./chunk-YZKM6VNZ.js";
 import "./chunk-OAOHUKFD.js";
 import "./chunk-BYFTVMX6.js";
-import "./chunk-YZKM6VNZ.js";
 import "./chunk-BOGY7ZBX.js";
 import "./chunk-WTH5GWJC.js";
 import "./chunk-BIESDLBS.js";

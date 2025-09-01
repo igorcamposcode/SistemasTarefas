@@ -16,10 +16,7 @@
             "outputPath": "dist/projeto-sistema-tarefa",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js",
-              "@angular/localize/init"
-            ],
+            "polyfills": ["zone.js", "@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -58,7 +55,8 @@
                   "maximumError": "15kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "sourceMap": false
             },
             "development": {
               "optimization": false,
@@ -99,20 +97,14 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "./node_modules/@po-ui/style/css/po-theme-default.min.css",
-              "src/styles.css"
-            ],
+            "styles": ["src/styles.css"],
             "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }
@@ -120,9 +112,7 @@
   },
   "cli": {
     "analytics": "34fb0492-8a94-44b6-bef4-21e3112cfefa",
-    "schematicCollections": [
-      "angular-eslint"
-    ]
+    "schematicCollections": ["angular-eslint"]
   },
   "schematics": {
     "@schematics/angular:component": {
@@ -148,6 +138,15 @@
     },
     "@schematics/angular:resolver": {
       "typeSeparator": "."
+    },
+    "secure": {
+      "optimization": true,
+      "outputHashing": "all",
+      "sourceMap": false,
+      "namedChunks": false,
+      "vendorChunk": false,
+      "extractLicenses": true,
+      "buildOptimizer": true
     }
   }
 }

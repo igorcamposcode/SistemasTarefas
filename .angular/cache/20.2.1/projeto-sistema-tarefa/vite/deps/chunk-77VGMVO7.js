@@ -9,7 +9,7 @@ import {
   WithConfig,
   takeUntilDestroyed,
   toSignal
-} from "./chunk-MRI3R6B5.js";
+} from "./chunk-UVXFUNWW.js";
 import {
   NgTemplateOutlet
 } from "./chunk-KQXFUPP7.js";
@@ -526,4 +526,4 @@ export {
   NZ_SPACE_COMPACT_ITEM_TYPE,
   NzSpaceCompactItemDirective
 };
-//# sourceMappingURL=chunk-NBF2OEWQ.js.map
+//# sourceMappingURL=chunk-77VGMVO7.js.map
