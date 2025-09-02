@@ -23,7 +23,7 @@ exports.login = async (req, res) => {
     });
   } catch (error) {
     console.error("Erro ao efetuar login:", error);
-    res.status(500).json({ error: "Erro ao efetuar login.", details: error.message });
+    res.status(500).json();
   }
 };
 
@@ -55,7 +55,7 @@ exports.cadastro = async (req, res) => {
     });
   } catch (error) {
     console.error("Erro ao cadastrar usuário:", error);
-    res.status(500).json({ error: "Erro ao cadastrar usuário.", details: error.message });
+    res.status(500).json();
   }
 };
 

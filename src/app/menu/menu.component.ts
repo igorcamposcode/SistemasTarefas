@@ -22,7 +22,7 @@ export interface Tarefa {
   dthrinicio: Date | number | string | null;
   documentos?: Documento[];
   subTarefas: SubTarefa[];
-  progresso: number; // Adiciona a propriedade 'progresso'
+  progresso: number;
 }
 
 export interface Documento {
@@ -40,7 +40,7 @@ export interface SubTarefa {
   descricao?: string;
   prioridade: string;
   estado: string;
-  progresso: number; // ✅ Adicionando a propriedade progresso
+  progresso: number;
   usuario?: string;
   idusuario?: number;
   dthrinicio?: Date | number | string | null;

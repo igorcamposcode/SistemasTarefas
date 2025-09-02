@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 
 export const API_PATH = 'http://localhost:3000/api';
-
 export interface Usuario {
   id: number;
   nome: string;
@@ -22,7 +21,6 @@ export class AuthService {
   criarUsuario(data: object): Observable<object> {
     return this.http.post(`${API_PATH}/usuario`, data);
   }
-
   // Método para listar todos os usuários
   listarUsuarios(): Observable<object> {
     return this.http.get(`${API_PATH}`);
@@ -39,25 +37,21 @@ export class AuthService {
       })
     );
   }
-
   // Este método é redundante. O login já armazena o token, e o ID do usuário pode ser obtido do próprio token.
   armazenarCredenciais(token: string, userId: number) {
     this.armazenarToken(token);
     // localStorage.setItem('userId', userId.toString()); // Desnecessário
   }
-
   // Obtém o ID do usuário logado armazenado no Local Storage
   // Busca os dados do usuário pelo ID
   getUsuarioId(id: number): Observable<Usuario> {
     return this.http.get<Usuario>(`${API_PATH}/usuario/${id}`);
   }
-
   // Limpa as credenciais do usuário
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
     // localStorage.removeItem('userId'); // Remover se não estiver mais usando
   }
-
   armazenarToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
@@ -65,15 +59,12 @@ export class AuthService {
   obterToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
-
   removerToken(): void {
     this.logout();
   }
-
   estaAutenticado(): boolean {
     return !!this.obterToken(); // Retorna verdadeiro se o token existir
   }
-
   recuperarSenha(
     email: string,
     senha: string,
@@ -85,7 +76,6 @@ export class AuthService {
       checkPassword,
     });
   }
-
   /** Obtém os dados do usuário logado */
   obterUsuarioLogado(): Observable<Usuario> {
     return this.http.get<Usuario>(`${API_PATH}/usuario/logado`, {
@@ -93,14 +83,12 @@ export class AuthService {
       headers: { Authorization: `Bearer ${this.obterToken()}` },
     });
   }
-
   /** Obtém o ID do usuário logado */
   obterIdUsuarioLogado(): number | null {
     const token = this.obterToken();
     if (!token) {
       return null;
     }
-
     try {
       const payload = JSON.parse(atob(token.split('.')[1])); // Decodifica o payload do token JWT
       return payload.id; // Retorna o ID do usuário do payload
@@ -109,7 +97,6 @@ export class AuthService {
       return null;
     }
   }
-
   /** Obtém os dados do usuário pelo ID */
   obterUsuarioPorId(id: number): Observable<Usuario> {
     const headers = new HttpHeaders().set(
@@ -123,13 +110,11 @@ export class AuthService {
       })
     );
   }
-
   /**
    * Atualiza os dados do usuário no backend
    * @param dadosAtualizados
    * @returns
    */
-
   atualizarUsuario(dados: Partial<Usuario>): Observable<{ message: string }> {
     const token = this.obterToken();
     if (!token) {
