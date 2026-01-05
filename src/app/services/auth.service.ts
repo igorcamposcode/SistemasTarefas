@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, tap} from 'rxjs';
 
 export const API_PATH = 'http://localhost:3000/api';
 export interface Usuario {
@@ -38,7 +38,7 @@ export class AuthService {
     );
   }
   // Este método é redundante. O login já armazena o token, e o ID do usuário pode ser obtido do próprio token.
-  armazenarCredenciais(token: string, userId: number) {
+  armazenarCredenciais(token: string) {
     this.armazenarToken(token);
     // localStorage.setItem('userId', userId.toString()); // Desnecessário
   }

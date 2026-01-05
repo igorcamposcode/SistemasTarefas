@@ -2,16 +2,6 @@ import {
   NzI18nService
 } from "./chunk-SYBGGYXB.js";
 import {
-  NzButtonComponent,
-  NzButtonModule
-} from "./chunk-GONI3GG7.js";
-import {
-  NzTransitionPatchDirective
-} from "./chunk-ZXHHQOLE.js";
-import {
-  NzWaveDirective
-} from "./chunk-FZ3WLLKR.js";
-import {
   CdkConnectedOverlay,
   CdkFixedSizeVirtualScroll,
   CdkOverlayOrigin,
@@ -32,13 +22,12 @@ import {
   PortalModule,
   ScrollingModule,
   getPlacementName
-} from "./chunk-YHK7HR7L.js";
+} from "./chunk-CKAT7SE7.js";
+import "./chunk-W535AH7C.js";
 import {
   NzNoAnimationDirective,
   slideMotion
 } from "./chunk-PKMXHSTM.js";
-import "./chunk-FOF2EA2U.js";
-import "./chunk-SFXFO5DW.js";
 import {
   FocusMonitor,
   NzBreakpointEnum,
@@ -50,7 +39,16 @@ import {
   cancelAnimationFrame,
   gridResponsiveMap,
   requestAnimationFrame
-} from "./chunk-DIBXZRBI.js";
+} from "./chunk-4W3EG6AC.js";
+import {
+  BACKSPACE,
+  DOWN_ARROW,
+  ENTER,
+  ESCAPE,
+  SPACE,
+  TAB,
+  UP_ARROW
+} from "./chunk-YLY2H6T4.js";
 import {
   COMPOSITION_BUFFER_MODE,
   CheckboxControlValueAccessor,
@@ -61,19 +59,22 @@ import {
   NgModel
 } from "./chunk-FIJ4UD4Q.js";
 import {
+  NzButtonComponent,
+  NzButtonModule
+} from "./chunk-TEBB5GYK.js";
+import {
+  NzWaveDirective
+} from "./chunk-FZ3WLLKR.js";
+import "./chunk-FOF2EA2U.js";
+import "./chunk-SFXFO5DW.js";
+import {
+  NzTransitionPatchDirective
+} from "./chunk-ZXHHQOLE.js";
+import {
   NZ_SPACE_COMPACT_ITEM_TYPE,
   NZ_SPACE_COMPACT_SIZE,
   NzSpaceCompactItemDirective
-} from "./chunk-77VGMVO7.js";
-import {
-  BACKSPACE,
-  DOWN_ARROW,
-  ENTER,
-  ESCAPE,
-  SPACE,
-  TAB,
-  UP_ARROW
-} from "./chunk-YLY2H6T4.js";
+} from "./chunk-SGJBGYIT.js";
 import {
   NzOutletModule,
   NzStringTemplateOutletDirective
@@ -89,7 +90,7 @@ import {
   onConfigChangeEventForComponent,
   takeUntilDestroyed,
   toSignal
-} from "./chunk-UVXFUNWW.js";
+} from "./chunk-TH2ZLVGJ.js";
 import {
   arraysEqual,
   coerceElement,
@@ -106,16 +107,15 @@ import {
   Platform,
   _getEventTarget
 } from "./chunk-BYFTVMX6.js";
-import "./chunk-C3O5PHYV.js";
-import "./chunk-BOGY7ZBX.js";
+import "./chunk-TPHLOT7Y.js";
 import "./chunk-WTH5GWJC.js";
-import "./chunk-BIESDLBS.js";
 import "./chunk-QX3AZ7X4.js";
 import {
   AsyncPipe,
   NgTemplateOutlet,
   isPlatformBrowser
 } from "./chunk-KQXFUPP7.js";
+import "./chunk-BIESDLBS.js";
 import "./chunk-YW65FSQM.js";
 import {
   ChangeDetectionStrategy,
