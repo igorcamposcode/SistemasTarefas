@@ -1,13 +1,15 @@
 /* menu.component.css - Estilo de Aplicativo de Tarefas */
 
 /* --- GERAL --- */
-@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
 
 /* Define um fundo suave para a página inteira, dando uma sensação de aplicativo */
 :host {
   display: block;
-  background-color: #f4f7f9; /* Um cinza azulado muito claro */
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
   min-height: 100vh;
+  font-family: "Inter", "Ubuntu", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 /* Contêiner principal para centralizar o conteúdo e limitar a largura */
@@ -19,64 +21,229 @@
 
 /* --- CABEÇALHO E AÇÕES SUPERIORES --- */
 .page-header {
-  background-color: rgb(255, 145, 0);
+  background: linear-gradient(135deg, #ff9100 0%, #ff6b00 100%);
   color: white;
-  padding: 1rem 2rem;
-  box-shadow: 2px 4px 3px 2px rgb(0, 0, 0);
-  border-radius: 2px;
-  margin-bottom: 0rem; /* Espaço abaixo do cabeçalho */
+  padding: 1.5rem 2.5rem;
+  box-shadow: 0 4px 20px rgba(255, 145, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+  margin-bottom: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.page-header > div {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
 }
 
 .page-header-title {
   display: flex;
-  height: 190px;
-  width: 205px;
-
+  height: 80px;
+  width: auto;
+  max-width: 250px;
   align-items: center;
   justify-content: center;
   box-sizing: content-box;
-  border-radius: 5px;
-  object-fit: cover;
+  border-radius: 8px;
+  object-fit: contain;
   margin: 0;
-  margin-left: 2.2%;
-  margin-right: 3%;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.page-header-title:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .page-header-logo {
-  height: 20px; /* Ajusta a altura do logo */
+  height: 20px;
 }
+
 .top-actions {
   display: flex;
-  align-items:center;
-  justify-content: center;
-  margin-top: 1.9%;
-  margin: 0; /* Remove a margem padrão do h1/h3 */
-  margin-left: 2.2%;
-  margin-right: 3%;
-  gap: 4rem;
-  margin-bottom: 1.5rem;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.top-actions .btn {
+  font-family: "Inter", "Ubuntu", sans-serif;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.top-actions .btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.top-actions .btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.top-actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+.top-actions .btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.top-actions .btn-dark {
+  background: rgba(33, 37, 41, 0.9);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.top-actions .btn-dark:hover {
+  background: rgba(33, 37, 41, 1);
+}
+
+.top-actions .btn-success {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.top-actions .btn-success:hover {
+  background: linear-gradient(135deg, #218838 0%, #1aa179 100%);
+}
+
+.top-actions .btn-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+}
+
+.top-actions .btn-danger:hover {
+  background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+}
+
+.top-actions .btn svg {
+  flex-shrink: 0;
 }
 
 /* --- CARD DE TAREFA --- */
 .card {
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
-  transition: all 0.3s ease-in-out;
-  border: 1px solid #e0e5ec;
-  border-left-width: 5px; /* Borda de prioridade */
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(224, 229, 236, 0.8);
+  border-left-width: 5px;
   margin-bottom: 1.5rem;
+  background: #ffffff;
+  overflow: hidden;
+  position: relative;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover::before {
+  opacity: 1;
 }
 
 .card:hover {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  border-color: rgba(224, 229, 236, 1);
 }
 
 .card-header {
-  font-weight: 500;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e0e5ec;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-bottom: 2px solid #e9ecef;
+  padding: 1.25rem 1.5rem;
+  font-size: 1.1rem;
+  color: #212529;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-body {
+  padding: 1.5rem;
+  background: #ffffff;
+  color: #495057;
+  line-height: 1.6;
+}
+
+.card-body .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.card-body p {
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.card-body strong {
+  color: #495057;
+  font-weight: 600;
 }
 
 /* --- ESTILOS DE ESTADO E PRIORIDADE DO CARD --- */
@@ -94,36 +261,125 @@
   text-decoration: line-through;
 }
 
-/* Cores da borda de prioridade */
+/* Cores da borda de prioridade e fundo sutil */
 .card.priority-muito-alta {
   border-left-color: #dc3545;
+  border-left-width: 6px;
+  background: linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);
+  box-shadow: 0 2px 12px rgba(220, 53, 69, 0.15);
+  position: relative;
 } /* Vermelho */
+
 .card.priority-alta {
   border-left-color: #fd7e14;
+  border-left-width: 6px;
+  background: linear-gradient(135deg, #ffffff 0%, #fff8f0 100%);
+  box-shadow: 0 2px 12px rgba(253, 126, 20, 0.15);
 } /* Laranja */
 .card.priority-media {
   border-left-color: #ffc107;
+  border-left-width: 6px;
+  background: linear-gradient(135deg, #ffffff 0%, #fffef5 100%);
+  box-shadow: 0 2px 12px rgba(255, 193, 7, 0.15);
 } /* Amarelo */
 .card.priority-baixa {
   border-left-color: #17a2b8;
+  border-left-width: 6px;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f9fa 100%);
+  box-shadow: 0 2px 12px rgba(23, 162, 184, 0.15);
 } /* Ciano */
+.card.priority-default {
+  border-left-color: #6c757d;
+  border-left-width: 5px;
+} /* Cinza padrão */
+
+/* Badge de prioridade */
+.badge-prioridade {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-prioridade:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Badge de prioridade para subtarefas */
+.badge-prioridade-subtarefa {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.badge-prioridade-subtarefa:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
 
 /* --- BARRA DE PROGRESSO --- */
 .progress {
-  height: 16px; /* Mais fina e elegante */
-  border-radius: 8px;
-  background-color: #e9ecef;
-  overflow: hidden; /* Garante que a barra interna respeite o border-radius */
+  height: 20px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #e9ecef 0%, #dee2e6 100%);
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.progress::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  pointer-events: none;
 }
 
 /* --- SEÇÃO DE DOCUMENTOS --- */
 .documentos-section {
-  margin: 1rem 0;
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 8px;
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 10px;
   border: 1px solid #e9ecef;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.documentos-section:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.documentos-section h4 {
+  color: #495057;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .documentos-section h5 {
@@ -137,14 +393,18 @@
   gap: 0.5rem;
 }
 
+.documento-section-icon {
+  color: #495057;
+}
+
 .documento-item {
-  padding: 0.75rem;
+  padding: 1rem;
   margin: 0.75rem 0;
-  background-color: white;
-  border-radius: 6px;
+  background: #ffffff;
+  border-radius: 8px;
   border: 1px solid #dee2e6;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .documento-item:hover {
@@ -258,40 +518,114 @@
 
 .progress-bar {
   font-weight: 600;
-  transition: width 0.6s ease;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.9);
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 /* Mantém as cores da barra de progresso */
 .bg-success {
-  background-color: #28a745 !important;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
 }
+
 .bg-primary {
-  background-color: #28a745 !important;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
 }
 
 /* --- SEÇÃO DE SUBTAREFAS --- */
 .subtarefas-titulo {
-  font-family: "Ubuntu", sans-serif;
-  font-weight: 500;
+  font-family: "Inter", "Ubuntu", sans-serif;
+  font-weight: 600;
   color: #495057;
-  border-bottom: 1px solid #dee2e6;
-  padding-bottom: 8px;
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 0.75rem;
+  margin-top: -1rem;
+  margin-bottom: 1.2rem;
+  font-size: 1.1rem;
+  text-align: center;
+  position: relative;
+}
+
+.subtarefas-titulo::after {
+  content: "";
+  position: absolute;
+  bottom: -0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #007bff, transparent);
 }
 
 .subtarefa-item {
   list-style-type: none;
-  padding: 12px 8px;
+  padding: 1rem;
   border-bottom: 1px solid #f1f3f5;
-  transition: background-color 0.2s ease;
-  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-left-width: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+/* Cores de prioridade para subtarefas */
+.subtarefa-item.priority-muito-alta {
+  border-left-color: #dc3545;
+  background: linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);
+}
+
+.subtarefa-item.priority-alta {
+  border-left-color: #fd7e14;
+  background: linear-gradient(135deg, #ffffff 0%, #fff8f0 100%);
+}
+
+.subtarefa-item.priority-media {
+  border-left-color: #ffc107;
+  background: linear-gradient(135deg, #ffffff 0%, #fffef5 100%);
+}
+
+.subtarefa-item.priority-baixa {
+  border-left-color: #17a2b8;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f9fa 100%);
+}
+
+.subtarefa-item.priority-default {
+  border-left-color: #6c757d;
 }
 
 .subtarefa-item:last-child {
@@ -299,7 +633,10 @@
 }
 
 .subtarefa-item:hover {
-  background-color: #f8f9fa;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-color: #dee2e6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateX(4px);
 }
 
 .subtarefa-conteudo {
@@ -307,6 +644,12 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.subtarefa-titulo {
+  flex: 1;
+  min-width: 150px;
 }
 
 .subtarefa-conteudo input[type="checkbox"] {
@@ -325,6 +668,185 @@
   text-decoration: line-through;
   color: #6c757d;
   opacity: 0.8;
+}
+
+/* --- MODAIS --- */
+.modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 2px solid #dee2e6;
+  padding: 1.25rem 1.5rem;
+}
+
+.modal-title {
+  font-weight: 600;
+  color: #212529;
+  font-size: 1.25rem;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  font-family: "Inter", "Ubuntu", sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.modal-body .form-label {
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.modal-body .form-control,
+.modal-body .form-select {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.modal-body .form-control:focus,
+.modal-body .form-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+  outline: none;
+}
+
+.modal-footer {
+  border-top: 2px solid #e9ecef;
+  padding: 1rem 1.5rem;
+  background: #f8f9fa;
+}
+
+.modal-footer .btn {
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.modal-footer .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Botões dos cards */
+.card-header .btn {
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.card-header .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-header .btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+.card-header .btn-outline-secondary:hover {
+  background: #6c757d;
+  color: white;
+  border-color: #6c757d;
+}
+
+.card-header .btn-outline-danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.card-header .btn-outline-danger:hover {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+/* Botões de subtarefas */
+.subtarefa-acoes .btn {
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.subtarefa-acoes .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.subtask-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e9ecef;
+}
+
+.subtask-section .btn {
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.subtask-section .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Container principal */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .page-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .page-header-title {
+    height: 60px;
+    max-width: 180px;
+  }
+
+  .top-actions {
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .top-actions .btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .card-header {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .container {
+    padding: 1rem;
+  }
 }
 
 /* --- UTILITÁRIOS --- */

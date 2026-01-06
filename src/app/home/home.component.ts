@@ -10,6 +10,8 @@ import {
 import { AuthService, Usuario } from '../services/auth.service';
 import { DatePipe, NgClass, NgForOf, NgIf } from '@angular/common';
 import { Estado, Prioridade, TaskService } from '../services/task.service';
+import { NotificationService } from '../services/notification.service';
+import { Observable } from 'rxjs';
 
 export interface Tarefa {
   id: number;
@@ -47,6 +49,38 @@ export interface SubTarefa {
   dthrfim?: Date | number | string | null;
 }
 
+// Interfaces para tipagem da resposta da API
+interface TarefaResponse {
+  id: number;
+  titulo: string;
+  descricao?: string;
+  idmae?: number;
+  idusuario?: number;
+  dthrinicio?: string;
+  dthrfim?: string;
+  progresso?: number;
+  Prioridade?: { nome: string };
+  EstadoAtual?: { nome: string };
+  TarefasEstados?: { Estado?: { nome: string } }[];
+  Usuario?: { nome: string };
+  Documentos?: Documento[];
+}
+
+interface TarefasApiResponse {
+  tarefas: TarefaResponse[];
+  opcoes: {
+    prioridades: Prioridade[];
+    estados: Estado[];
+  };
+}
+
+interface ProgressoTarefaSalvo {
+  id: number;
+  progresso: number;
+  estado: string;
+  subTarefas: { id: number; estado: string }[];
+}
+
 @Component({
   selector: 'app-menu',
   standalone: true,
@@ -82,7 +116,30 @@ export class HomeComponent implements OnInit {
   private taskService = inject(TaskService);
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
+  private notificationService = inject(NotificationService);
 
+  /**
+   * Converte uma data para o formato datetime-local usando o horário local do navegador
+   * @param data - Data em qualquer formato (string ISO, Date, etc)
+   * @returns String formatada no padrão YYYY-MM-DDTHH:mm para input datetime-local
+   */
+  private formatarDataParaDateTimeLocal(data: Date | string | number | null | undefined): string | null {
+    if (!data) return null;
+    
+    const dataObj = new Date(data);
+    // Verifica se a data é válida
+    if (isNaN(dataObj.getTime())) return null;
+    
+    // Obtém os componentes da data/hora local
+    const ano = dataObj.getFullYear();
+    const mes = String(dataObj.getMonth() + 1).padStart(2, '0');
+    const dia = String(dataObj.getDate()).padStart(2, '0');
+    const horas = String(dataObj.getHours()).padStart(2, '0');
+    const minutos = String(dataObj.getMinutes()).padStart(2, '0');
+    
+    // Formato: YYYY-MM-DDTHH:mm (formato esperado pelo input datetime-local)
+    return `${ano}-${mes}-${dia}T${horas}:${minutos}`;
+  }
 
   ngOnInit(): void {
     this.carregarUsuario(); // Obter dados do usuário logado
@@ -118,16 +175,20 @@ export class HomeComponent implements OnInit {
     });
 
     // Formulário para criação/edição de tarefas
-    function getHorarioBrasilia(): Date {
-      const dataAtual = new Date();
-      const fusoHorarioBrasilia = -3; // UTC-3 para Brasília
-      const diferencaUTC = dataAtual.getTimezoneOffset() / 60; // Diferença do UTC em horas
-      const horarioBrasilia = new Date(
-        dataAtual.setHours(
-          dataAtual.getHours() + fusoHorarioBrasilia - diferencaUTC
-        )
-      );
-      return horarioBrasilia;
+    /**
+     * Retorna a data/hora local formatada para o input datetime-local
+     * Usa o horário local do navegador/cliente, não força nenhum fuso horário específico
+     */
+    function getHorarioLocal(): string {
+      const agora = new Date();
+      // Obtém os componentes da data/hora local
+      const ano = agora.getFullYear();
+      const mes = String(agora.getMonth() + 1).padStart(2, '0');
+      const dia = String(agora.getDate()).padStart(2, '0');
+      const horas = String(agora.getHours()).padStart(2, '0');
+      const minutos = String(agora.getMinutes()).padStart(2, '0');
+      // Formato: YYYY-MM-DDTHH:mm (formato esperado pelo input datetime-local)
+      return `${ano}-${mes}-${dia}T${horas}:${minutos}`;
     }
     this.tarefaForm = this.fb.group({
       id: [null], // ID da tarefa para atualizações
@@ -138,7 +199,7 @@ export class HomeComponent implements OnInit {
       idestado: [null, Validators.required], // Estado da tarefa (obrigatório)
       idmae: [null], // Subtarefa (opcional)
       dthrinicio: [
-        getHorarioBrasilia().toISOString().slice(0, 16), // Data de início ajustada para Brasília
+        getHorarioLocal(), // Data de início no horário local do cliente
       ],
       dthrfim: [null], // Data de fim (opcional)
     });
@@ -152,7 +213,7 @@ export class HomeComponent implements OnInit {
         // Atualiza o formulário com o ID do usuário logado
         this.tarefaForm.patchValue({ idusuario: usuario.id }); // Corrigido para 'idusuario' conforme o form
       },
-      error: () => alert('Erro ao carregar usuário logado.'),
+      error: () => this.notificationService.showError('Erro ao carregar usuário logado.'),
     });
   }
   /** Carrega os dados do usuário logado */
@@ -160,7 +221,7 @@ export class HomeComponent implements OnInit {
     try {
       const idUsuario = this.authService.obterIdUsuarioLogado();
       if (idUsuario === null) {
-        alert('Usuário não autenticado. Faça login novamente.');
+        this.notificationService.showWarning('Usuário não autenticado. Faça login novamente.');
         this.router.navigate(['/login']);
         return;
       }
@@ -170,35 +231,34 @@ export class HomeComponent implements OnInit {
           this.usuario = [usuario]; // Corrigido para ser um array, conforme esperado pelo restante do código
           this.usuarioForm.patchValue(usuario); // Preenche o formulário com o objeto do usuário
         },
-        error: (err) => {
-          console.error('Erro ao carregar usuário:', err);
-          alert('Erro ao carregar os dados do usuário.');
+        error: () => {
+          // Não loga detalhes do erro para prevenir vazamento de informações
+          this.notificationService.showError('Erro ao carregar os dados do usuário.');
         },
       });
-    } catch (error) {
-      console.error('Erro ao obter ID do usuário logado:', error);
-      alert('Erro ao carregar o usuário. Faça login novamente.');
+    } catch {
+      // Não loga detalhes do erro para prevenir vazamento de informações
+      this.notificationService.showError('Erro ao carregar o usuário. Faça login novamente.');
     }
   }
   /** Salva os dados atualizados do usuário */
  public salvarDadosUsuario(): void {
     if (this.usuarioForm.invalid) {
-      alert('Preencha todos os campos obrigatórios corretamente.');
+      this.notificationService.showWarning('Preencha todos os campos obrigatórios corretamente.');
       return;
     }
 
     const dadosAtualizados = this.usuarioForm.value;
 
-    console.log('Payload enviado ao backend:', dadosAtualizados);
-
+    // Não loga dados do usuário por segurança
     this.authService.atualizarUsuario(dadosAtualizados).subscribe({
       next: (res) => {
-        alert(res?.message || 'Dados atualizados com sucesso!');
+        this.notificationService.showSuccess(res?.message || 'Dados atualizados com sucesso!');
         this.carregarUsuario();
       },
-      error: (err) => {
-        console.error('Erro ao atualizar usuário:', err);
-        alert(`Erro no servidor (${err.status}). Tente novamente mais tarde.`);
+      error: () => {
+        // Não expõe detalhes do erro (status code, etc) para prevenir vazamento de informações
+        this.notificationService.showError('Erro ao atualizar dados. Tente novamente mais tarde.');
       },
     });
   }
@@ -227,7 +287,7 @@ export class HomeComponent implements OnInit {
         this.prioridades = res.prioridades;
         this.estados = res.estados;
       },
-      error: () => alert('Erro ao carregar prioridades e estados.'),
+      error: () => this.notificationService.showError('Erro ao carregar prioridades e estados.'),
     });
   }
   /** Carrega as prioridades diretamente da tabela prioridade */
@@ -235,11 +295,11 @@ export class HomeComponent implements OnInit {
     this.taskService.obterPrioridades().subscribe({
       next: (res) => {
         this.prioridades = res;
-        console.log('Prioridades carregadas:', this.prioridades);
+        // Não loga dados por segurança
       },
-      error: (err) => {
-        console.error('Erro ao carregar prioridades:', err);
-        alert(
+      error: () => {
+        // Não loga detalhes do erro
+        this.notificationService.showError(
           'Erro ao carregar prioridades. Verifique a conexão com o servidor.'
         );
       },
@@ -249,19 +309,20 @@ export class HomeComponent implements OnInit {
   private carregarTarefas(): void {
     this.loading = true; // Inicia o carregamento
 
-    this.taskService.obterTarefas().subscribe({
-      next: (res: any) => {
+    // Faz cast para o tipo correto da resposta da API
+    (this.taskService.obterTarefas() as unknown as Observable<TarefasApiResponse>).subscribe({
+      next: (res: TarefasApiResponse) => {
         this.loading = false; // Finaliza o carregamento
 
-        console.log(res); // Inspeciona a resposta
+        // Não loga dados sensíveis das tarefas
 
         if (res && Array.isArray(res.tarefas)) {
-          const tarefasPrincipais = res.tarefas.filter((t: any) => !t.idmae);
+          const tarefasPrincipais = res.tarefas.filter((t: TarefaResponse) => !t.idmae);
 
-          this.tarefas = tarefasPrincipais.map((tarefa: any) => {
+          this.tarefas = tarefasPrincipais.map((tarefa: TarefaResponse) => {
             const subTarefasAssociadas = res.tarefas
-              .filter((sub: { idmae?: number }) => sub.idmae === tarefa.id)
-              .map((sub: any) => ({
+              .filter((sub: TarefaResponse) => sub.idmae === tarefa.id)
+              .map((sub: TarefaResponse) => ({
                 id: sub.id,
                 titulo: sub.titulo,
                 descricao: sub.descricao,
@@ -303,16 +364,14 @@ export class HomeComponent implements OnInit {
           // Carrega o estado salvo do localStorage
           this.carregarLocalStorage();
         } else {
-          console.error(
-            'res não é um array ou não contém a propriedade tarefas:',
-            res
-          );
+          // Não loga detalhes da resposta por segurança
+          this.notificationService.showError('Formato de dados inválido recebido do servidor.');
         }
       },
-      error: (err) => {
+      error: () => {
         this.loading = false; // Finaliza o carregamento em caso de erro
-        console.error('Erro ao carregar tarefas:', err);
-        alert('Erro ao carregar tarefas.');
+        // Não loga detalhes do erro
+        this.notificationService.showError('Erro ao carregar tarefas.');
       },
     });
   }
@@ -324,17 +383,23 @@ export class HomeComponent implements OnInit {
   /** Salvar uma nova tarefa ou editar uma existente */
   public salvarTarefa(): void {
     if (this.tarefaForm.invalid) {
-      alert('Preencha todos os campos obrigatórios.');
+      this.notificationService.showWarning('Preencha todos os campos obrigatórios.');
       return;
     }
+
+    // Converte as datas do formato datetime-local (horário local) para ISO (UTC) para envio ao servidor
+    const dthrinicioISO = this.tarefaForm.value.dthrinicio
+      ? new Date(this.tarefaForm.value.dthrinicio).toISOString()
+      : null;
+    const dthrfimISO = this.tarefaForm.value.dthrfim
+      ? new Date(this.tarefaForm.value.dthrfim).toISOString()
+      : null;
 
     const tarefaData = {
       ...this.tarefaForm.value,
       idusuario: this.authService.obterIdUsuarioLogado(),
-      dthrinicio: new Date(this.tarefaForm.value.dthrinicio).toISOString(),
-      dthrfim: this.tarefaForm.value.dthrfim
-        ? new Date(this.tarefaForm.value.dthrfim).toISOString()
-        : null,
+      dthrinicio: dthrinicioISO,
+      dthrfim: dthrfimISO,
     };
 
     Object.keys(tarefaData).forEach((key) => {
@@ -346,7 +411,7 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    console.log('Dados da tarefa a serem enviados:', tarefaData);
+    // Não loga dados da tarefa por segurança
 
     if (this.tarefaEditando) {
       // MODO DE EDIÇÃO: Atualiza uma tarefa ou subtarefa existente.
@@ -360,29 +425,20 @@ export class HomeComponent implements OnInit {
         ? 'Erro ao atualizar subtarefa'
         : 'Erro ao atualizar tarefa';
 
-      console.log(
-        `Atualizando ${eSubtarefa ? 'subtarefa' : 'tarefa'}:`,
-        idParaAtualizar,
-        tarefaData
-      );
-
       this.taskService.atualizarTarefa(idParaAtualizar, tarefaData).subscribe({
         next: () => {
           // Se há um arquivo selecionado, faz o upload
           if (this.arquivoSelecionado && !eSubtarefa) {
             this.fazerUploadDocumento(idParaAtualizar, tarefaData.idusuario);
           } else {
-            alert(mensagemSucesso);
+            this.notificationService.showSuccess(mensagemSucesso);
             this.carregarTarefas();
             this.fecharModal();
           }
         },
-        error: (err) => {
-          console.error(`${mensagemErro}:`, err);
-          alert(
-            `${mensagemErro}: ` +
-              (err.error?.message || err.message || 'Erro desconhecido')
-          );
+        error: () => {
+          // Não expõe detalhes do erro
+          this.notificationService.showError(mensagemErro + '. Tente novamente.');
         },
       });
     } else {
@@ -393,16 +449,13 @@ export class HomeComponent implements OnInit {
           .criarSubTarefa(tarefaData.idmae, tarefaData)
           .subscribe({
             next: () => {
-              alert('Subtarefa criada com sucesso!');
+              this.notificationService.showSuccess('Subtarefa criada com sucesso!');
               this.carregarTarefas();
               this.fecharModal();
             },
-            error: (err) => {
-              console.error('Erro ao criar subtarefa:', err);
-              alert(
-                'Erro ao criar subtarefa: ' +
-                  (err.error?.message || err.message || 'Erro desconhecido')
-              );
+            error: () => {
+              // Não expõe detalhes do erro
+              this.notificationService.showError('Erro ao criar subtarefa. Tente novamente.');
             },
           });
       } else {
@@ -413,14 +466,14 @@ export class HomeComponent implements OnInit {
             if (this.arquivoSelecionado && res?.id) {
               this.fazerUploadDocumento(res.id, tarefaData.idusuario);
             } else {
-              alert('Nova tarefa criada com sucesso!');
+              this.notificationService.showSuccess('Nova tarefa criada com sucesso!');
               this.carregarTarefas();
               this.fecharModal();
             }
           },
-          error: (err) => {
-            console.error('Erro ao criar nova tarefa:', err);
-            alert('Erro ao criar nova tarefa.');
+          error: () => {
+            // Não expõe detalhes do erro
+            this.notificationService.showError('Erro ao criar nova tarefa. Tente novamente.');
           },
         });
       }
@@ -428,60 +481,115 @@ export class HomeComponent implements OnInit {
   }
   public salvarNovaTarefa(tarefa: Tarefa): void {
     if (!tarefa.usuario || isNaN(Number(tarefa.usuario))) {
-      alert('ID do usuário é obrigatório e deve ser um número válido.');
+      this.notificationService.showWarning('ID do usuário é obrigatório e deve ser um número válido.');
       return;
     }
 
     this.taskService.obterTarefas().subscribe({
       next: () => {
-        alert('Tarefa criada com sucesso!');
+        this.notificationService.showSuccess('Tarefa criada com sucesso!');
         this.carregarTarefas();
       },
-      error: (err: { error?: { message?: string }; message?: string }) => {
-        console.error('Erro ao criar tarefa:', err);
-        alert('Erro ao criar tarefa. Verifique os dados.');
+      error: () => {
+        // Não expõe detalhes do erro
+        this.notificationService.showError('Erro ao criar tarefa. Verifique os dados.');
       },
     });
   }
   /** Excluir uma tarefa */
   public excluirTarefa(id: number): void {
+    // Validação de segurança: verifica se o usuário tem permissão
+    if (!this.validarPermissaoTarefa(id)) {
+      this.notificationService.showError('Você não tem permissão para excluir esta tarefa.');
+      return;
+    }
+
+    if (!this.notificationService.confirm('Tem certeza que deseja excluir esta tarefa?')) {
+      return;
+    }
+
     this.taskService.excluirTarefa(id).subscribe({
       next: () => {
-        alert('Tarefa excluída com sucesso.');
+        this.notificationService.showSuccess('Tarefa excluída com sucesso.');
         this.carregarTarefas(); // Recarrega os cards após exclusão
       },
-      error: (err) => {
-        console.error('Erro ao excluir tarefa:', err);
-        alert('Erro ao excluir tarefa.');
+      error: () => {
+        // Não expõe detalhes do erro
+        this.notificationService.showError('Erro ao excluir tarefa. Tente novamente.');
       },
     });
   }
 
+  /**
+   * Valida se o usuário tem permissão para acessar/modificar uma tarefa
+   * Previne Insecure Direct Object References (IDOR)
+   * IMPORTANTE: Esta é uma validação no frontend, mas o backend DEVE fazer a mesma validação
+   */
+  private validarPermissaoTarefa(tarefaId: number): boolean {
+    const tarefa = this.tarefas.find(t => t.id === tarefaId);
+    if (!tarefa) {
+      return false;
+    }
+    
+    const idUsuarioLogado = this.authService.obterIdUsuarioLogado();
+    if (!idUsuarioLogado) {
+      return false;
+    }
+    
+    // Verifica se a tarefa pertence ao usuário logado
+    // Nota: Isso é uma validação no frontend, mas o backend DEVE fazer a mesma validação
+    const tarefaComId = tarefa as Tarefa & { idusuario?: number };
+    return tarefa.usuario === this.usuario[0]?.nome || 
+           tarefaComId.idusuario === idUsuarioLogado;
+  }
+
+  /**
+   * Sanitiza texto para prevenir XSS
+   * Remove tags HTML e caracteres perigosos
+   */
+  private sanitizarTexto(texto: string): string {
+    if (!texto) return '';
+    
+    // Remove tags HTML
+    let sanitizado = texto.replace(/<[^>]*>/g, '');
+    
+    // Remove caracteres de controle
+    // eslint-disable-next-line no-control-regex
+    sanitizado = sanitizado.replace(/[\x00-\x1F\x7F]/g, '');
+    
+    // Limita tamanho
+    if (sanitizado.length > 100) {
+      sanitizado = sanitizado.substring(0, 100) + '...';
+    }
+    
+    return sanitizado;
+  }
+
   /** Excluir uma subtarefa */
- public  excluirSubTarefa(subTarefa: SubTarefa, tarefa: any): void {
+ public  excluirSubTarefa(subTarefa: SubTarefa, tarefa: Tarefa): void {
+    // Sanitiza o título para prevenir XSS
+    const tituloSanitizado = this.sanitizarTexto(subTarefa.titulo);
+    
     if (
-      confirm(
-        `Tem certeza que deseja excluir a subtarefa "${subTarefa.titulo}"?`
+      this.notificationService.confirm(
+        `Tem certeza que deseja excluir a subtarefa "${tituloSanitizado}"?`
       )
     ) {
       this.taskService.excluirSubTarefa(subTarefa.id).subscribe({
         next: () => {
-          alert('Subtarefa excluída com sucesso.');
+          this.notificationService.showSuccess('Subtarefa excluída com sucesso.');
           // Remove a subtarefa da lista local
           tarefa.subTarefas = tarefa.subTarefas.filter(
-            (sub: Tarefa) => sub.id !== subTarefa.id
+            (sub: SubTarefa) => sub.id !== subTarefa.id
           );
           // Atualiza o progresso da tarefa
           this.atualizarProgresso(tarefa);
           // Recarrega as tarefas para sincronizar com o backend
           this.carregarTarefas();
         },
-        error: (err) => {
-          console.error('Erro ao excluir subtarefa:', err);
-          alert(
-            'Erro ao excluir subtarefa: ' +
-              (err.error?.message || err.message || 'Erro desconhecido')
-          );
+        error: () => {
+          // Não expõe detalhes do erro
+          this.notificationService.showError('Erro ao excluir subtarefa. Tente novamente.');
         },
       });
     }
@@ -518,13 +626,13 @@ export class HomeComponent implements OnInit {
           // Remove estado antigo
           localStorage.removeItem('progressoTarefas');
         }
-      } catch (error) {
-        console.error('Erro ao carregar o progresso do localStorage:', error);
+      } catch {
+        // Não loga erros do localStorage por segurança
         localStorage.removeItem('progressoTarefas');
       }
     }
   }
- private  aplicarProgressoSalvo(progressoSalvo: any[]): void {
+ private  aplicarProgressoSalvo(progressoSalvo: ProgressoTarefaSalvo[]): void {
     progressoSalvo.forEach((progressoTarefa) => {
       const tarefa = this.tarefas.find((t) => t.id === progressoTarefa.id);
 
@@ -534,7 +642,7 @@ export class HomeComponent implements OnInit {
         tarefa.estado = progressoTarefa.estado || tarefa.estado;
 
         // Aplica o estado das subtarefas
-        progressoTarefa.subTarefas.forEach((progressoSub: SubTarefa) => {
+        progressoTarefa.subTarefas.forEach((progressoSub: { id: number; estado: string }) => {
           const subTarefa = tarefa.subTarefas.find(
             (s: { id: Tarefa['id'] }) => s.id === progressoSub.id
           );
@@ -549,11 +657,22 @@ export class HomeComponent implements OnInit {
   public incluirSubTarefa(tarefa: Tarefa): void {
     this.isSubTarefa = true; // Define que estamos criando uma subtarefa
     this.tarefaMae = tarefa; // Armazena a tarefa pai
+    
+    // Obtém a data/hora local atual formatada
+    const agora = new Date();
+    const ano = agora.getFullYear();
+    const mes = String(agora.getMonth() + 1).padStart(2, '0');
+    const dia = String(agora.getDate()).padStart(2, '0');
+    const horas = String(agora.getHours()).padStart(2, '0');
+    const minutos = String(agora.getMinutes()).padStart(2, '0');
+    const dataInicioLocal = `${ano}-${mes}-${dia}T${horas}:${minutos}`;
+    
     // Atualiza o formulário com os valores da tarefa pai e bloqueia os campos necessários
     this.tarefaForm.patchValue({
       idmae: tarefa.id, // ID da tarefa pai
       titulo: '', // Campo editável para o título da subtarefa
       descricao: '', // Campo editável para a descrição da subtarefa
+      dthrinicio: dataInicioLocal, // Data de início no horário local do cliente
     });
 
     // Configura os campos para subtarefa
@@ -572,16 +691,7 @@ export class HomeComponent implements OnInit {
     const idPrioridade = this.obterIdPrioridade(tarefa.prioridade);
     const idEstado = this.obterIdEstado(tarefa.estado);
 
-    console.log('Mapeando tarefa para formulário:', {
-      id: tarefa.id,
-      idusuario: tarefa.usuario || this.authService.obterIdUsuarioLogado(),
-      idprioridade: idPrioridade,
-      titulo: tarefa.titulo,
-      descricao: tarefa.descricao,
-      idestado: idEstado,
-      dthrinicio: tarefa.dthrinicio,
-      dthrfim: tarefa.dthrfim,
-    });
+    // Não loga dados da tarefa por segurança
 
     this.tarefaForm.patchValue({
       id: tarefa.id,
@@ -590,19 +700,15 @@ export class HomeComponent implements OnInit {
       titulo: tarefa.titulo,
       descricao: tarefa.descricao,
       idestado: idEstado,
-      dthrinicio: tarefa.dthrinicio
-        ? new Date(tarefa.dthrinicio).toISOString().slice(0, 16)
-        : null,
-      dthrfim: tarefa.dthrfim
-        ? new Date(tarefa.dthrfim).toISOString().slice(0, 16) // Formato ISO para `datetime-local`
-        : null,
+      dthrinicio: this.formatarDataParaDateTimeLocal(tarefa.dthrinicio),
+      dthrfim: this.formatarDataParaDateTimeLocal(tarefa.dthrfim),
     });
     this.isModalVisible = true;
   }
   /** Editar uma subtarefa */
   public editarSubTarefa(subTarefa: SubTarefa, tarefaMae: Tarefa): void {
     if (this.isSubTarefaConcluida(subTarefa)) {
-      alert('Não é possível editar uma subtarefa que já foi concluída.');
+      this.notificationService.showWarning('Não é possível editar uma subtarefa que já foi concluída.');
       return;
     }
 
@@ -614,12 +720,7 @@ export class HomeComponent implements OnInit {
     const idPrioridade = this.obterIdPrioridade(subTarefa.prioridade);
     const idEstado = this.obterIdEstado(subTarefa.estado);
 
-    console.log('Editando subtarefa:', {
-      subTarefa,
-      idPrioridade,
-      idEstado,
-      tarefaMae,
-    });
+    // Não loga dados da subtarefa por segurança
 
     // Preenche o formulário com os dados da subtarefa
     this.tarefaForm.patchValue({
@@ -630,12 +731,8 @@ export class HomeComponent implements OnInit {
       descricao: subTarefa.descricao,
       idestado: idEstado,
       idmae: tarefaMae.id, // Referência à tarefa principal
-      dthrinicio: subTarefa.dthrinicio
-        ? new Date(subTarefa.dthrinicio).toISOString().slice(0, 16)
-        : null,
-      dthrfim: subTarefa.dthrfim
-        ? new Date(subTarefa.dthrfim).toISOString().slice(0, 16)
-        : null,
+      dthrinicio: this.formatarDataParaDateTimeLocal(subTarefa.dthrinicio),
+      dthrfim: this.formatarDataParaDateTimeLocal(subTarefa.dthrfim),
     });
 
     // Configura os campos para edição de subtarefa
@@ -664,21 +761,135 @@ export class HomeComponent implements OnInit {
     this.inicializarFormularios();
 
   }
-  // Handle file selection
+  /**
+   * Valida e processa arquivo selecionado com verificações de segurança
+   * Segue OWASP: valida tipo, tamanho e nome do arquivo
+   */
   public onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
 
-    if (file) {
-      this.arquivoSelecionado = file;
-      console.log('Arquivo selecionado:', file.name, 'Tamanho:', file.size);
+    if (!file) {
+      return;
     }
+
+    // Validação de segurança do arquivo
+    const validationResult = this.validarArquivo(file);
+    if (!validationResult.isValid) {
+      this.notificationService.showError(validationResult.errorMessage || 'Arquivo inválido');
+      // Limpa o input
+      input.value = '';
+      this.arquivoSelecionado = null;
+      return;
+    }
+
+    this.arquivoSelecionado = file;
+    // Não loga informações sensíveis do arquivo
+  }
+
+  /**
+   * Valida arquivo seguindo práticas OWASP
+   * - Verifica tipo MIME e extensão
+   * - Verifica tamanho máximo
+   * - Sanitiza nome do arquivo
+   */
+  private validarArquivo(file: File): { isValid: boolean; errorMessage?: string } {
+    // Tipos de arquivo permitidos (whitelist)
+    const tiposPermitidos = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'text/plain',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/gif'
+    ];
+
+    const extensoesPermitidas = [
+      '.pdf', '.doc', '.docx', '.txt', '.xls', '.xlsx', '.jpg', '.jpeg', '.png', '.gif'
+    ];
+
+    // Tamanho máximo: 10MB (10 * 1024 * 1024 bytes)
+    const tamanhoMaximo = 10 * 1024 * 1024;
+
+    // Valida tipo MIME
+    if (!tiposPermitidos.includes(file.type)) {
+      return {
+        isValid: false,
+        errorMessage: 'Tipo de arquivo não permitido. Use: PDF, DOC, DOCX, TXT, XLS, XLSX, JPG, PNG ou GIF.'
+      };
+    }
+
+    // Valida extensão
+    const extensao = this.obterExtensao(file.name);
+    if (!extensoesPermitidas.includes(extensao.toLowerCase())) {
+      return {
+        isValid: false,
+        errorMessage: 'Extensão de arquivo não permitida.'
+      };
+    }
+
+    // Valida tamanho
+    if (file.size > tamanhoMaximo) {
+      return {
+        isValid: false,
+        errorMessage: `Arquivo muito grande. Tamanho máximo: 10MB. Tamanho atual: ${(file.size / 1024 / 1024).toFixed(2)}MB`
+      };
+    }
+
+    // Valida nome do arquivo (prevenir path traversal e caracteres perigosos)
+    if (!this.validarNomeArquivo(file.name)) {
+      return {
+        isValid: false,
+        errorMessage: 'Nome do arquivo contém caracteres inválidos.'
+      };
+    }
+
+    return { isValid: true };
+  }
+
+  /**
+   * Obtém a extensão do arquivo de forma segura
+   */
+  private obterExtensao(nomeArquivo: string): string {
+    const ultimoPonto = nomeArquivo.lastIndexOf('.');
+    if (ultimoPonto === -1 || ultimoPonto === 0) {
+      return '';
+    }
+    return nomeArquivo.substring(ultimoPonto);
+  }
+
+  /**
+   * Valida nome do arquivo para prevenir path traversal e caracteres perigosos
+   */
+  private validarNomeArquivo(nomeArquivo: string): boolean {
+    // Remove caracteres perigosos
+    // eslint-disable-next-line no-control-regex
+    const caracteresPerigosos = /[<>:"|?*\x00-\x1F]/;
+    if (caracteresPerigosos.test(nomeArquivo)) {
+      return false;
+    }
+
+    // Previne path traversal
+    if (nomeArquivo.includes('..') || nomeArquivo.includes('/') || nomeArquivo.includes('\\')) {
+      return false;
+    }
+
+    // Limita tamanho do nome
+    if (nomeArquivo.length > 255) {
+      return false;
+    }
+
+    return true;
   }
 
   // Upload de documento para uma tarefa
   private fazerUploadDocumento(idtarefa: number, idusuario: number): void {
     if (!this.arquivoSelecionado) {
-      alert('Nenhum arquivo selecionado para upload.');
+      this.notificationService.showWarning('Nenhum arquivo selecionado para upload.');
       return;
     }
 
@@ -687,17 +898,17 @@ export class HomeComponent implements OnInit {
         const mensagem = this.tarefaEditando
           ? 'Tarefa atualizada e documento anexado com sucesso!'
           : 'Tarefa criada e documento anexado com sucesso!';
-        alert(mensagem);
+        this.notificationService.showSuccess(mensagem);
         this.arquivoSelecionado = null;
         this.carregarTarefas();
         this.fecharModal();
       },
-      error: (err) => {
-        console.error('Erro ao fazer upload do documento:', err);
+      error: () => {
+        // Não expõe detalhes do erro
         const mensagem = this.tarefaEditando
-          ? 'Tarefa atualizada, mas erro ao anexar documento: '
-          : 'Tarefa criada, mas erro ao anexar documento: ';
-        alert(mensagem + (err.error?.message || err.message || 'Erro desconhecido'));
+          ? 'Tarefa atualizada, mas erro ao anexar documento.'
+          : 'Tarefa criada, mas erro ao anexar documento.';
+        this.notificationService.showError(mensagem);
         this.carregarTarefas();
         this.fecharModal();
       },
@@ -718,24 +929,24 @@ export class HomeComponent implements OnInit {
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
       },
-      error: (err) => {
-        console.error('Erro ao fazer download do documento:', err);
-        alert('Erro ao fazer download do documento: ' + (err.error?.message || err.message || 'Erro desconhecido'));
+      error: () => {
+        // Não expõe detalhes do erro
+        this.notificationService.showError('Erro ao fazer download do documento. Tente novamente.');
       },
     });
   }
 
   // Excluir um documento
   public excluirDocumento(id: number): void {
-    if (confirm('Tem certeza que deseja excluir este documento?')) {
+    if (this.notificationService.confirm('Tem certeza que deseja excluir este documento?')) {
       this.taskService.excluirDocumento(id).subscribe({
         next: () => {
-          alert('Documento excluído com sucesso!');
+          this.notificationService.showSuccess('Documento excluído com sucesso!');
           this.carregarTarefas(); // Recarrega as tarefas para atualizar a lista de documentos
         },
-        error: (err) => {
-          console.error('Erro ao excluir documento:', err);
-          alert('Erro ao excluir documento: ' + (err.error?.message || err.message || 'Erro desconhecido'));
+        error: () => {
+          // Não expõe detalhes do erro
+          this.notificationService.showError('Erro ao excluir documento. Tente novamente.');
         },
       });
     }
@@ -774,7 +985,7 @@ export class HomeComponent implements OnInit {
   // Logout and navigate to login
  public CliqueHome(pageName: string): void {
     this.authService.removerToken();
-    alert('Você saiu do sistema!');
+    this.notificationService.showInfo('Você saiu do sistema!');
     this.router.navigate([pageName]);
   }
   // Calculate task progress
@@ -802,7 +1013,7 @@ export class HomeComponent implements OnInit {
       (e: Estado) => e.nome === 'Concluído'
     );
     if (!estadoConcluido) {
-      alert(
+      this.notificationService.showError(
         'Estado "Concluído" não encontrado. Verifique a configuração do sistema.'
       );
       return;
@@ -813,11 +1024,7 @@ export class HomeComponent implements OnInit {
       dthrfim: new Date().toISOString(), // Define a data/hora de conclusão
     };
 
-    console.log('Marcando subtarefa como concluída:', {
-      subtarefaId: subTarefa.id,
-      dadosParaAtualizar,
-      estadoConcluido,
-    });
+    // Não loga dados por segurança
 
     // 4. Atualiza a subtarefa no backend
     this.taskService
@@ -860,7 +1067,7 @@ export class HomeComponent implements OnInit {
     tarefa.progresso = progresso;
 
     // 3. Prepara o corpo da requisição com o progresso e estado
-    const dadosParaAtualizar: any = {
+    const dadosParaAtualizar: { progresso: number; idestado?: number } = {
       progresso: progresso,
     };
 
@@ -873,17 +1080,11 @@ export class HomeComponent implements OnInit {
         dadosParaAtualizar.idestado = estadoConcluido.id;
       }
     }
-    console.log('Atualizando progresso da tarefa:', {
-      tarefaId: tarefa.id,
-      progresso,
-      dadosParaAtualizar,
-    });
+    // Não loga dados por segurança
     // 4. Atualiza a tarefa no backend
     this.taskService.atualizarTarefa(tarefa.id, dadosParaAtualizar).subscribe({
       next: () => {
-        console.log(
-          `Progresso da tarefa ${tarefa.id} atualizado para ${progresso}%`
-        );
+        // Não loga dados por segurança
 
         // 5. Se a tarefa foi concluída, atualiza a interface
         if (progresso === 100) {
@@ -891,12 +1092,9 @@ export class HomeComponent implements OnInit {
           tarefa.dthrfim = new Date();
         }
       },
-      error: (err) => {
-        console.error('Erro ao atualizar progresso no backend:', err);
-        alert(
-          'Erro ao atualizar progresso: ' +
-            (err.error?.message || err.message || 'Erro desconhecido')
-        );
+      error: () => {
+        // Não loga detalhes do erro por segurança
+        this.notificationService.showError('Erro ao atualizar progresso. Tente novamente.');
       },
     });
   }
@@ -914,6 +1112,7 @@ export class HomeComponent implements OnInit {
     return {
       'subtarefa-concluida': this.isSubTarefaConcluida(sub),
       'subtarefa-desabilitada': this.isSubTarefaDesabilitada(sub),
+      [this.obterClassePrioridade(sub.prioridade)]: true,
     };
   }
   /** Obtém o ID da prioridade pelo nome */
@@ -925,5 +1124,68 @@ export class HomeComponent implements OnInit {
   private obterIdEstado(nomeEstado: string): number | null {
     const estado = this.estados.find((e) => e.nome === nomeEstado);
     return estado ? estado.id : null;
+  }
+
+  /**
+   * Obtém a classe CSS baseada na prioridade da tarefa
+   * @param prioridade - Nome da prioridade
+   * @returns Classe CSS correspondente à prioridade
+   */
+  public obterClassePrioridade(prioridade: string): string {
+    if (!prioridade) return 'priority-default';
+    
+    const prioridadeLower = prioridade.toLowerCase().trim();
+    
+    if (prioridadeLower.includes('muito alta') || prioridadeLower.includes('muito-alta')) {
+      return 'priority-muito-alta';
+    } else if (prioridadeLower.includes('alta')) {
+      return 'priority-alta';
+    } else if (prioridadeLower.includes('média') || prioridadeLower.includes('media')) {
+      return 'priority-media';
+    } else if (prioridadeLower.includes('baixa')) {
+      return 'priority-baixa';
+    }
+    
+    return 'priority-default';
+  }
+
+  /**
+   * Obtém a cor de fundo baseada na prioridade
+   * @param prioridade - Nome da prioridade
+   * @returns Cor em formato hexadecimal
+   */
+  public obterCorPrioridade(prioridade: string): string {
+    if (!prioridade) return '#6c757d';
+    
+    const prioridadeLower = prioridade.toLowerCase().trim();
+    
+    if (prioridadeLower.includes('muito alta') || prioridadeLower.includes('muito-alta')) {
+      return '#dc3545'; // Vermelho
+    } else if (prioridadeLower.includes('alta')) {
+      return '#fd7e14'; // Laranja
+    } else if (prioridadeLower.includes('média') || prioridadeLower.includes('media')) {
+      return '#ffc107'; // Amarelo
+    } else if (prioridadeLower.includes('baixa')) {
+      return '#17a2b8'; // Ciano
+    }
+    
+    return '#6c757d'; // Cinza padrão
+  }
+
+  /**
+   * Obtém a cor de texto baseada na prioridade (para contraste)
+   * @param prioridade - Nome da prioridade
+   * @returns Cor em formato hexadecimal
+   */
+  public obterCorTextoPrioridade(prioridade: string): string {
+    if (!prioridade) return '#ffffff';
+    
+    const prioridadeLower = prioridade.toLowerCase().trim();
+    
+    if (prioridadeLower.includes('média') || prioridadeLower.includes('media')) {
+      return '#000000'; // Preto para amarelo (melhor contraste)
+    }
+    
+    return '#ffffff'; // Branco para outras cores
   }
 }

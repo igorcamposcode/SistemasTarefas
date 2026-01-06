@@ -29,8 +29,13 @@ export class AuthService {
     return this.http.post<{ token: string }>(`${API_PATH}/login`, { email, senha }).pipe(
       tap((response) => {
         if (response.token) {
-          this.armazenarToken(response.token);
-          console.log('Token salvo:', response.token);
+          // Valida o token antes de armazenar
+          if (this.validarTokenJWT(response.token)) {
+            this.armazenarToken(response.token);
+            // Não loga o token por segurança
+          } else {
+            throw new Error('Token inválido recebido do servidor.');
+          }
         } else {
           throw new Error('Token não recebido do servidor.');
         }
@@ -52,8 +57,38 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     // localStorage.removeItem('userId'); // Remover se não estiver mais usando
   }
+  /**
+   * Armazena o token de forma segura
+   * Valida o token antes de armazenar
+   */
   armazenarToken(token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
+    if (!this.validarTokenJWT(token)) {
+      throw new Error('Token inválido. Não foi possível armazenar.');
+    }
+    try {
+      localStorage.setItem(this.TOKEN_KEY, token);
+    } catch (error) {
+      // Em caso de erro (ex: localStorage desabilitado), não expõe detalhes
+      throw new Error('Erro ao armazenar token de autenticação.');
+    }
+  }
+
+  /**
+   * Valida a estrutura básica de um token JWT
+   * Verifica se tem 3 partes separadas por ponto
+   */
+  private validarTokenJWT(token: string): boolean {
+    if (!token || typeof token !== 'string') {
+      return false;
+    }
+    
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      return false;
+    }
+    
+    // Verifica se as partes não estão vazias
+    return parts.every(part => part.length > 0);
   }
 
   obterToken(): string | null {
@@ -92,8 +127,9 @@ export class AuthService {
     try {
       const payload = JSON.parse(atob(token.split('.')[1])); // Decodifica o payload do token JWT
       return payload.id; // Retorna o ID do usuário do payload
-    } catch (error) {
-      console.error('Erro ao decodificar o token:', error);
+    } catch (_error) {
+      // Não loga detalhes do erro por segurança
+      // Token inválido ou corrompido
       return null;
     }
   }
@@ -105,7 +141,7 @@ export class AuthService {
     );
     return this.http.get<Usuario>(`${API_PATH}/usuario/${id}`, { headers }).pipe(
       catchError((err) => {
-        console.error('Erro ao obter usuário:', err);
+        // Não loga detalhes do erro por segurança
         throw err;
       })
     );

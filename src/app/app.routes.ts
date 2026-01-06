@@ -11,8 +11,8 @@ export const routes: Routes = [
   // Rota para a tela de login
   { path: 'login', component: LoginComponent },
 
-  // Rota para o menu principal (protegida)
-  { path: 'menu', component: HomeComponent, canActivate: [AuthGuard] },
+  // Rota para o home principal (protegida)
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
 
   // Rota para minhas tarefas (protegida)
   { path: 'minhas-tarefas', component: MinhasTarefasComponent, canActivate: [AuthGuard] },

@@ -59,12 +59,36 @@ export interface ProgressoTarefa {
 })
 export class TaskService {
   private http = inject(HttpClient);
-  private authToken = localStorage.getItem('authToken');
 
+  /**
+   * Obtém o token de autenticação dinamicamente do localStorage
+   * Isso garante que sempre usamos o token mais recente
+   * Segurança: Não armazena o token em memória, sempre busca do storage
+   */
   private getHeaders(): HttpHeaders {
+    const token = this.getAuthToken();
+    if (!token) {
+      // Retorna headers sem autorização se não houver token
+      // O backend deve validar e retornar erro 401
+      return new HttpHeaders();
+    }
     return new HttpHeaders({
-      'Authorization': `Bearer ${this.authToken}`
+      'Authorization': `Bearer ${token}`
     });
+  }
+
+  /**
+   * Obtém o token de autenticação de forma segura
+   * @returns Token de autenticação ou null se não existir
+   */
+  private getAuthToken(): string | null {
+    try {
+      return localStorage.getItem('authToken');
+    } catch (error) {
+      // Em caso de erro ao acessar localStorage (ex: modo privado)
+      console.error('Erro ao acessar localStorage:', error);
+      return null;
+    }
   }
 
   /** Obter prioridades e estados disponíveis */
@@ -221,8 +245,6 @@ export class TaskService {
     );
   }
 
-  // Atualizar token de autenticação
-  public atualizarToken(): void {
-    this.authToken = localStorage.getItem('authToken');
-  }
+  // Método removido - token é obtido dinamicamente via getAuthToken()
+  // Isso melhora a segurança evitando armazenar token em memória
 }

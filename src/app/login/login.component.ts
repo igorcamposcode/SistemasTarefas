@@ -4,6 +4,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { NotificationService } from '../services/notification.service';
 import { NgIf } from '@angular/common';
 
 // Declaração do componente
@@ -27,8 +28,9 @@ export class LoginComponent {
   submitForm(): void {
     // Verifica se o formulário é válido
     if (this.validateForms.valid) {
-      // Se válido, imprime os valores do formulário no console
-      console.log('submit', this.validateForms.value);
+      // Não loga dados do formulário por segurança
+      // Chama o método onSubmit para processar o login
+      this.onSubmit();
     } else {
       // Caso inválido, marca todos os controles como sujos (dirty) para exibir os erros
       Object.values(this.validateForms.controls).forEach(control => {
@@ -45,6 +47,7 @@ export class LoginComponent {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private notificationService = inject(NotificationService);
     // Criação do formulário com três campos: userName, password e remember
     // 'Validators.required' garante que o campo é obrigatório
     validateForms = this.fb.group({
@@ -64,15 +67,21 @@ export class LoginComponent {
         return; // segurança extra contra valores null/undefined
       }
       this.authService.login(email, senha).subscribe({
-        next: (res) => {
-          this.authService.armazenarToken(res.token);
-          // Aqui você pode exibir um toast, snackbar ou mensagem de sucesso no template
-          console.log('Login bem-sucedido!');
-          this.router.navigate(['/menu']);
+        next: () => {
+          // O token já é armazenado automaticamente pelo AuthService no método login()
+          // Não precisa armazenar novamente aqui
+          // Não loga informações por segurança
+          // Redireciona para a página principal (home)
+          this.notificationService.showSuccess('Login realizado com sucesso!');
+          this.router.navigate(['/home']);
         },
-        error: (err) => {
-          console.error('Erro no login:', err);
-          // Ideal: exibir mensagem de erro amigável no template
+        error: () => {
+          // Não loga detalhes do erro por segurança
+          // Define mensagem de erro genérica
+          this.error = 'Email ou senha inválidos. Tente novamente.';
+          this.notificationService.showError('Email ou senha inválidos. Tente novamente.');
+          // Marca o formulário como não submetido para permitir nova tentativa
+          this.validateForms.reset();
         },
       });
     }

@@ -1,22 +1,16 @@
 <!-- Cabeçalho da Página -->
 <header class="page-header">
-  <div class="d-flex justify-content-between align-items-center mb-3">
+  <div class="d-flex justify-content-between align-items-center">
     <img
       class="page-header-title"
       src="/assets/system-task-logo.jpg.png"
       alt="Sistemas de Tarefas"
     />
     <!-- Botões de Ações -->
-    <div class="top-actions d-flex justify-content-end gap-3 mb-3">
+    <div class="top-actions">
       <button
-        class="btn btn btn-dark btn-sm"
+        class="btn btn-dark btn-sm"
         (click)="abrirModalUsuario()"
-        style="
-          font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-            'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-          padding: 20px;
-          font-size: 1rem;
-        "
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -33,14 +27,8 @@
         Usuário: {{ usuario.length > 0 ? usuario[0].nome : "Carregando..." }}
       </button>
       <button
-        class="btn btn btn-dark btn-sm"
+        class="btn btn-dark btn-sm"
         (click)="CliqueMinhaTarefa('minhas-tarefas')"
-        style="
-          font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-            'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-          padding: 20px;
-          font-size: 1rem;
-        "
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -67,12 +55,6 @@
       <button
         class="btn btn-success btn-sm"
         (click)="isModalVisible = true"
-        style="
-          font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-            'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-          padding: 20px;
-          font-size: 1rem;
-        "
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -91,12 +73,6 @@
       <button
         class="btn btn-danger btn-sm"
         (click)="CliqueHome('login')"
-        style="
-          font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-            'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-          padding: 20px;
-          font-size: 1rem;
-        "
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -139,14 +115,7 @@
             (click)="fecharModalUsuario()"
           ></button>
         </div>
-        <div
-          class="modal-body"
-          style="
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-              'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            font-size: 1rem;
-          "
-        >
+        <div class="modal-body">
           <p>
             <strong>Nome:</strong>
             {{ usuario.length > 0 ? usuario[0].nome : "N/A" }}
@@ -436,7 +405,7 @@
   <!-- Cards das Tarefas -->
   <div class="row">
     <div *ngFor="let tarefa of tarefas" class="col-md-4 mb-4">
-      <div class="card">
+      <div class="card" [ngClass]="obterClassePrioridade(tarefa.prioridade)">
         <div
           class="card-header d-flex justify-content-between align-items-center"
         >
@@ -506,7 +475,16 @@
                 : "Não definido"
             }}
           </p>
-          <p><strong>Prioridade:</strong> {{ tarefa.prioridade }}</p>
+          <p>
+            <strong>Prioridade:</strong>
+            <span 
+              class="badge-prioridade"
+              [style.background-color]="obterCorPrioridade(tarefa.prioridade)"
+              [style.color]="obterCorTextoPrioridade(tarefa.prioridade)"
+            >
+              {{ tarefa.prioridade }}
+            </span>
+          </p>
           <p><strong>Status:</strong> {{ tarefa.estado }}</p>
 
           <!-- Seção de Documentos -->
@@ -517,12 +495,11 @@
             <h4>
               <strong>
                 <svg
-                  style="color: black"
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
                   height="16"
                   fill="currentColor"
-                  class="bi bi-file-post"
+                  class="bi bi-file-post documento-section-icon"
                   viewBox="0 0 16 16"
                 >
                   <path
@@ -597,9 +574,17 @@
                     [class.text-decoration-line-through]="
                       sub.estado === 'Concluído'
                     "
-                    class="ms-2"
+                    class="ms-2 subtarefa-titulo"
                   >
                     {{ sub.titulo }}
+                  </span>
+                  <span 
+                    class="badge-prioridade-subtarefa ms-2"
+                    [style.background-color]="obterCorPrioridade(sub.prioridade)"
+                    [style.color]="obterCorTextoPrioridade(sub.prioridade)"
+                    title="Prioridade: {{ sub.prioridade }}"
+                  >
+                    {{ sub.prioridade }}
                   </span>
                 </div>
 
@@ -627,7 +612,6 @@
                         d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
                       />
                     </svg>
-                    Editar
                   </button>
 
                   <button
@@ -651,7 +635,6 @@
                         d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
                       />
                     </svg>
-                    Excluir
                   </button>
 
                   <button
@@ -676,7 +659,6 @@
                         d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"
                       />
                     </svg>
-                    Concluir
                   </button>
                 </div>
               </li>
