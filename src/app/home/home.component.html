@@ -403,14 +403,14 @@
   <br />
 
   <!-- Cards das Tarefas -->
-  <div class="row">
-    <div *ngFor="let tarefa of tarefas" class="col-md-4 mb-4">
+  <div class="row g-3">
+    <div *ngFor="let tarefa of tarefas" class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 mb-4">
       <div class="card" [ngClass]="obterClassePrioridade(tarefa.prioridade)">
         <div
-          class="card-header d-flex justify-content-between align-items-center"
+          class="card-header d-flex justify-content-between align-items-center flex-wrap"
         >
-          <span>{{ tarefa.titulo }}</span>
-          <div>
+          <span class="card-title-text">{{ tarefa.titulo }}</span>
+          <div class="card-header-actions">
             <button
               class="btn btn-sm btn-outline-secondary me-2"
               (click)="editarTarefa(tarefa)"
@@ -513,8 +513,8 @@
               </strong>
             </h4>
             <div *ngFor="let doc of tarefa.documentos" class="documento-item">
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="documento-info">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="documento-info flex-grow-1">
                   <div class="documento-header">
                     <i
                       [class]="getDocumentoIcon(doc.extensao || '')"
@@ -533,7 +533,7 @@
                     }}</span>
                   </div>
                 </div>
-                <div class="documento-acoes">
+                <div class="documento-acoes flex-shrink-0">
                   <button
                     class="btn btn-sm btn-outline-primary me-1"
                     (click)="downloadDocumento(doc.id || 0)"
@@ -556,7 +556,7 @@
           <!-- Contêiner para centralizar a seção de subtarefas -->
           <div class="subtask-section">
             <h4 class="subtarefas-titulo"><strong>- Sub Tarefas -</strong></h4>
-            <ul>
+            <ul class="subtarefas-list">
               <li
                 *ngFor="let sub of tarefa.subTarefas"
                 [ngClass]="getSubTarefaClasses(sub)"
@@ -574,12 +574,12 @@
                     [class.text-decoration-line-through]="
                       sub.estado === 'Concluído'
                     "
-                    class="ms-2 subtarefa-titulo"
+                    class="subtarefa-titulo"
                   >
                     {{ sub.titulo }}
                   </span>
                   <span 
-                    class="badge-prioridade-subtarefa ms-2"
+                    class="badge-prioridade-subtarefa"
                     [style.background-color]="obterCorPrioridade(sub.prioridade)"
                     [style.color]="obterCorTextoPrioridade(sub.prioridade)"
                     title="Prioridade: {{ sub.prioridade }}"
@@ -663,7 +663,7 @@
                 </div>
               </li>
             </ul>
-            <div class="progress mb-3">
+            <div class="progress">
               <div
                 class="progress-bar"
                 role="progressbar"
@@ -677,27 +677,40 @@
               </div>
             </div>
 
-            <button
-              class="btn btn-sm btn-outline-primary me-2"
-              (click)="incluirSubTarefa(tarefa)"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-file-earmark-plus-fill"
-                viewBox="0 0 17 17"
+            <div class="subtask-button-container">
+              <button
+                class="btn btn-sm btn-outline-primary"
+                (click)="incluirSubTarefa(tarefa)"
               >
-                <path
-                  d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"
-                />
-              </svg>
-              Adicionar Sub-Tarefa
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-file-earmark-plus-fill"
+                  viewBox="0 0 17 17"
+                >
+                  <path
+                    d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"
+                  />
+                </svg>
+                Adicionar Sub-Tarefa
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Rodapé -->
+<footer class="page-footer">
+  <div class="footer-content">
+    <img
+      class="footer-image"
+      src="/assets/footer-logo.png"
+      alt="Logo do Rodapé"
+    />
+  </div>
+</footer>

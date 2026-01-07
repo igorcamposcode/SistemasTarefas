@@ -1,11 +1,13 @@
 /* --- GERAL --- */
-@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
 
 /* Define um fundo suave para a página inteira, dando uma sensação de aplicativo */
 :host {
   display: block;
-  background-color: #f4f7f9; /* Um cinza azulado muito claro */
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
   min-height: 100vh;
+  font-family: "Inter", "Ubuntu", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 /* Contêiner principal para centralizar o conteúdo e limitar a largura */
@@ -15,45 +17,151 @@
   padding: 1.5rem;
 }
 
+/* Container principal */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
 /* --- CABEÇALHO E AÇÕES SUPERIORES --- */
 .page-header {
-  background-color: rgb(255, 145, 0);
+  background: linear-gradient(135deg, #ff9100 0%, #ff6b00 100%);
   color: white;
-  padding: 1rem 2rem;
-  box-shadow: 2px 4px 3px 2px rgb(0, 0, 0);
-  border-radius: 2px;
-  margin-bottom: 0rem; /* Espaço abaixo do cabeçalho */
+  padding: 1.5rem 2.5rem;
+  box-shadow: 0 4px 20px rgba(255, 145, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+  margin-bottom: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.page-header > div {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
 }
 
 .page-header-title {
   display: flex;
-  height: 190px;
-  width: 205px;
-
+  height: 80px;
+  width: auto;
+  max-width: 250px;
   align-items: center;
   justify-content: center;
   box-sizing: content-box;
-  border-radius: 5px;
-  object-fit: cover;
+  border-radius: 8px;
+  object-fit: contain;
   margin: 0;
-  margin-left: 2.2%;
-  margin-right: 3%;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.page-header-title:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .page-header-logo {
-  height: 20px; /* Ajusta a altura do logo */
+  height: 20px;
 }
+
 .top-actions {
   display: flex;
-  align-items:center;
-  justify-content: center;
-  margin-top: 1.9%;
-  margin: 0; /* Remove a margem padrão do h1/h3 */
-  margin-left: 2.2%;
-  margin-right: 3%;
-  gap: 4rem;
-  margin-bottom: 1.5rem;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.top-actions .btn {
+  font-family: "Inter", "Ubuntu", sans-serif;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.top-actions .btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.top-actions .btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.top-actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+.top-actions .btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.top-actions .btn-dark {
+  background: rgba(33, 37, 41, 0.9);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.top-actions .btn-dark:hover {
+  background: rgba(33, 37, 41, 1);
+}
+
+.top-actions .btn-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+}
+
+.top-actions .btn-danger:hover {
+  background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+}
+
+.top-actions .btn svg {
+  flex-shrink: 0;
 }
 /* Estilos para a tabela de consulta de tarefas */
 .ConsultaTarefa {
@@ -270,6 +378,10 @@
 
 /* Responsividade */
 @media (max-width: 1200px) {
+  .task-container {
+    padding: 1.5rem 1rem;
+  }
+
   .ConsultaTarefa {
     margin: 10px;
   }
@@ -288,10 +400,88 @@
     margin: 15px 10px;
     padding: 15px;
   }
+}
 
-  .Retornar {
-    padding: 10px 20px;
-    font-size: 13px;
+@media (max-width: 992px) {
+  .ConsultaTarefa {
+    margin: 10px 5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .page-header-title {
+    height: 60px;
+    max-width: 180px;
+  }
+
+  .top-actions {
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .top-actions .btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .task-container {
+    padding: 1rem;
+  }
+
+  .ConsultaTarefa {
+    margin: 10px 0;
+  }
+
+  .page-footer {
+    padding: 1.5rem 1rem;
+    margin-top: 2rem;
+  }
+
+  .footer-image {
+    max-height: 130px;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .page-header-title {
+    height: 50px;
+    max-width: 150px;
+  }
+
+  .top-actions {
+    gap: 0.5rem;
+  }
+
+  .top-actions .btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .top-actions .btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .task-container {
+    padding: 0.75rem;
+  }
+
+  .page-footer {
+    padding: 1.5rem 1rem;
+    margin-top: 2rem;
+  }
+
+  .footer-image {
+    max-height: 120px;
   }
 }
 
@@ -317,4 +507,102 @@
   padding: 40px 20px;
   color: #ffffff;
   font-size: 14px;
+}
+
+/* --- MODAIS --- */
+.modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 2px solid #dee2e6;
+  padding: 1.25rem 1.5rem;
+}
+
+.modal-title {
+  font-weight: 600;
+  color: #212529;
+  font-size: 1.25rem;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  font-family: "Inter", "Ubuntu", sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.modal-body .form-label {
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.modal-body .form-control,
+.modal-body .form-select {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.modal-body .form-control:focus,
+.modal-body .form-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+  outline: none;
+}
+
+.modal-footer {
+  border-top: 2px solid #e9ecef;
+  padding: 1rem 1.5rem;
+  background: #f8f9fa;
+}
+
+.modal-footer .btn {
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.modal-footer .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* --- RODAPÉ --- */
+.page-footer {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-top: 2px solid #dee2e6;
+  padding: 2rem 1.5rem;
+  margin-top: 3rem;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.footer-image {
+  max-width: 100%;
+  height: auto;
+  max-height: 150px;
+  object-fit: contain;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.footer-image:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
 }
