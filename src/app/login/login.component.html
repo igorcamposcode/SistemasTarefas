@@ -21,16 +21,12 @@
                 <span class="input-group-text">
                   <i class="bi bi-envelope"></i>
                 </span>
-                <input
-                  type="email"
-                  class="form-control"
-                  formControlName="email"
-                  id="email"
+                <input type="email" class="form-control" formControlName="email" id="email"
                   placeholder="Digite seu e-mail"
-                  [class.is-invalid]="validateForms.get('email')?.invalid && validateForms.get('email')?.touched"
-                />
+                  [class.is-invalid]="validateForms.get('email')?.invalid && validateForms.get('email')?.touched" />
               </div>
-              <div class="invalid-feedback" *ngIf="validateForms.get('email')?.invalid && validateForms.get('email')?.touched">
+              <div class="invalid-feedback"
+                *ngIf="validateForms.get('email')?.invalid && validateForms.get('email')?.touched">
                 Por favor, digite seu E-mail.
               </div>
             </div>
@@ -41,26 +37,18 @@
                 <span class="input-group-text">
                   <i class="bi bi-lock"></i>
                 </span>
-                <input
-                  type="password"
-                  class="form-control"
-                  formControlName="senha"
-                  id="senha"
+                <input type="password" class="form-control" formControlName="senha" id="senha"
                   placeholder="Digite sua senha"
-                  [class.is-invalid]="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched"
-                />
+                  [class.is-invalid]="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched" />
               </div>
-              <div class="invalid-feedback" *ngIf="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched">
+              <div class="invalid-feedback"
+                *ngIf="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched">
                 Por favor, digite sua senha.
               </div>
             </div>
 
             <div class="d-grid gap-2">
-              <button
-                type="submit"
-                class="btn btn-dark btn-lg"
-                [disabled]="!validateForms.valid"
-              >
+              <button type="submit" class="btn btn-dark btn-lg" [disabled]="!validateForms.valid">
                 <i class="bi bi-box-arrow-in-right"></i> Entrar
               </button>
             </div>
@@ -85,10 +73,17 @@
 <!-- Rodapé -->
 <footer class="page-footer">
   <div class="footer-content">
-    <img
-      class="footer-image"
-      src="/assets/footer-logo.png"
-      alt="Logo do Rodapé"
-    />
+    <img src="/assets/github.png" alt="ilustração GitHub" />
   </div>
+  <p class="Copyright" style="font-size: 1.5cap">
+    © 2025 Copyright, Desenvolvido Por
+    <a href="https://github.com/igorcamposcode" style="color: white">
+      <b>IgorcamposCODE</b>
+    </a>
+     &
+    <a href="https://github.com/AlexRM1208" style="color: white">
+      <b>AlexRM1208</b>
+    </a>
+  </p>
+  <p class="Copyright">Não recomendamos abrir em navegadores mobile</p>
 </footer>
