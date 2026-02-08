@@ -1,8 +1,8 @@
-<h1> Documentação Sistemas de Tarefas ou System Task </h1> 
+<h1 style="text-align: center;" > Documentação Sistemas de Tarefas ou System Task </h1> 
 
 ## Objetivo Geral
 
-<p> O projeto Sistema de Tarefas da TaskSystem S.A. tem como objetivo desenvolver 
+<p style="text-align: center;"> O projeto Sistema de Tarefas da TaskSystem S.A. tem como objetivo desenvolver 
 um software web voltado para profissionais e autônomos que desejam organizar 
 melhor sua rotina de trabalho. O sistema foi projetado para permitir a criação, 
 edição e conclusão de tarefas de forma eficiente e intuitiva, garantindo o 
@@ -31,41 +31,41 @@ operações: </p>
 
 ## Gestão de Tarefas:
 
-<li> Os usuários podem criar, editar e excluir tarefas conforme suas 
+<li  style="text-align: center;"> Os usuários podem criar, editar e excluir tarefas conforme suas 
 necessidades. Cada tarefa pode ter documentos anexados e ser 
 detalhada com subtarefas, promovendo uma organização mais 
 granular. </li>
-<li> É possível atribuir níveis de prioridade (de "Muito baixo" a "Muito alto") 
+<li  style="text-align: center;"> É possível atribuir níveis de prioridade (de "Muito baixo" a "Muito alto") 
 para ajudar na definição do que é mais urgente ou relevante. </li> 
 
 ##
 
 ## Acompanhamento e Modificação de Tarefas:
-<li> O sistema permite que os usuários acompanhem o progresso de cada 
+<li  style="text-align: center;"> O sistema permite que os usuários acompanhem o progresso de cada 
 tarefa em tempo real, indicando o que foi concluído e o que ainda está 
 pendente. </li>
-<li> Datas de conclusão podem ser alteradas, ajustando os prazos 
+<li  style="text-align: center;"> Datas de conclusão podem ser alteradas, ajustando os prazos 
 conforme mudanças no cronograma ou nas prioridades. </li> 
 
 ##
 
 ## Conclusão de Tarefas:
-<li> Uma vez finalizadas, as tarefas podem ser marcadas como 
+<li  style="text-align: center;"> Uma vez finalizadas, as tarefas podem ser marcadas como 
 concluídas. Essa ação fornece ao usuário um resumo do progresso, 
 ajudando na avaliação do desempenho e cumprimento dos objetivos. </li> 
 
 ##
 
 ## Gerenciamento Avançado com Anexos e Subtarefas:
-<li> Arquivos e documentos podem ser anexados diretamente às tarefas, 
+<li  style="text-align: center;"> Arquivos e documentos podem ser anexados diretamente às tarefas, 
 centralizando informações importantes. </li>
-<li> A funcionalidade de criação de subtarefas permite dividir projetos 
+<li  style="text-align: center;"> A funcionalidade de criação de subtarefas permite dividir projetos 
 maiores em etapas menores, facilitando o gerenciamento de 
 processos complexos. </li> 
 
 ## Justificativa
 
-<p> A criação do Sistema de Tarefas da TaskSystem S.A. foi motivada pela necessida
+<p style="text-align: center;"> A criação do Sistema de Tarefas da TaskSystem S.A. foi motivada pela necessida
 de de suprir desafios enfrentados por profissionais e autônomos na gestão de suas ativi
 dades diárias. A desorganização gerada pela falta de ferramentas adequadas frequente
 mente resulta no esquecimento de tarefas importantes, atrasos nos prazos e queda de 
@@ -128,34 +128,34 @@ oferecendo uma solução completa, intuitiva e adaptada às demandas dos usuári
 
 ## Requisitos Funcionais:
 
-<li> Cadastro de Tarefas: O usuário poderá criar uma nova tarefa, fornecendo um 
+<li style="text-align: center;"> Cadastro de Tarefas: O usuário poderá criar uma nova tarefa, fornecendo um 
 nome descritivo. </li>
-<li> Anexos: Será possível anexar arquivos a uma tarefa, permitindo o armazenamento 
+<li style="text-align: center;"> Anexos: Será possível anexar arquivos a uma tarefa, permitindo o armazenamento 
 de documentos relevantes.</li>
-<li> Definição de Prioridades: O usuário poderá atribuir uma prioridade a tarefa (ex.: 
+<li style="text-align: center;"> Definição de Prioridades: O usuário poderá atribuir uma prioridade a tarefa (ex.: 
 Muito Baixa, Baixa, Média, Alta, Muito Alta) para facilitar a gestão e o 
 acompanhamento da tarefa. </li>
-<li> Datas e Horários: O usuário definirá a data de início e a data de conclusão para 
+<li style="text-align: center;"> Datas e Horários: O usuário definirá a data de início e a data de conclusão para 
 cada tarefa. Além disso, poderá especificar horários para tarefas e subtarefas, 
 garantindo a precisão do planejamento. </li>
-<li> Subtarefas: O sistema permitirá a criação de subtarefas dentro de uma tarefa mãe, 
+<li style="text-align: center;"> Subtarefas: O sistema permitirá a criação de subtarefas dentro de uma tarefa mãe, 
 organizando melhor atividades relacionadas. </li>
-<li> Reagendamento: Na seção “Minhas Tarefas”, o usuário terá a opção de postergar 
+<li style="text-align: center;"> Reagendamento: Na seção “Minhas Tarefas”, o usuário terá a opção de postergar 
 ou antecipar tanto tarefas mãe quanto subtarefas, ajustando-as conforme 
 necessários.</li>
-<li> Consulta por Prioridade: O usuário poderá filtrar tarefas mãe e subtarefas na 
+<li style="text-align: center;"> Consulta por Prioridade: O usuário poderá filtrar tarefas mãe e subtarefas na 
 seção “Minhas Tarefas” com base na prioridade (ex.: extremo risco, baixo risco), 
 facilitando a visualização de atividades críticas e de menor urgência. </li>
 
 ## Requisitos Não Funcionais:
-<li> Autenticação e Acesso: O acesso ao programa será protegido por autenticação 
+<li style="text-align: center;"> Autenticação e Acesso: O acesso ao programa será protegido por autenticação 
 simples, onde os usuários serão pré-cadastrados. </li>
-<li> Plataforma De Execução: O sistema será acessado via navegadores. Sendo 
+<li style="text-align: center;"> Plataforma De Execução: O sistema será acessado via navegadores. Sendo 
 somente em Desktop. Obs.: Navegador a ser utilizado: Edge ou Chrome. Não é 
 aconselhável utilizar Firefox ou outros, sendo possível utilizar outros navegadores 
 com base no Chrome. </li>
-<li> Linguagem a Ser Utilizada: Angular. </li>
-<li> Acesso Simultâneo: Até 100 usuários, com o acesso simultâneo a todo momento. 
+<li style="text-align: center;">Linguagem a Ser Utilizada: Angular. </li>
+<li style="text-align: center;"> Acesso Simultâneo: Até 100 usuários, com o acesso simultâneo a todo momento. 
 Suportando uma alta demanda de usuários.</li>
-<li>  Responsividade e Delay: O Sistema terá de ser responsivo e sem atraso na 
+<li style="text-align: center;">  Responsividade e Delay: O Sistema terá de ser responsivo e sem atraso na 
 abertura de novas Abas </li>
