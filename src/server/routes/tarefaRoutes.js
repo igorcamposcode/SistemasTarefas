@@ -10,6 +10,6 @@ router.get('/', autenticarToken, tarefaController.buscarTarefas);
 router.put('/:id', autenticarToken, tarefaController.atualizarTarefa);
 router.delete('/:id', autenticarToken, tarefaController.deletarTarefa);
 router.delete('/subtarefa/:id', autenticarToken, tarefaController.deletarSubTarefa);
-router.get('/meta', tarefaController.getMeta);
+router.get('/meta', autenticarToken, tarefaController.getMeta);
 
 module.exports = router;

@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const jwtKeyRotation = require('../utils/jwtKeyRotation');
 const { Usuario } = require('../models');
-const SECRET_KEY = "ci@tarefassystem2024b";
 
 exports.login = async (req, res) => {
   try {
@@ -14,7 +13,7 @@ exports.login = async (req, res) => {
     if (!senhaValida) {
       return res.status(401).json({ error: "Senha inválida." });
     }
-    const token = jwt.sign({ id: usuario.id, email: usuario.email }, SECRET_KEY, { expiresIn: "3h" });
+    const token = jwtKeyRotation.sign({ id: usuario.id, email: usuario.email }, { expiresIn: "3h" });
     res.status(200).json({
       message: "Login bem-sucedido.",
       token,
@@ -23,7 +22,7 @@ exports.login = async (req, res) => {
     });
   } catch (error) {
     console.error("Erro ao efetuar login:", error);
-    res.status(500).json();
+    res.status(500).json({ error: "Erro interno ao efetuar login." });
   }
 };
 
@@ -55,7 +54,7 @@ exports.cadastro = async (req, res) => {
     });
   } catch (error) {
     console.error("Erro ao cadastrar usuário:", error);
-    res.status(500).json();
+    res.status(500).json({ error: "Erro interno ao cadastrar usuário." });
   }
 };
 
@@ -74,6 +73,41 @@ exports.recuperarSenha = async (req, res) => {
     res.status(200).json({ message: "Senha atualizada com sucesso." });
   } catch (error) {
     console.error("Erro ao recuperar senha:", error);
-    res.status(500).json({ error: "Erro ao atualizar senha.", details: error.message });
+    res.status(500).json({ error: "Erro ao atualizar senha." });
+  }
+};
+
+/**
+ * Renovar Token JWT
+ * Endpoint para renovar tokens com a chave anterior
+ * Útil durante rotação de chaves para manter sessions ativas
+ */
+exports.renovarToken = (req, res) => {
+  try {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : authHeader;
+
+    if (!token) {
+      return res.status(401).json({ error: 'Token não fornecido.' });
+    }
+
+    // Verifica o token (aceita chaves atual e anterior)
+    const decoded = jwtKeyRotation.verify(token);
+
+    // Gera novo token com a chave ATUAL
+    const novoToken = jwtKeyRotation.sign(
+      { id: decoded.id, email: decoded.email },
+      { expiresIn: '3h' }
+    );
+
+    res.status(200).json({
+      message: 'Token renovado com sucesso.',
+      token: novoToken,
+      wasFromPreviousKey: decoded._from_previous_key || false,
+      success: true
+    });
+  } catch (error) {
+    console.error('Erro ao renovar token:', error);
+    res.status(401).json({ error: 'Falha ao renovar token.' });
   }
 };

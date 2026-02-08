@@ -1,8 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, Observable, tap} from 'rxjs';
-
-export const API_PATH = 'http://localhost:3000/api';
+import { catchError, Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 export interface Usuario {
   id: number;
   nome: string;
@@ -19,14 +18,16 @@ export class AuthService {
 
   // Método para criar usuário
   criarUsuario(data: object): Observable<object> {
-    return this.http.post(`${API_PATH}/usuario`, data);
+    return this.http.post(`${environment.apiUrl}/usuario`, data);
   }
-  // Método para listar todos os usuários
+  /** Lista usuários (requer autenticação). Rota deve existir no backend (ex: GET /api/usuario). */
   listarUsuarios(): Observable<object> {
-    return this.http.get(`${API_PATH}`);
+    const token = this.obterToken();
+    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+    return this.http.get(`${environment.apiUrl}/usuario`, { headers });
   }
   login(email: string, senha: string): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(`${API_PATH}/login`, { email, senha }).pipe(
+    return this.http.post<{ token: string }>(`${environment.apiUrl}/login`, { email, senha }).pipe(
       tap((response) => {
         if (response.token) {
           // Valida o token antes de armazenar
@@ -50,7 +51,7 @@ export class AuthService {
   // Obtém o ID do usuário logado armazenado no Local Storage
   // Busca os dados do usuário pelo ID
   getUsuarioId(id: number): Observable<Usuario> {
-    return this.http.get<Usuario>(`${API_PATH}/usuario/${id}`);
+    return this.http.get<Usuario>(`${environment.apiUrl}/usuario/${id}`);
   }
   // Limpa as credenciais do usuário
   logout() {
@@ -67,7 +68,7 @@ export class AuthService {
     }
     try {
       localStorage.setItem(this.TOKEN_KEY, token);
-    } catch (error) {
+    } catch {
       // Em caso de erro (ex: localStorage desabilitado), não expõe detalhes
       throw new Error('Erro ao armazenar token de autenticação.');
     }
@@ -105,7 +106,7 @@ export class AuthService {
     senha: string,
     checkPassword: string
   ): Observable<object> {
-    return this.http.post(`${API_PATH}/recuperar-senha`, {
+    return this.http.post(`${environment.apiUrl}/recuperar-senha`, {
       email,
       senha,
       checkPassword,
@@ -113,7 +114,7 @@ export class AuthService {
   }
   /** Obtém os dados do usuário logado */
   obterUsuarioLogado(): Observable<Usuario> {
-    return this.http.get<Usuario>(`${API_PATH}/usuario/logado`, {
+    return this.http.get<Usuario>(`${environment.apiUrl}/usuario/logado`, {
       // A adição do header de autorização é idealmente feita por um HttpInterceptor.
       headers: { Authorization: `Bearer ${this.obterToken()}` },
     });
@@ -127,8 +128,8 @@ export class AuthService {
     try {
       const payload = JSON.parse(atob(token.split('.')[1])); // Decodifica o payload do token JWT
       return payload.id; // Retorna o ID do usuário do payload
-    } catch (_error) {
-      // Não loga detalhes do erro por segurança
+    } catch {
+      // Token inválido ou corrompido
       // Token inválido ou corrompido
       return null;
     }
@@ -139,7 +140,7 @@ export class AuthService {
       'Authorization',
       `Bearer ${this.obterToken() ?? ''}`
     );
-    return this.http.get<Usuario>(`${API_PATH}/usuario/${id}`, { headers }).pipe(
+    return this.http.get<Usuario>(`${environment.apiUrl}/usuario/${id}`, { headers }).pipe(
       catchError((err) => {
         // Não loga detalhes do erro por segurança
         throw err;
@@ -165,6 +166,6 @@ export class AuthService {
     });
 
     // Ajuste a rota conforme o backend: singular ou plural
-    return this.http.put<{ message: string }>(`${API_PATH}/usuario`, dados, { headers });
+    return this.http.put<{ message: string }>(`${environment.apiUrl}/usuario`, dados, { headers });
   }
 }

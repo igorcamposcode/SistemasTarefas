@@ -19,14 +19,18 @@ exports.criarUsuario = async (req, res) => {
     });
     res.status(201).json({ message: "Usuário criado com sucesso.", usuario: novoUsuario });
   } catch (error) {
-    res.status(500).json({ error: "Erro ao criar usuário.", details: error.message });
+    console.error("Erro ao criar usuário:", error);
+    res.status(500).json({ error: "Erro ao criar usuário." });
   }
 };
 
 exports.buscarUsuarioPorId = async (req, res) => {
   try {
     const { id } = req.params;
-    const usuario = await Usuario.findByPk(id);
+    if (parseInt(id) !== req.usuario.id) {
+      return res.status(403).json({ error: "Sem permissão para acessar este usuário." });
+    }
+    const usuario = await Usuario.findByPk(id, { attributes: ['id', 'nome', 'email', 'telefone'] });
     if (!usuario) {
       return res.status(404).json({ error: "Usuário não encontrado." });
     }
@@ -61,6 +65,9 @@ exports.atualizarUsuario = async (req, res) => {
 exports.deletarUsuario = async (req, res) => {
   try {
     const { id } = req.params;
+    if (parseInt(id) !== req.usuario.id) {
+      return res.status(403).json({ error: "Sem permissão para excluir este usuário." });
+    }
     const usuario = await Usuario.findByPk(id);
     if (!usuario) {
       return res.status(404).json({ error: "Usuário não encontrado." });
@@ -68,6 +75,7 @@ exports.deletarUsuario = async (req, res) => {
     await usuario.destroy();
     res.status(200).json({ message: "Usuário deletado com sucesso." });
   } catch (error) {
-    res.status(500).json({ error: "Erro ao deletar usuário.", details: error.message });
+    console.error("Erro ao deletar usuário:", error);
+    res.status(500).json({ error: "Erro ao deletar usuário." });
   }
 };

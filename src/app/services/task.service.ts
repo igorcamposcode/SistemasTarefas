@@ -1,8 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-export const API_PATH = 'http://localhost:3000/api';
+import { environment } from '../../environments/environment';
 
 // Interfaces para tipagem forte
 export interface Prioridade {
@@ -84,31 +83,29 @@ export class TaskService {
   private getAuthToken(): string | null {
     try {
       return localStorage.getItem('authToken');
-    } catch (error) {
-      // Em caso de erro ao acessar localStorage (ex: modo privado)
-      console.error('Erro ao acessar localStorage:', error);
+    } catch {
       return null;
     }
   }
 
   /** Obter prioridades e estados disponíveis */
   public obterMetadados(): Observable<MetadadosTarefa> {
-    return this.http.get<MetadadosTarefa>(`${API_PATH}/tarefa/meta`);
+    return this.http.get<MetadadosTarefa>(`${environment.apiUrl}/tarefa/meta`);
   }
 
   /** Obter estados relacionados às tarefas */
   public obterEstadosTarefa(): Observable<Estado[]> {
-    return this.http.get<Estado[]>(`${API_PATH}/tarefa-estados`);
+    return this.http.get<Estado[]>(`${environment.apiUrl}/tarefa-estados`);
   }
 
   public obterPrioridades(): Observable<Prioridade[]> {
-    return this.http.get<Prioridade[]>(`${API_PATH}/prioridades`);
+    return this.http.get<Prioridade[]>(`${environment.apiUrl}/prioridades`);
   }
 
   // Criar nova tarefa
   public criarTarefa(tarefa: Tarefa): Observable<Tarefa> {
     return this.http.post<Tarefa>(
-      `${API_PATH}/tarefa`,
+      `${environment.apiUrl}/tarefa`,
       tarefa,
       { headers: this.getHeaders() }
     );
@@ -117,7 +114,7 @@ export class TaskService {
   // Incluir subtarefa vinculada à tarefa pai
   public criarSubTarefa(idmae: number, subtarefaData: Partial<SubTarefa>): Observable<SubTarefa> {
     return this.http.post<SubTarefa>(
-      `${API_PATH}/tarefa/${idmae}/subtarefa`,
+      `${environment.apiUrl}/tarefa/${idmae}/subtarefa`,
       subtarefaData,
       { headers: this.getHeaders() }
     );
@@ -130,7 +127,7 @@ export class TaskService {
     };
 
     return this.http.put<SubTarefa>(
-      `${API_PATH}/tarefa/${id}/subtarefa/${idmae}`,
+      `${environment.apiUrl}/tarefa/${id}/subtarefa/${idmae}`,
       body,
       { headers: this.getHeaders() }
     );
@@ -138,7 +135,7 @@ export class TaskService {
 
   public excluirSubTarefa(id: number): Observable<void> {
     return this.http.delete<void>(
-      `${API_PATH}/tarefa/subtarefa/${id}`,
+      `${environment.apiUrl}/tarefa/subtarefa/${id}`,
       { headers: this.getHeaders() }
     );
   }
@@ -150,7 +147,7 @@ export class TaskService {
     };
 
     return this.http.put<Tarefa>(
-      `${API_PATH}/tarefa/${id}`,
+      `${environment.apiUrl}/tarefa/${id}`,
       body,
       { headers: this.getHeaders() }
     );
@@ -159,7 +156,7 @@ export class TaskService {
   // Excluir tarefa
   public excluirTarefa(id: number): Observable<void> {
     return this.http.delete<void>(
-      `${API_PATH}/tarefa/${id}`,
+      `${environment.apiUrl}/tarefa/${id}`,
       { headers: this.getHeaders() }
     );
   }
@@ -167,14 +164,14 @@ export class TaskService {
   /** Obter subtarefas pelo ID do usuário */
   public obterSubtarefas(idusuario: number): Observable<SubTarefa[]> {
     return this.http.get<SubTarefa[]>(
-      `${API_PATH}/tarefa/${idusuario}`,
+      `${environment.apiUrl}/tarefa/${idusuario}`,
       { headers: this.getHeaders() }
     );
   }
 
   public concluirTarefa(id: number): Observable<Tarefa> {
     return this.http.put<Tarefa>(
-      `${API_PATH}/tarefa/${id}/concluir`,
+      `${environment.apiUrl}/tarefa/${id}/concluir`,
       {},
       { headers: this.getHeaders() }
     );
@@ -183,14 +180,14 @@ export class TaskService {
   // Obter progresso de uma tarefa
   public getProgresso(id: number): Observable<ProgressoTarefa> {
     return this.http.get<ProgressoTarefa>(
-      `${API_PATH}/tarefa/${id}/progresso`,
+      `${environment.apiUrl}/tarefa/${id}/progresso`,
       { headers: this.getHeaders() }
     );
   }
 
   public atualizarProgresso(id: number, progresso: number): Observable<ProgressoTarefa> {
     return this.http.put<ProgressoTarefa>(
-      `${API_PATH}/tarefa/${id}/progresso`,
+      `${environment.apiUrl}/tarefa/${id}/progresso`,
       { progresso },
       { headers: this.getHeaders() }
     );
@@ -199,7 +196,7 @@ export class TaskService {
   /** Obter todas as tarefas de um usuário */
   public obterTarefas(): Observable<Tarefa[]> {
     return this.http.get<Tarefa[]>(
-      `${API_PATH}/tarefa`,
+      `${environment.apiUrl}/tarefa`,
       { headers: this.getHeaders() }
     );
   }
@@ -212,7 +209,7 @@ export class TaskService {
     formData.append('idusuario', idusuario.toString());
 
     return this.http.post<Documento>(
-      `${API_PATH}/documento/upload`,
+      `${environment.apiUrl}/documento/upload`,
       formData,
       { headers: this.getHeaders() }
     );
@@ -221,7 +218,7 @@ export class TaskService {
   /** Obter documentos de uma tarefa */
   public obterDocumentosTarefa(idtarefa: number, idusuario: number): Observable<Documento[]> {
     return this.http.get<Documento[]>(
-      `${API_PATH}/documento/tarefa/${idtarefa}/${idusuario}`,
+      `${environment.apiUrl}/documento/tarefa/${idtarefa}/${idusuario}`,
       { headers: this.getHeaders() }
     );
   }
@@ -229,7 +226,7 @@ export class TaskService {
   /** Download de um documento */
   public downloadDocumento(id: number): Observable<Blob> {
     return this.http.get(
-      `${API_PATH}/documento/download/${id}`,
+      `${environment.apiUrl}/documento/download/${id}`,
       {
         headers: this.getHeaders(),
         responseType: 'blob'
@@ -240,7 +237,7 @@ export class TaskService {
   /** Excluir um documento */
   public excluirDocumento(id: number): Observable<void> {
     return this.http.delete<void>(
-      `${API_PATH}/documento/${id}`,
+      `${environment.apiUrl}/documento/${id}`,
       { headers: this.getHeaders() }
     );
   }

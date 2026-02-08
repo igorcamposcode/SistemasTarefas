@@ -383,6 +383,9 @@
   border: 1px solid #e9ecef;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
+
+  max-height: 280px;
+  overflow-y: auto;
 }
 
 .documentos-section:hover {
@@ -629,6 +632,9 @@
   flex-direction: column;
   align-items: center;
   gap: 0.6rem;
+
+  max-height: 260px;
+  overflow-y: auto;
 }
 
 .subtarefa-item {

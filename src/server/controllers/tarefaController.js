@@ -3,8 +3,11 @@ const { Tarefa, TarefasEstado, Prioridade, Estado, Usuario, Documento } = requir
 
 exports.getMeta = async (req, res) => {
   try {
-    const meta = await Tarefa.findAll();
-    res.status(200).json(meta);
+    const [prioridades, estados] = await Promise.all([
+      Prioridade.findAll(),
+      Estado.findAll()
+    ]);
+    res.status(200).json({ prioridades, estados });
   } catch (error) {
     console.error("Erro ao carregar meta:", error);
     res.status(500).json({ error: "Erro ao carregar meta" });
@@ -15,16 +18,15 @@ exports.getMeta = async (req, res) => {
 exports.criarTarefa = async (req, res) => {
   const transaction = await Tarefa.sequelize.transaction();
   try {
-    const { idusuario, idprioridade, titulo, descricao, idestado, idmae, dthrinicio, dthrfim } = req.body;
-
-    console.log('Dados recebidos para criação:', { idusuario, idprioridade, titulo, descricao, idestado, idmae, dthrinicio, dthrfim });
+    const idusuario = req.usuario.id; // Sempre do token - previne criar tarefa para outro usuário
+    const { idprioridade, titulo, descricao, idestado, idmae, dthrinicio, dthrfim } = req.body;
 
     // Validação dos campos obrigatórios
-    if (!idusuario || !idprioridade || !titulo || !idestado) {
+    if (!idprioridade || !titulo || !idestado) {
       await transaction.rollback();
       return res.status(400).json({
         error: "Campos obrigatórios não preenchidos",
-        required: { idusuario, idprioridade, titulo, idestado },
+        required: { idprioridade, titulo, idestado },
         opcoes: {
           prioridades: await Prioridade.findAll(),
           estados: await Estado.findAll()
@@ -101,7 +103,6 @@ exports.criarTarefa = async (req, res) => {
     console.error("Erro ao criar tarefa:", error);
     res.status(500).json({
       error: "Erro interno ao criar tarefa",
-      details: error.message,
       opcoes: {
         prioridades: await Prioridade.findAll(),
         estados: await Estado.findAll()
@@ -214,7 +215,6 @@ exports.buscarTarefas = async (req, res) => {
     console.error("Erro ao carregar tarefas:", error);
     res.status(500).json({
       error: "Erro ao carregar tarefas",
-      details: error.message,
       opcoes: {
         prioridades: await Prioridade.findAll(),
         estados: await Estado.findAll()
@@ -228,15 +228,18 @@ exports.criarSubTarefa = async (req, res) => {
   const transaction = await Tarefa.sequelize.transaction();
   try {
     const { idmae } = req.params;
-    const { idusuario, idprioridade, titulo, descricao, dthrinicio, dthrfim } = req.body;
+    const idusuario = req.usuario.id; // Sempre do token
+    const { idprioridade, titulo, descricao, dthrinicio, dthrfim } = req.body;
 
-    console.log('Criando subtarefa:', { idmae, idusuario, idprioridade, titulo, descricao, dthrinicio, dthrfim });
-
-    // Verifica se a tarefa pai existe
+    // Verifica se a tarefa pai existe e pertence ao usuário
     const tarefaMae = await Tarefa.findByPk(idmae, { transaction });
     if (!tarefaMae) {
       await transaction.rollback();
       return res.status(404).json({ error: "Tarefa pai não encontrada" });
+    }
+    if (tarefaMae.idusuario !== idusuario) {
+      await transaction.rollback();
+      return res.status(403).json({ error: "Sem permissão para criar subtarefa nesta tarefa." });
     }
 
     // Cria a subtarefa
@@ -281,8 +284,7 @@ exports.criarSubTarefa = async (req, res) => {
     await transaction.rollback();
     console.error("Erro ao criar subtarefa:", error);
     res.status(500).json({
-      error: "Erro interno ao criar subtarefa",
-      details: error.message
+      error: "Erro interno ao criar subtarefa"
     });
   }
 };
@@ -293,10 +295,6 @@ exports.atualizarTarefa = async (req, res) => {
   try {
     const { id } = req.params;
     const { idprioridade, titulo, descricao, idestado, dthrfim, progresso } = req.body;
-
-    // Log para debug
-    console.log('Dados recebidos para atualização:', { id, idprioridade, titulo, descricao, idestado, dthrfim });
-    console.log('Body completo:', req.body);
 
     const tarefa = await Tarefa.findByPk(id, {
       include: [
@@ -320,8 +318,12 @@ exports.atualizarTarefa = async (req, res) => {
         }
       });
     }
+    if (tarefa.idusuario !== req.usuario.id) {
+      await transaction.rollback();
+      return res.status(403).json({ error: "Sem permissão para atualizar esta tarefa." });
+    }
 
-        // Validação dos dados antes da atualização
+    // Validação dos dados antes da atualização
     const dadosAtualizacao = {};
 
     if (idprioridade !== undefined && idprioridade !== null && idprioridade !== '') {
@@ -343,8 +345,6 @@ exports.atualizarTarefa = async (req, res) => {
     if (progresso !== undefined && progresso !== null) {
       dadosAtualizacao.progresso = progresso;
     }
-
-    console.log('Dados para atualização:', dadosAtualizacao);
 
     // Só atualiza se houver dados para atualizar
     if (Object.keys(dadosAtualizacao).length > 0) {
@@ -396,7 +396,6 @@ exports.atualizarTarefa = async (req, res) => {
     console.error("Erro ao atualizar tarefa:", error);
     res.status(500).json({
       error: "Erro ao atualizar tarefa",
-      details: error.message,
       opcoes: {
         prioridades: await Prioridade.findAll(),
         estados: await Estado.findAll()
@@ -436,6 +435,10 @@ exports.deletarTarefa = async (req, res) => {
       await transaction.rollback();
       return res.status(404).json({ error: "Tarefa não encontrada." });
     }
+    if (tarefa.idusuario !== req.usuario.id) {
+      await transaction.rollback();
+      return res.status(403).json({ error: "Sem permissão para excluir esta tarefa." });
+    }
 
     // Exclui os estados relacionados às subtarefas
     for (const subTarefa of tarefa.SubTarefas) {
@@ -467,8 +470,6 @@ exports.deletarSubTarefa = async (req, res) => {
   try {
     const { id } = req.params;
 
-    console.log('Excluindo subtarefa:', id);
-
     // Verifica se a subtarefa existe
     const subtarefa = await Tarefa.findByPk(id, {
       include: [
@@ -483,6 +484,10 @@ exports.deletarSubTarefa = async (req, res) => {
     if (!subtarefa) {
       await transaction.rollback();
       return res.status(404).json({ error: "Subtarefa não encontrada" });
+    }
+    if (subtarefa.idusuario !== req.usuario.id) {
+      await transaction.rollback();
+      return res.status(403).json({ error: "Sem permissão para excluir esta subtarefa." });
     }
 
     // Verifica se é realmente uma subtarefa (tem idmae)
@@ -505,8 +510,7 @@ exports.deletarSubTarefa = async (req, res) => {
     await transaction.rollback();
     console.error("Erro ao excluir subtarefa:", error);
     res.status(500).json({
-      error: "Erro interno ao excluir subtarefa",
-      details: error.message
+      error: "Erro interno ao excluir subtarefa"
     });
   }
 };
