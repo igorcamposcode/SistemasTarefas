@@ -29,39 +29,39 @@ operações: </p>
 
 ## 
 
-<ul>Gestão de Tarefas:
+## Gestão de Tarefas:
 
 <li> Os usuários podem criar, editar e excluir tarefas conforme suas 
 necessidades. Cada tarefa pode ter documentos anexados e ser 
 detalhada com subtarefas, promovendo uma organização mais 
 granular. </li>
 <li> É possível atribuir níveis de prioridade (de "Muito baixo" a "Muito alto") 
-para ajudar na definição do que é mais urgente ou relevante. </li> </ul>
+para ajudar na definição do que é mais urgente ou relevante. </li> 
 
 ##
 
-<ul> Acompanhamento e Modificação de Tarefas:
+## Acompanhamento e Modificação de Tarefas:
 <li> O sistema permite que os usuários acompanhem o progresso de cada 
 tarefa em tempo real, indicando o que foi concluído e o que ainda está 
 pendente. </li>
 <li> Datas de conclusão podem ser alteradas, ajustando os prazos 
-conforme mudanças no cronograma ou nas prioridades. </li> </ul>
+conforme mudanças no cronograma ou nas prioridades. </li> 
 
 ##
 
-<ul>Conclusão de Tarefas:
+## Conclusão de Tarefas:
 <li> Uma vez finalizadas, as tarefas podem ser marcadas como 
 concluídas. Essa ação fornece ao usuário um resumo do progresso, 
-ajudando na avaliação do desempenho e cumprimento dos objetivos. </li> </ul>
+ajudando na avaliação do desempenho e cumprimento dos objetivos. </li> 
 
 ##
 
-<ul> Gerenciamento Avançado com Anexos e Subtarefas:
+## Gerenciamento Avançado com Anexos e Subtarefas:
 <li> Arquivos e documentos podem ser anexados diretamente às tarefas, 
 centralizando informações importantes. </li>
 <li> A funcionalidade de criação de subtarefas permite dividir projetos 
 maiores em etapas menores, facilitando o gerenciamento de 
-processos complexos. </li> </ul>
+processos complexos. </li> 
 
 ## Justificativa
 
