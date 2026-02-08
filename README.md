@@ -29,39 +29,39 @@ operações: </p>
 
 ## 
 
-1. Gestão de Tarefas:
+<ul>Gestão de Tarefas:
 
- Os usuários podem criar, editar e excluir tarefas conforme suas 
+<li> Os usuários podem criar, editar e excluir tarefas conforme suas 
 necessidades. Cada tarefa pode ter documentos anexados e ser 
 detalhada com subtarefas, promovendo uma organização mais 
-granular.
- É possível atribuir níveis de prioridade (de "Muito baixo" a "Muito alto") 
-para ajudar na definição do que é mais urgente ou relevante.
+granular. </li>
+<li> É possível atribuir níveis de prioridade (de "Muito baixo" a "Muito alto") 
+para ajudar na definição do que é mais urgente ou relevante. </li> </ul>
 
 ##
 
-2. Acompanhamento e Modificação de Tarefas:
- O sistema permite que os usuários acompanhem o progresso de cada 
+<ul> Acompanhamento e Modificação de Tarefas:
+<li> O sistema permite que os usuários acompanhem o progresso de cada 
 tarefa em tempo real, indicando o que foi concluído e o que ainda está 
-pendente.
- Datas de conclusão podem ser alteradas, ajustando os prazos 
-conforme mudanças no cronograma ou nas prioridades.
+pendente. </li>
+<li> Datas de conclusão podem ser alteradas, ajustando os prazos 
+conforme mudanças no cronograma ou nas prioridades. </li> </ul>
 
 ##
 
-3. Conclusão de Tarefas:
- Uma vez finalizadas, as tarefas podem ser marcadas como 
+<ul>Conclusão de Tarefas:
+<li> Uma vez finalizadas, as tarefas podem ser marcadas como 
 concluídas. Essa ação fornece ao usuário um resumo do progresso, 
-ajudando na avaliação do desempenho e cumprimento dos objetivos.
+ajudando na avaliação do desempenho e cumprimento dos objetivos. </li> </ul>
 
 ##
 
-4. Gerenciamento Avançado com Anexos e Subtarefas:
- Arquivos e documentos podem ser anexados diretamente às tarefas, 
-centralizando informações importantes.
- A funcionalidade de criação de subtarefas permite dividir projetos 
+<ul> Gerenciamento Avançado com Anexos e Subtarefas:
+<li> Arquivos e documentos podem ser anexados diretamente às tarefas, 
+centralizando informações importantes. </li>
+<li> A funcionalidade de criação de subtarefas permite dividir projetos 
 maiores em etapas menores, facilitando o gerenciamento de 
-processos complexos.
+processos complexos. </li> </ul>
 
 ## Justificativa
 
@@ -125,38 +125,37 @@ como indispensável para quem lida com atividades mais complexas.
 Dessa forma, o Sistema de Tarefas foi desenvolvido para atender a essas necessidades, 
 oferecendo uma solução completa, intuitiva e adaptada às demandas dos usuários </p>
 
-## Requisitos Funcionais e Requisitos Não Funcionais
 
- # Requisitos Funcionais:
+## Requisitos Funcionais:
 
- Cadastro de Tarefas: O usuário poderá criar uma nova tarefa, fornecendo um 
-nome descritivo.
- Anexos: Será possível anexar arquivos a uma tarefa, permitindo o armazenamento 
-de documentos relevantes.
- Definição de Prioridades: O usuário poderá atribuir uma prioridade a tarefa (ex.: 
+<li> Cadastro de Tarefas: O usuário poderá criar uma nova tarefa, fornecendo um 
+nome descritivo. </li>
+<li> Anexos: Será possível anexar arquivos a uma tarefa, permitindo o armazenamento 
+de documentos relevantes.</li>
+<li> Definição de Prioridades: O usuário poderá atribuir uma prioridade a tarefa (ex.: 
 Muito Baixa, Baixa, Média, Alta, Muito Alta) para facilitar a gestão e o 
-acompanhamento da tarefa.
- Datas e Horários: O usuário definirá a data de início e a data de conclusão para 
+acompanhamento da tarefa. </li>
+<li> Datas e Horários: O usuário definirá a data de início e a data de conclusão para 
 cada tarefa. Além disso, poderá especificar horários para tarefas e subtarefas, 
-garantindo a precisão do planejamento.
- Subtarefas: O sistema permitirá a criação de subtarefas dentro de uma tarefa mãe, 
-organizando melhor atividades relacionadas.
- Reagendamento: Na seção “Minhas Tarefas”, o usuário terá a opção de postergar 
+garantindo a precisão do planejamento. </li>
+<li> Subtarefas: O sistema permitirá a criação de subtarefas dentro de uma tarefa mãe, 
+organizando melhor atividades relacionadas. </li>
+<li> Reagendamento: Na seção “Minhas Tarefas”, o usuário terá a opção de postergar 
 ou antecipar tanto tarefas mãe quanto subtarefas, ajustando-as conforme 
-necessários.
- Consulta por Prioridade: O usuário poderá filtrar tarefas mãe e subtarefas na 
+necessários.</li>
+<li> Consulta por Prioridade: O usuário poderá filtrar tarefas mãe e subtarefas na 
 seção “Minhas Tarefas” com base na prioridade (ex.: extremo risco, baixo risco), 
-facilitando a visualização de atividades críticas e de menor urgência.
-
- # Requisitos Não Funcionais:
- Autenticação e Acesso: O acesso ao programa será protegido por autenticação 
-simples, onde os usuários serão pré-cadastrados.
- Plataforma De Execução: O sistema será acessado via navegadores. Sendo 
+facilitando a visualização de atividades críticas e de menor urgência. </li>
+
+## Requisitos Não Funcionais:
+<li> Autenticação e Acesso: O acesso ao programa será protegido por autenticação 
+simples, onde os usuários serão pré-cadastrados. </li>
+<li> Plataforma De Execução: O sistema será acessado via navegadores. Sendo 
 somente em Desktop. Obs.: Navegador a ser utilizado: Edge ou Chrome. Não é 
 aconselhável utilizar Firefox ou outros, sendo possível utilizar outros navegadores 
-com base no Chrome.
- Linguagem a Ser Utilizada: Angular.
- Acesso Simultâneo: Até 100 usuários, com o acesso simultâneo a todo momento. 
-Suportando uma alta demanda de usuários.
- Responsividade e Delay: O Sistema terá de ser responsivo e sem atraso na 
-abertura de novas Abas
+com base no Chrome. </li>
+<li> Linguagem a Ser Utilizada: Angular. </li>
+<li> Acesso Simultâneo: Até 100 usuários, com o acesso simultâneo a todo momento. 
+Suportando uma alta demanda de usuários.</li>
+<li>  Responsividade e Delay: O Sistema terá de ser responsivo e sem atraso na 
+abertura de novas Abas </li>
