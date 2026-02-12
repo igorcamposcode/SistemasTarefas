@@ -12,9 +12,14 @@ npm-debug.log
 yarn-error.log
 
 # Pasta de uploads que deve ser ignorada
-uploads/
+/uploads/
 
 # Variáveis de ambiente (credenciais e segredos)
-.env
-src/server/.env
-
+env
+/src/server/.env
+env.local
+env.production
+env.*.local
+/config/config.json
+/node_modules/
+/dist/
