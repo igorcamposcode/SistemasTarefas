@@ -15,7 +15,11 @@ yarn-error.log
 /uploads/
 
 # Variáveis de ambiente (credenciais e segredos)
-env
+.env
+/src/app/services/
+/src/environments/
+/src/server/
+/src/server/uploads/
 /src/server/.env/
 env.local
 env.production
