@@ -1,29 +1,68 @@
+# ============================================
 # Arquivos de compilação e temporários do Angular
+# ============================================
 /dist/
 /tmp/
 /out-tsc/
 /bazel-out/
 
+# ============================================
 # Dependências
+# ============================================
 /node_modules/
+package-lock.json
+yarn.lock
 
+# ============================================
 # Logs
+# ============================================
 npm-debug.log
+npm-debug.log*
 yarn-error.log
+yarn-error.log*
 
-# Pasta de uploads que deve ser ignorada
-/uploads/
-
-# Variáveis de ambiente (credenciais e segredos)
+# ============================================
+# Ambiente (Secretos e Credenciais - NÃO COMMITAR)
+# ============================================
 .env
-/src/app/services/
-/src/environments/
+.env.local
+.env.production
+.env.*.local
+
+# ============================================
+# CONFIGURAÇÕES SENSÍVEIS - NÃO EXIBIR NO GITHUB
+# ============================================
+# Servidor backend
 /src/server/
+# Serviços com credenciais
+/src/app/services/
+# Variáveis de ambiente frontend
+/src/environments/
+
+# ============================================
+# Arquivo de configuração do banco de dados
+# ============================================
+/src/server/config/config.json
+
+# ============================================
+# Uploads e arquivos temporários
+# ============================================
+/uploads/
 /src/server/uploads/
-/src/server/.env/
-env.local
-env.production
-env.*.local
-/src/server/config/config.json/
-/node_modules/
-/dist/
+/tmp/
+
+# ============================================
+# IDE e Editores
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ============================================
+# Sistema operacional
+# ============================================
+desktop.ini
+Thumbs.db
