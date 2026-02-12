@@ -16,12 +16,10 @@ yarn-error.log
 
 # Variáveis de ambiente (credenciais e segredos)
 env
-/src/server/
-/src/server/uploads/
 /src/server/.env/
 env.local
 env.production
 env.*.local
-/config/config.json
+/src/server/config/config.json/
 /node_modules/
 /dist/
