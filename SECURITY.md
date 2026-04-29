@@ -1,21 +1,21 @@
-# Security Policy
+# Política de Segurança
 
-## Supported Versions
+## Versões Suportadas
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Use esta seção para informar quais versões do seu projeto estão
+atualmente sendo suportadas com atualizações de segurança.
 
-| Version | Supported          |
+| Versão  | Suportado          |
 | ------- | ------------------ |
 | 5.1.x   | :white_check_mark: |
 | 5.0.x   | :x:                |
 | 4.0.x   | :white_check_mark: |
 | < 4.0   | :x:                |
 
-## Reporting a Vulnerability
+## Relatando uma Vulnerabilidade
 
-Use this section to tell people how to report a vulnerability.
+Use esta seção para informar como relatar uma vulnerabilidade.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Informe para onde ir, com que frequência eles podem esperar receber uma
+atualização sobre uma vulnerabilidade relatada, o que esperar se a
+vulnerabilidade for aceita ou rejeitada, etc.
