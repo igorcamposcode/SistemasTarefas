@@ -24,10 +24,12 @@
                 id="nome"
                 placeholder="Digite seu nome completo"
                 [class.is-invalid]="validateForms.get('nome')?.invalid && validateForms.get('nome')?.touched"
-              />
-              <div class="invalid-feedback" *ngIf="validateForms.get('nome')?.invalid && validateForms.get('nome')?.touched">
-                Por favor, insira seu nome.
-              </div>
+                />
+              @if (validateForms.get('nome')?.invalid && validateForms.get('nome')?.touched) {
+                <div class="invalid-feedback">
+                  Por favor, insira seu nome.
+                </div>
+              }
             </div>
 
             <div class="mb-3">
@@ -38,7 +40,7 @@
                 formControlName="telefone"
                 id="telefone"
                 placeholder="Digite seu telefone"
-              />
+                />
             </div>
 
             <div class="mb-3">
@@ -50,10 +52,12 @@
                 id="email"
                 placeholder="Digite seu e-mail"
                 [class.is-invalid]="validateForms.get('email')?.invalid && validateForms.get('email')?.touched"
-              />
-              <div class="invalid-feedback" *ngIf="validateForms.get('email')?.invalid && validateForms.get('email')?.touched">
-                Por favor, insira um e-mail válido.
-              </div>
+                />
+              @if (validateForms.get('email')?.invalid && validateForms.get('email')?.touched) {
+                <div class="invalid-feedback">
+                  Por favor, insira um e-mail válido.
+                </div>
+              }
             </div>
 
             <div class="mb-3">
@@ -65,10 +69,12 @@
                 id="senha"
                 placeholder="Digite sua senha"
                 [class.is-invalid]="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched"
-              />
-              <div class="invalid-feedback" *ngIf="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched">
-                A senha deve ter no mínimo 8 caracteres.
-              </div>
+                />
+              @if (validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched) {
+                <div class="invalid-feedback">
+                  A senha deve ter no mínimo 8 caracteres.
+                </div>
+              }
             </div>
 
             <div class="mb-4">
@@ -80,10 +86,12 @@
                 id="confirmarSenha"
                 placeholder="Confirme sua senha"
                 [class.is-invalid]="validateForms.get('checkPassword')?.invalid && validateForms.get('checkPassword')?.touched"
-              />
-              <div class="invalid-feedback" *ngIf="validateForms.get('checkPassword')?.invalid && validateForms.get('checkPassword')?.touched">
-                Por favor, confirme sua senha.
-              </div>
+                />
+              @if (validateForms.get('checkPassword')?.invalid && validateForms.get('checkPassword')?.touched) {
+                <div class="invalid-feedback">
+                  Por favor, confirme sua senha.
+                </div>
+              }
             </div>
 
             <div class="d-grid gap-2">
@@ -91,7 +99,7 @@
                 type="submit"
                 class="btn btn-dark btn-lg"
                 [disabled]="validateForms.invalid"
-              >
+                >
                 <i class="bi bi-person-plus"></i> Criar Conta
               </button>
             </div>
@@ -118,7 +126,7 @@
     <a href="https://github.com/igorcamposcode" style="color: white">
       <b>IgorcamposCODE</b>
     </a>
-     &
+    &
     <a href="https://github.com/AlexRM1208" style="color: white">
       <b>AlexRM1208</b>
     </a>

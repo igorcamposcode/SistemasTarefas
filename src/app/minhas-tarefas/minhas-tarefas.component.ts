@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -14,7 +14,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
-import { CommonModule } from '@angular/common';
+
 import { TaskService } from '../services/task.service';
 import { AuthService, Usuario } from '../services/auth.service';
 
@@ -60,10 +60,10 @@ interface Tarefa {
     NzDropdownMenuComponent,
     NzTagModule,
     NzButtonModule,
-    NzCollapseModule,
-    CommonModule,
-  ],
+    NzCollapseModule
+],
   templateUrl: './minhas-tarefas.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './minhas-tarefas.component.css',
 })
 export class MinhasTarefasComponent implements OnInit {

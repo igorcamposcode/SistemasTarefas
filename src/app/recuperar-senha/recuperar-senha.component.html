@@ -29,11 +29,13 @@
                   id="email"
                   placeholder="Digite seu e-mail"
                   [class.is-invalid]="validateForms.get('email')?.invalid && validateForms.get('email')?.touched"
-                />
+                  />
               </div>
-              <div class="invalid-feedback" *ngIf="validateForms.get('email')?.invalid && validateForms.get('email')?.touched">
-                Por favor, insira um e-mail válido.
-              </div>
+              @if (validateForms.get('email')?.invalid && validateForms.get('email')?.touched) {
+                <div class="invalid-feedback">
+                  Por favor, insira um e-mail válido.
+                </div>
+              }
             </div>
 
             <div class="mb-3">
@@ -49,11 +51,13 @@
                   id="senha"
                   placeholder="Digite sua nova senha"
                   [class.is-invalid]="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched"
-                />
+                  />
               </div>
-              <div class="invalid-feedback" *ngIf="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched">
-                A senha deve ter no mínimo 8 caracteres.
-              </div>
+              @if (validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched) {
+                <div class="invalid-feedback">
+                  A senha deve ter no mínimo 8 caracteres.
+                </div>
+              }
             </div>
 
             <div class="mb-4">
@@ -69,11 +73,13 @@
                   id="checkPassword"
                   placeholder="Confirme sua nova senha"
                   [class.is-invalid]="validateForms.get('checkPassword')?.invalid && validateForms.get('checkPassword')?.touched"
-                />
+                  />
               </div>
-              <div class="invalid-feedback" *ngIf="validateForms.get('checkPassword')?.invalid && validateForms.get('checkPassword')?.touched">
-                Por favor, confirme a nova senha.
-              </div>
+              @if (validateForms.get('checkPassword')?.invalid && validateForms.get('checkPassword')?.touched) {
+                <div class="invalid-feedback">
+                  Por favor, confirme a nova senha.
+                </div>
+              }
             </div>
 
             <div class="d-grid gap-2">
@@ -81,7 +87,7 @@
                 type="submit"
                 class="btn btn-dark btn-lg"
                 [disabled]="validateForms.invalid"
-              >
+                >
                 <i class="bi bi-key"></i> Alterar Senha
               </button>
             </div>
@@ -108,7 +114,7 @@
     <a href="https://github.com/igorcamposcode" style="color: white">
       <b>IgorcamposCODE</b>
     </a>
-     &
+    &
     <a href="https://github.com/AlexRM1208" style="color: white">
       <b>AlexRM1208</b>
     </a>

@@ -1,19 +1,19 @@
 
 // Importações necessárias de módulos e bibliotecas do Angular e NG-ZORRO
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
-import { NgIf } from '@angular/common';
+
 
 // Declaração do componente
 @Component({
     selector: 'app-login', // Define que o componente é autônomo
     // Importa os módulos necessários para o funcionamento do formulário e componentes NG-ZORRO
-    imports: [FormsModule, ReactiveFormsModule,
-       NgIf],
+    imports: [FormsModule, ReactiveFormsModule],
     templateUrl: './login.component.html', // Caminho do arquivo HTML associado ao componente
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './login.component.css' // Caminho do arquivo CSS associado ao componente
 })
 

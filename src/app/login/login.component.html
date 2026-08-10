@@ -25,10 +25,12 @@
                   placeholder="Digite seu e-mail"
                   [class.is-invalid]="validateForms.get('email')?.invalid && validateForms.get('email')?.touched" />
               </div>
-              <div class="invalid-feedback"
-                *ngIf="validateForms.get('email')?.invalid && validateForms.get('email')?.touched">
-                Por favor, digite seu E-mail.
-              </div>
+              @if (validateForms.get('email')?.invalid && validateForms.get('email')?.touched) {
+                <div class="invalid-feedback"
+                  >
+                  Por favor, digite seu E-mail.
+                </div>
+              }
             </div>
 
             <div class="mb-4">
@@ -41,10 +43,12 @@
                   placeholder="Digite sua senha"
                   [class.is-invalid]="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched" />
               </div>
-              <div class="invalid-feedback"
-                *ngIf="validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched">
-                Por favor, digite sua senha.
-              </div>
+              @if (validateForms.get('senha')?.invalid && validateForms.get('senha')?.touched) {
+                <div class="invalid-feedback"
+                  >
+                  Por favor, digite sua senha.
+                </div>
+              }
             </div>
 
             <div class="d-grid gap-2">
@@ -80,7 +84,7 @@
     <a href="https://github.com/igorcamposcode" style="color: white">
       <b>IgorcamposCODE</b>
     </a>
-     &
+    &
     <a href="https://github.com/AlexRM1208" style="color: white">
       <b>AlexRM1208</b>
     </a>

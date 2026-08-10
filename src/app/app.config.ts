@@ -8,6 +8,7 @@ import {
 import {
   provideHttpClient,
   withInterceptors,
+  withXhr
 } from '@angular/common/http';
 import { pt_PT, provideNzI18n } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
@@ -23,7 +24,7 @@ registerLocaleData(pt);
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(
+    provideHttpClient(withXhr(), 
       withInterceptors([AuthInterceptor])
     ),
     provideZoneChangeDetection({ eventCoalescing: true }),

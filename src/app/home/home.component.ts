@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   FormBuilder,
@@ -8,7 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService, Usuario } from '../services/auth.service';
-import { DatePipe, NgClass, NgForOf, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { Estado, Prioridade, TaskService } from '../services/task.service';
 import { NotificationService } from '../services/notification.service';
 import { Observable } from 'rxjs';
@@ -87,12 +87,11 @@ interface ProgressoTarefaSalvo {
   imports: [
     ReactiveFormsModule,
     FormsModule,
-    NgForOf,
     DatePipe,
-    NgIf,
     NgClass
-  ],
+],
   templateUrl: './home.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {

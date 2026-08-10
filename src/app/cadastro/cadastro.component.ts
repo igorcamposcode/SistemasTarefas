@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -11,16 +11,17 @@ import {
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-cadastro',
     imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientModule,NgIf
-    ],
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule
+],
     templateUrl: './cadastro.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './cadastro.component.css'
 })
 export class CadastroComponent {

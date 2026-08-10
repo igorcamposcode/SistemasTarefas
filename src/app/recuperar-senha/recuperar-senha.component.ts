@@ -1,5 +1,5 @@
 // Importando os módulos e componentes necessários para o funcionamento do formulário e da interface
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
   AbstractControl,
@@ -9,7 +9,7 @@ import {
   ValidatorFn,
 } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -17,11 +17,11 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-recuperar-senha',
     imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        CommonModule,
-    ],
+    FormsModule,
+    ReactiveFormsModule
+],
     templateUrl: './recuperar-senha.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './recuperar-senha.component.css'
 })
 export class RecuperarSenhaComponent {
