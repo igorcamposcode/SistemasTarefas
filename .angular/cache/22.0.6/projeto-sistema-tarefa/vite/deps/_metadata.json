@@ -1,0 +1,362 @@
+{
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+  "hash": "d7161671",
+  "configHash": "f04b3739",
+  "lockfileHash": "acae0f49",
+  "browserHash": "a85d1bff",
+=======
+  "hash": "b9041d03",
+  "configHash": "7eb7a4dc",
+  "lockfileHash": "73c6f33a",
+  "browserHash": "32500506",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+  "optimized": {
+    "@angular/common": {
+      "src": "../../../../../../node_modules/@angular/common/fesm2022/common.mjs",
+      "file": "@angular_common.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "302067b6",
+=======
+      "fileHash": "1cde59fa",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "@angular/common/http": {
+      "src": "../../../../../../node_modules/@angular/common/fesm2022/http.mjs",
+      "file": "@angular_common_http.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "e893da54",
+=======
+      "fileHash": "7df27f9b",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "@angular/common/locales/pt": {
+      "src": "../../../../../../node_modules/@angular/common/locales/pt.js",
+      "file": "@angular_common_locales_pt.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "fb4ebfaa",
+=======
+      "fileHash": "ec540647",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "@angular/core": {
+      "src": "../../../../../../node_modules/@angular/core/fesm2022/core.mjs",
+      "file": "@angular_core.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "c5195119",
+=======
+      "fileHash": "610954b8",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "@angular/forms": {
+      "src": "../../../../../../node_modules/@angular/forms/fesm2022/forms.mjs",
+      "file": "@angular_forms.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "d5ce92a2",
+=======
+      "fileHash": "acda8857",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "@angular/localize/init": {
+      "src": "../../../../../../node_modules/@angular/localize/fesm2022/init.mjs",
+      "file": "@angular_localize_init.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "f6f2bed3",
+=======
+      "fileHash": "62a0798c",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "@angular/platform-browser": {
+      "src": "../../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
+      "file": "@angular_platform-browser.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "57d99d16",
+=======
+      "fileHash": "6e9eb376",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "@angular/platform-browser/animations/async": {
+      "src": "../../../../../../node_modules/@angular/platform-browser/fesm2022/animations-async.mjs",
+      "file": "@angular_platform-browser_animations_async.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "1d150001",
+=======
+      "fileHash": "4794995e",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "@angular/router": {
+      "src": "../../../../../../node_modules/@angular/router/fesm2022/router.mjs",
+      "file": "@angular_router.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "2e57e1c1",
+=======
+      "fileHash": "126b9681",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "@ant-design/icons-angular/icons": {
+      "src": "../../../../../../node_modules/@ant-design/icons-angular/fesm2022/ant-design-icons-angular-icons.mjs",
+      "file": "@ant-design_icons-angular_icons.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "d292c7df",
+=======
+      "fileHash": "0a95deeb",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "ng-zorro-antd/button": {
+      "src": "../../../../../../node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-button.mjs",
+      "file": "ng-zorro-antd_button.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "665385ba",
+=======
+      "fileHash": "61e75d5b",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "ng-zorro-antd/collapse": {
+      "src": "../../../../../../node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-collapse.mjs",
+      "file": "ng-zorro-antd_collapse.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "c5837f23",
+=======
+      "fileHash": "035e3604",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "ng-zorro-antd/core/transition-patch": {
+      "src": "../../../../../../node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-core-transition-patch.mjs",
+      "file": "ng-zorro-antd_core_transition-patch.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "11c89009",
+=======
+      "fileHash": "91344616",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "ng-zorro-antd/core/wave": {
+      "src": "../../../../../../node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-core-wave.mjs",
+      "file": "ng-zorro-antd_core_wave.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "6ed77d7d",
+=======
+      "fileHash": "8b67c484",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "ng-zorro-antd/dropdown": {
+      "src": "../../../../../../node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-dropdown.mjs",
+      "file": "ng-zorro-antd_dropdown.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "95eeab33",
+=======
+      "fileHash": "98255fec",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "ng-zorro-antd/i18n": {
+      "src": "../../../../../../node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-i18n.mjs",
+      "file": "ng-zorro-antd_i18n.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "129fd506",
+=======
+      "fileHash": "387ba403",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "ng-zorro-antd/icon": {
+      "src": "../../../../../../node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-icon.mjs",
+      "file": "ng-zorro-antd_icon.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "5da47821",
+=======
+      "fileHash": "da7b77d7",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "ng-zorro-antd/input": {
+      "src": "../../../../../../node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-input.mjs",
+      "file": "ng-zorro-antd_input.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "3a8fa2f8",
+=======
+      "fileHash": "70ab67a9",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "ng-zorro-antd/table": {
+      "src": "../../../../../../node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-table.mjs",
+      "file": "ng-zorro-antd_table.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "f2f04116",
+=======
+      "fileHash": "484c46ac",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "ng-zorro-antd/tag": {
+      "src": "../../../../../../node_modules/ng-zorro-antd/fesm2022/ng-zorro-antd-tag.mjs",
+      "file": "ng-zorro-antd_tag.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "7f73ce6b",
+=======
+      "fileHash": "ef65bf01",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "rxjs": {
+      "src": "../../../../../../node_modules/rxjs/dist/esm5/index.js",
+      "file": "rxjs.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "1163a3a0",
+=======
+      "fileHash": "80b41883",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": false
+    },
+    "zone.js": {
+      "src": "../../../../../../node_modules/zone.js/fesm2015/zone.js",
+      "file": "zone__js.js",
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "fileHash": "92fe3583",
+=======
+      "fileHash": "595f92e5",
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "chunk-QVUXI33L": {
+      "file": "chunk-QVUXI33L.js"
+    },
+    "browser-S6M2WB3U": {
+      "file": "browser-S6M2WB3U.js"
+    },
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+    "chunk-YBJBNGIG": {
+      "file": "chunk-YBJBNGIG.js"
+=======
+    "chunk-M3IUUG3F": {
+      "file": "chunk-M3IUUG3F.js"
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+    },
+    "chunk-A36NPHLN": {
+      "file": "chunk-A36NPHLN.js"
+    },
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+    "chunk-UASVHYF3": {
+      "file": "chunk-UASVHYF3.js"
+=======
+    "chunk-3RB3LA4P": {
+      "file": "chunk-3RB3LA4P.js"
+    },
+    "chunk-4KCDKKZK": {
+      "file": "chunk-4KCDKKZK.js"
+    },
+    "chunk-GSUJNKAU": {
+      "file": "chunk-GSUJNKAU.js"
+    },
+    "chunk-J3LPAXAE": {
+      "file": "chunk-J3LPAXAE.js"
+    },
+    "chunk-AGKUOY4W": {
+      "file": "chunk-AGKUOY4W.js"
+    },
+    "chunk-GUV6BGY5": {
+      "file": "chunk-GUV6BGY5.js"
+    },
+    "chunk-4SFQK2AM": {
+      "file": "chunk-4SFQK2AM.js"
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+    },
+    "chunk-Q5XPHK6W": {
+      "file": "chunk-Q5XPHK6W.js"
+    },
+    "chunk-QB5ICR5Z": {
+      "file": "chunk-QB5ICR5Z.js"
+    },
+    "chunk-WWOBRQO6": {
+      "file": "chunk-WWOBRQO6.js"
+    },
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+    "chunk-HU6ZXTFX": {
+      "file": "chunk-HU6ZXTFX.js"
+    },
+    "chunk-FSCQW5GD": {
+      "file": "chunk-FSCQW5GD.js"
+    },
+    "chunk-NFZZIJXJ": {
+      "file": "chunk-NFZZIJXJ.js"
+    },
+    "chunk-EZ3AR637": {
+      "file": "chunk-EZ3AR637.js"
+    },
+    "chunk-BPLDPHLR": {
+      "file": "chunk-BPLDPHLR.js"
+    },
+    "chunk-PZVYNE7O": {
+      "file": "chunk-PZVYNE7O.js"
+    },
+    "chunk-S5YOP4XY": {
+      "file": "chunk-S5YOP4XY.js"
+    },
+    "chunk-5RX6JVQ6": {
+      "file": "chunk-5RX6JVQ6.js"
+    },
+    "chunk-WEUNK7DU": {
+      "file": "chunk-WEUNK7DU.js"
+=======
+    "chunk-CSQZPZS6": {
+      "file": "chunk-CSQZPZS6.js"
+    },
+    "chunk-N7SFGLV5": {
+      "file": "chunk-N7SFGLV5.js"
+    },
+    "chunk-W62R2TXA": {
+      "file": "chunk-W62R2TXA.js"
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+    },
+    "chunk-YMTLKOSH": {
+      "file": "chunk-YMTLKOSH.js"
+    },
+<<<<<<< HEAD:.angular/cache/22.0.6/projeto-sistema-tarefa/vite/deps/_metadata.json
+    "chunk-7DCQFHUQ": {
+      "file": "chunk-7DCQFHUQ.js"
+    },
+    "chunk-AXAIAVI6": {
+      "file": "chunk-AXAIAVI6.js"
+    },
+    "chunk-F4XLABLD": {
+      "file": "chunk-F4XLABLD.js"
+=======
+    "chunk-OAOHUKFD": {
+      "file": "chunk-OAOHUKFD.js"
+    },
+    "chunk-FLKUFN3C": {
+      "file": "chunk-FLKUFN3C.js"
+    },
+    "chunk-JGLLOK6F": {
+      "file": "chunk-JGLLOK6F.js"
+>>>>>>> cc3bfc73a40949b50ca35f42bf02b7c46b801383:.angular/cache/20.3.15/projeto-sistema-tarefa/vite/deps/_metadata.json
+    },
+    "chunk-KUVQP7CM": {
+      "file": "chunk-KUVQP7CM.js"
+    },
+    "chunk-FT3EWC66": {
+      "file": "chunk-FT3EWC66.js"
+    },
+    "chunk-NGDYWETO": {
+      "file": "chunk-NGDYWETO.js"
+    },
+    "chunk-FMGVFGPW": {
+      "file": "chunk-FMGVFGPW.js"
+    }
+  }
+}
