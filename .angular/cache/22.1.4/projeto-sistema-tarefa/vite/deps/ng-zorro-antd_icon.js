@@ -1,0 +1,2 @@
+import { a as NZ_ICON_DEFAULT_TWOTONE_COLOR, c as NzIconPatchService, d as provideNzIconsPatch, i as NZ_ICONS_USED_BY_ZORRO, l as NzIconService, n as NZ_ICONS, o as NzIconDirective, r as NZ_ICONS_PATCH, s as NzIconModule, t as DEFAULT_TWOTONE_COLOR, u as provideNzIcons } from "./ng-zorro-antd-icon-DGQmdhvo.js";
+export { DEFAULT_TWOTONE_COLOR, NZ_ICONS, NZ_ICONS_PATCH, NZ_ICONS_USED_BY_ZORRO, NZ_ICON_DEFAULT_TWOTONE_COLOR, NzIconDirective, NzIconModule, NzIconPatchService, NzIconService, provideNzIcons, provideNzIconsPatch };
