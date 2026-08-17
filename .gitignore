@@ -45,6 +45,11 @@ yarn-error.log*
 /src/server/config/config.json
 
 # ============================================
+# Chaves JWT e secrets do backend
+# ============================================
+/src/server/jwt-keys.json
+
+# ============================================
 # Uploads e arquivos temporários
 # ============================================
 /uploads/
