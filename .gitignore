@@ -65,6 +65,7 @@ yarn-error.log*
 *.swo
 *~
 .DS_Store
+.gitignore 
 
 # ============================================
 # Sistema operacional
